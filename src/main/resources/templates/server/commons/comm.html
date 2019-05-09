@@ -1,35 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
-<title>Insert title here</title>
+<title>喵喵核保系统</title>
+
+
+<script type="text/javascript">
+	$(function(){
+		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+			//console.log(data);
+			$("#tianqi").html(data.weather);
+		},"json");
+	});
+</script>
 </head>
 <body>
 
 <!-- topbar -->
 <header class="header black-bg" id="topbar">
-      <div class="sidebar-toggle-box">
-        <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
-      </div>
-      <!--logo start-->
-      <a href="index.html" class="logo"><b>喵喵<span>财保</span></b></a>
-      <!--logo end-->
-      
-      
-      
-      <div class="top-menu">
-        <ul class="nav pull-right top-menu">
-          <li><a class="logout" href="login.html">Logout</a></li>
-        </ul>
-      </div>
-    </header>
+  <div class="sidebar-toggle-box">
+    <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+  </div>
+  <!--logo start-->
+  <a href="index.html" class="logo"><b>喵喵<span>财保</span></b></a>
+  <!--logo end-->
+  
+  
+  
+  <div class="top-menu">
+    <ul class="nav pull-right top-menu">
+      <li><a class="logout" href="login.html" th:href="@{/logout}" >Logout</a></li>
+    </ul>
+  </div>
+</header>
     
     <aside id="sidebar">
       <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
-          <h5 class="centered">熊蕃猛</h5>
+          <h5 class="centered" th:text="${session.user.realname}" >熊蕃猛是个傻子</h5>
+          
+          <li ><span id="tianqi" ></span></li>
+          
           <li class="mt">
             <a class="active" href="index.html" 
             th:class="${activeUri=='index.html'?'active':''}">
@@ -40,24 +53,26 @@
           <li class="sub-menu">
             <a href="javascript:;" th:class="${activeUri=='guaranteeList.html'?'dcjq-parent active':'dcjq-parent'}">
               <i class="fa fa-desktop"></i>
-              <span>保单模块</span>
+              <span>投保单</span>
               </a>
             <ul class="sub" th:style="${activeUri=='guaranteeList.html'?'display: block':'display: none'}">
-              <li><a href="guaranteeList.html">查看保单</a></li>
-              <li><a href="buttons.html">查看代办保单</a></li>
-              <li><a href="panels.html">查看以办保单</a></li>
+              <li><a href="guaranteeList.html">投保单列表</a></li>
+              <li><a href="buttons.html">待处理投保单</a></li>
+              <li><a href="panels.html">正在处理中投保单</a></li>
+              <li><a href="panels.html">已完成投保单</a></li>
          
             </ul>
           </li>
           <li class="sub-menu">
             <a href="javascript:;" th:class="${activeUri=='basicTable.html'?'dcjq-parent active':'dcjq-parent'}">
               <i class="fa fa-cogs"></i>
-              <span>理赔模块</span>
+              <span>保单</span>
               </a>
             <ul class="sub" th:style="${activeUri=='basicTable.html'?'display: block':'display: none'}" >
-              <li><a href="basicTable.html">查看所有理赔单</a></li>
-              <li><a href="daiban.html" >查看代办理赔单</a></li>
-              <li><a href="gallery.html">查看一办理赔单</a></li>
+              <li><a href="basicTable.html">保单列表</a></li>
+              <li><a href="daiban.html" >待处理保单</a></li>
+              <li><a href="gallery.html">正在处理中保单</a></li>
+              <li><a href="panels.html">已完成保单</a></li>
               
             </ul>
           </li>
@@ -75,7 +90,7 @@
           <li class="sub-menu">
             <a href="javascript:;">
               <i class="fa fa-tasks"></i>
-              <span>超级管理员模块</span>
+              <span>超级管理员</span>
               </a>
             <ul class="sub">
               <li><a href="form_component.html">查看保单</a></li>

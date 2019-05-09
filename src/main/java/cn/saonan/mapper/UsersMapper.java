@@ -4,5 +4,5 @@ import cn.saonan.pojo.Users;
 
 public interface UsersMapper {
 
-	public int isLogin(Users user);
+	public Users isLogin(Users user);
 }
