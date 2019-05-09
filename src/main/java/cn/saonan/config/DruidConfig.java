@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
-//@Configuration
+@Configuration
 public class DruidConfig {
 	
-	//@ConfigurationProperties(prefix = "spring.datasource")
-	//@Bean
+	@ConfigurationProperties(prefix = "spring.datasource")
+	@Bean
 	public DataSource dataSource() {
 		
 		return new DruidDataSource();
