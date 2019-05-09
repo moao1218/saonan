@@ -1,0 +1,242 @@
+var yjmdnffkdsdata = new Array();
+yjmdnffkdsdata[0];
+var yjmdnffkdsindex = 1;
+var yjmdnffkdspy = 0;
+var yjmdnffkdscfsize = 2;
+var yjmdnffkdscfmaxindex = 40;
+var yjmdnffkdscfbgindex = 1;
+var yjmdnffkdscfyjbj = false;
+var yjmdnffkdsldtime;
+function curDateTime() {
+	var d = new Date();
+	yjmdnffkdsldtime = d;
+	return yjmdnffkdsldtime.getTime()
+}
+function timeoffset(btime) {
+	var b64map = "78xyz01FIjklJKmXYnoLMNOPQRSTfgABhiU4W56VZaDEbcdepqrstuvw23GH9C+/";
+	var etime = new Date();
+	var cz = etime.getTime() - yjmdnffkdsldtime.getTime();
+	var ms = cz / 1000;
+	var fs = ms / 60;
+	var mss = ms % 60;
+	if (fs > 60) {
+		return "//"
+	} else {
+		return b64map.charAt(fs) + b64map.charAt(mss)
+	}
+}
+function addyjmdnffkds(str) {
+	var fgf = "";
+	if (!yjmdnffkdscfyjbj && yjmdnffkdsindex > yjmdnffkdscfmaxindex) {
+		yjmdnffkdsindex = 1;
+		yjmdnffkdscfbgindex = 2;
+		yjmdnffkdsdata[yjmdnffkdsindex] = "";
+		yjmdnffkdscfyjbj = true
+	}
+	if (yjmdnffkdspy == 0) {
+		yjmdnffkdsdata[yjmdnffkdsindex] = fgf + str;
+		yjmdnffkdspy++
+	} else {
+		if (yjmdnffkdspy == yjmdnffkdscfsize - 1) {
+			yjmdnffkdsdata[yjmdnffkdsindex] += fgf + str;
+			yjmdnffkdspy = 0;
+			yjmdnffkdsindex++;
+			if (yjmdnffkdscfyjbj) {
+				if (yjmdnffkdsindex == yjmdnffkdscfmaxindex) {
+					yjmdnffkdscfbgindex = 1;
+					yjmdnffkdsdata[yjmdnffkdsindex] = ""
+				} else {
+					if (yjmdnffkdsindex > yjmdnffkdscfmaxindex) {
+						yjmdnffkdsindex = 1;
+						yjmdnffkdsdata[yjmdnffkdsindex] = "";
+						yjmdnffkdscfbgindex++
+					} else {
+						yjmdnffkdscfbgindex++;
+						yjmdnffkdsdata[yjmdnffkdsindex] = ""
+					}
+				}
+			}
+		} else {
+			yjmdnffkdsdata[yjmdnffkdsindex] += fgf + str;
+			yjmdnffkdspy++
+		}
+	}
+}
+function inityjmdnffkds(dd, type) {
+	if ("pc" == type) {
+		yjmdnffkdsdata[0] = "1"
+	} else {
+		yjmdnffkdsdata[0] = "2"
+	}
+	yjmdnffkdsdata[0] += browserInfo() + curDateTime();
+	yjmdnffkdsldtime = new Date();
+	var obj = document.getElementById(dd);
+	if ("pc" == type) {
+		obj.onmousedown = function() {
+			var dt = creatkdscode(1);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onmouseup = function() {
+			var dt = creatkdscode(2);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onkeydown = function() {
+			var dt = creatkdscode(3);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onkeyup = function() {
+			var dt = creatkdscode(4);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onfocus = function() {
+			var dt = creatkdscode(5);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onmouseover = function() {
+			var dt = creatkdscode(6);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onmouseout = function() {
+			var dt = creatkdscode(7);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		}
+	} else {
+		obj.onkeydown = function() {
+			var dt = creatkdscode(3);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onkeyup = function() {
+			var dt = creatkdscode(4);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		};
+		obj.onfocus = function() {
+			var dt = creatkdscode(5);
+			if (dt != "") {
+				addyjmdnffkds(dt)
+			}
+		}
+	}
+}
+function creatkdscode(id) {
+	var time = timeoffset(yjmdnffkdsldtime);
+	var out = "";
+	switch (id) {
+	case 1:
+		out = "A" + time;
+		break;
+	case 2:
+		out = "B" + time;
+		break;
+	case 3:
+		out = "C" + time;
+		break;
+	case 4:
+		out = "D" + time;
+		break;
+	case 5:
+		out = "E" + time;
+		break;
+	case 6:
+		out = "F" + time;
+		break;
+	case 7:
+		out = "G" + time;
+		break;
+	default:
+		out = "Z" + time;
+		break
+	}
+	return out
+}
+function browserInfo() {
+	var bname = "";
+	var browser = navigator.userAgent;
+	if (browser.indexOf("AppleWebKit") > -1) {
+		if (navigator.appName == "Netscape") {
+			bname = "GG"
+		} else {
+			bname = "PG"
+		}
+	} else {
+		if (browser.indexOf("Presto") > -1) {
+			bname = "OP"
+		} else {
+			if (browser.indexOf("Trident") > -1) {
+				bname = navigatorInfo()
+			} else {
+				if (browser.indexOf("Gecko") > -1
+						&& browser.indexOf("KHTML") == -1) {
+					bname = "HH"
+				} else {
+					if (browser.match(/AppleWebKit.*Mobile.*/)) {
+						bname = "MB"
+					}
+				}
+			}
+		}
+	}
+	if (bname == "") {
+		bname = "ZZ"
+	}
+	return bname
+}
+function navigatorInfo() {
+	if (navigator.appName == "Microsoft Internet Explorer") {
+		var ua = navigator.userAgent;
+		var s = "MSIE";
+		var i = ua.indexOf(s);
+		if (i >= 0 && i < 16) {
+			var ver = parseFloat(ua.substr(i + s.length));
+			return "E" + ver.toString(16)
+		} else {
+			return "E0"
+		}
+	} else {
+		return "WZ"
+	}
+}
+function yjmdnffkdsjm(mw) {
+	// var
+	// PublicKey="B1204FC8EB406948947F0F69E460BFEA19E778D7D3619AFE3EBEF3CEACA10A289F303E3EA717850757B43948FC3C6AE766B4AA8A08F927F976A0313DCB6054860DFF1CDE7DF5C87E2E3147CC9DCDDF31C97282B975088DF94679A4F1E53EFEBF68FC3717D28D00E51BED299CB1815777265B0DB4576CC314C82612277626F82D";
+	var PublicKey = "BC77665A91E338E6DBBD5A5BF9DBD9750C61602782998909C49B6F56E99E8A09D26CB6AF999D7D20E7814E71BD0545298D8226A958F1A1AC1CE1B0C8B4EF4CAB6EAC86ABA47A4FB535C30F463A3DB0533D9FA3C36DB1EA95351A1362997559D62DAD6CC8907D2C29E58DD2075AFB31B27F7ACC419E4D36490FC563F3B32A25F798608A5C88A87650C27AE5BF7CCA39089B3D2937CC196B7E12D7F2F23B4C054CAC2FCF2373AAFE984B9750C6EE42BD057DBFE3A33379947DDACB20FBB7456C6B9F0A8162874842A91BD56A0F56474DD320E1319BB7804ED13496A1AA99E132970DE2708367A4BE9D2FB46EB1D11EA27E60D34E11BFCAB0DFD230B16201BB0337";
+	var RSA = new RSAKey();
+	RSA.setPublic(PublicKey, "10001");
+	// var Res=RSA.encrypt(mw);
+	var Res = RSA.encryptPama(mw);
+	return Res + "|"
+}
+function yjmdnffkdsout() {
+	var out = "";
+	out += yjmdnffkdsdata[0];
+	for (var i = 0; (i < yjmdnffkdscfmaxindex) && i < yjmdnffkdsdata.length - 1; i++) {
+		if (yjmdnffkdscfbgindex + i <= yjmdnffkdscfmaxindex) {
+			if (yjmdnffkdsdata[yjmdnffkdscfbgindex + i] != "") {
+				out += yjmdnffkdsdata[yjmdnffkdscfbgindex + i]
+			}
+		} else {
+			if (yjmdnffkdsdata[yjmdnffkdscfbgindex + i - yjmdnffkdscfmaxindex] != "") {
+				out += yjmdnffkdsdata[yjmdnffkdscfbgindex + i
+						- yjmdnffkdscfmaxindex]
+			}
+		}
+	}
+	return out
+};

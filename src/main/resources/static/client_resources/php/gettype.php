@@ -1,0 +1,1 @@
+geetest_1557541731286({"data": {"geetest": "/static/js/geetest.5.13.0.js", "slide": "/static/js/slide.pingan.1.0.js", "click": "/static/js/click.pingan.1.0.js", "aspect_radio": {"slide": 103, "click": 128}, "fullpage": "/static/js/fullpage.pingan.1.0.js", "type": "fullpage", "static_servers": ["captcha-static.pingan.com"]}, "status": "success"})

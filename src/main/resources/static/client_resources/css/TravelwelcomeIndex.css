@@ -1,0 +1,48 @@
+﻿@charset "UTF-8";
+/*隐私授权管理*/
+.yscq_btn{display:inline-block;*display:inline;*zoom:1;padding-right:36px;/*background:url(/login/images/yscq.png) right center no-repeat;*/ cursor:pointer;}
+.yscq_btn:hover {color: #e7340b;}
+#ysqyMask{opacity:.6;filter:alpha(opacity=60);position:fixed;left:0;top:0;width:100%;height:100%;background-color: #000;z-index: 99999;}
+
+.clearfix:after{content:"";display:block;clear:both;}
+.clearfix{*zoom:1;}
+.lay-cancelauthorization .fl,.privacy-lay .fl{float:left;}
+.lay-cancelauthorization .fr,.privacy-lay .fr{float:right;}
+.lay-cancelauthorization .pr,.privacy-lay .pr{position:relative;}
+.lay-cancelauthorization .pa,.privacy-lay .pa{position:absolute;}
+.lay-cancelauthorization .hide,.privacy-lay .hide{display:none !important;}
+.lay-cancelauthorization .hidden,.privacy-lay .hidden{visibility:hidden;}
+.lay-cancelauthorization .ovf,.privacy-lay .ovf{overflow:hidden;}
+.lay-cancelauthorization .tc,.privacy-lay .tc{text-align:center;}
+.lay-cancelauthorization .tl,.privacy-lay .tl{text-align:left;}
+.lay-cancelauthorization .tr,.privacy-lay .tr{text-align:right;}
+
+.privacy-lay{position:fixed;background:url(../images/lay_tip_hue.png) center center repeat;padding:5px;left:50%;top: 50%;margin-top:-325px;margin-left:-475px;z-index: 100001;}
+.privacy-box{border-top:2px solid #e9401a;width:940px;background-color:#fff;height:640px;overflow:hidden;position: relative;}
+.privacy-h2{height:44px;line-height:44px;padding-left:20px;color: #333;font-size:16px;background-color:#f5f5f5;font-weight:bold;letter-spacing:.5px;float: none;margin-top: 10px;}
+.privacy-box-txt-box{padding:12px 10px 30px 0}
+.privacy-box-txt{padding-left:20px;overflow-y:auto;height:456px;padding-top:12px;padding-bottom:12px;box-sizing: content-box;padding-right:10px;}
+.privacy-btn-box{text-align: center;font-size:0;padding-bottom:30px;}
+a.privacy-btn{display:inline-block;*display:inline;*zoom:1;width:150px;height:40px;text-align:center;line-height:40px;background-color:#d4d4d4;color: #666;font-size:16px;margin:0 20px;cursor: no-drop;letter-spacing:.5px;}
+.privacy-btn.privacy-btn-agree{color: #fff;background-color:#e9401a;cursor:pointer;}
+.privacy-btn.privacy-btn-cancel{cursor: pointer;}
+.privacy-btn-agree:hover{background-color:#ff501f;}
+.privacy-box-txt b,.privacy-box-txt p{display:block;color:#333;font-size:14px;line-height: 24px;margin: 0;}
+.privacy-box-txt b.pt,.privacy-box-txt p.pt{padding-top:12px;}
+.ysqy-lay-close{position:absolute;width:20px;height:20px;background:url(/login/images/lay_close_gray.png) center center no-repeat;top:12px;right:7px;cursor:pointer;margin-top: 10px;}
+.ysqy-lay-close.rotate{-webkit-transform:rotate(360deg);transform:rotate(360deg);-webkit-transition:-webkit-transform .4s linear;transition:transform .4s linear;}
+.lay_tip_streamer{position:absolute;left:-1000px;top:500px;width:858px;height:44px;line-height:44px;padding-left:54px;box-sizing:content-box;background:url(/login/images/lay_tip_streamer.png) center center no-repeat;color:#fff;font-size:14px;font-weight:bold;z-index: 9}
+.ysqy_lay_tip_corner{position: absolute;top:5px;right:28px;width:227px;height:58px;background:url(/login/images/lay_tip_corner.png) center center no-repeat;color:#333;line-height:18px;text-align: center;padding-right:20px;padding-top:14px;box-sizing: content-box;z-index:8}
+.ysqy_lay_tip_corner span{color:#ff7a66;}
+.ysqy_lay_tip_corner b{font-weight:bold;}
+/*取消授权提示*/
+.lay-cancelauthorization{position:fixed;left:50%;top:50%;height: 280px;width:490px;background-color:#fff;margin-left:-245px;margin-top:-140px;border-radius:5px;overflow: hidden;z-index: 100001;}
+.h4-cancelauthorization{height:46px;background-color:#ff644c;color:#fff;font-size:16px;line-height:46px;padding-left:10px;float: none;}
+.close-cancelauthorization{position:absolute;width:20px;height:20px;background:url(/login/images/lay_close.png) center center no-repeat;top:13px;right:8px;cursor:pointer;}
+.b-cancelauthorization{color:#333;font-size:18px;font-weight:bold;line-height:32px;width:330px;margin:33px auto 0;text-align: left;}
+.p-cancelauthorization{color:#333;font-size:16px;line-height:32px;width:330px;margin:0 auto;text-align: left;}
+a.btn-cancelauthorization{display: block;width:150px;height:40px;line-height: 40px;text-align: center;color:#fff;font-size:16px;background-color:#e9401a;border-radius:1px;margin:0 auto;font-weight:bold;}
+.btnbox-cancelauthorization{margin-top: 33px;}
+.btn-cancelauthorization-lg:hover{background-color:#ff2f00;color:#fff;}
+.btn-cancelauthorization.btn-cancelauthorization-sm{color:#069;font-weight:normal;background-color:#fff;}
+.btn-cancelauthorization-sm:hover{color:#0892d7;}
