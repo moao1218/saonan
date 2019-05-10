@@ -4,14 +4,9 @@
 <meta charset="UTF-8"/>
 <title>喵喵核保系统</title>
 
-
+<script src="back/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function(){
-		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
-			//console.log(data);
-			$("#tianqi").html(data.weather);
-		},"json");
-	});
+	
 </script>
 </head>
 <body>
@@ -28,8 +23,23 @@
   
   
   <div class="top-menu">
-    <ul class="nav pull-right top-menu">
+  		<!-- 天气显示位置 -->
+    	<span style="margin-left: 120px;color:white" >您所在的城市 : <span id="tianqi_city" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >日期 : <span id="tianqi_date" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >星期 :<span id="tianqi_week" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >天气 : <span id="tianqi_weather" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >湿度 : <span id="tianqi_humidity" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >气温: <span id="tianqi_temp" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >最低气温 : <span id="tianqi_templow" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >最高气温 : <span id="tianqi_temphigh" style="color:#4ECDC4" ></span></span>
+
+	
+	
+    <ul class="nav pull-right top-menu" style="folat:right;">
       <li><a class="logout" href="login.html" th:href="@{/logout}" >Logout</a></li>
+    </ul>
+    <ul style="folat:right; ">
+    	<span style="margin-left: 120px;color:white" >温馨提示 : <span id="tianqi_detail" style="color:#4ECDC4" ></span></span>
     </ul>
   </div>
 </header>
@@ -40,8 +50,6 @@
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
           <h5 class="centered" th:text="${session.user.realname}" >熊蕃猛是个傻子</h5>
-          
-          <li ><span id="tianqi" ></span></li>
           
           <li class="mt">
             <a class="active" href="index.html" 

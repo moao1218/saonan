@@ -85,6 +85,21 @@
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
   <script type="text/javascript">
+	  $(function(){
+			$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+				console.log(data);
+				$("#tianqi_city").html(data.result.result.city);
+				$("#tianqi_date").html(data.result.result.updatetime);
+				$("#tianqi_week").html(data.result.result.week);
+				$("#tianqi_weather").html(data.result.result.weather);
+				$("#tianqi_humidity").html(data.result.result.humidity);
+				$("#tianqi_temp").html(data.result.result.temp);
+				$("#tianqi_templow").html(data.result.result.templow);
+				$("#tianqi_temphigh").html(data.result.result.temphigh);
+				$("#tianqi_detail").html(data.result.result.index[0].detail);
+			},"json");
+		});
+  
     $(document).ready(function() {
       var unique_id = $.gritter.add({
         // (string | mandatory) the heading of the notification

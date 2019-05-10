@@ -55,8 +55,8 @@ public class UsersController {
 	}
 	
 	@ResponseBody
-	@GetMapping(value="/weather")
-	public StringBuffer weather() {
+	@PostMapping(value="/weather")
+	public String weather() {
 		StringBuffer b = new StringBuffer();
 		try {
 			URL u = new URL("https://way.jd.com/jisuapi/weather?city=深圳&appkey=3aa9dfcfc136e1953edb18c45d1835f6");
@@ -76,6 +76,7 @@ public class UsersController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return b;
+		System.out.println(b.toString());
+		return b.toString();
 	}
 }
