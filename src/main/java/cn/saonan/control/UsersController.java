@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.mapper.UsersMapper;
 import cn.saonan.pojo.Users;
+import cn.saonan.utils.IpAdrressUtil;
 
 
 @Controller
@@ -56,7 +58,14 @@ public class UsersController {
 	
 	@ResponseBody
 	@PostMapping(value="/weather")
-	public String weather() {
+	public String weather(HttpServletRequest request) throws Exception {
+		
+		/*
+		 * String city = IpAdrressUtil.getCity(); System.out.println(city);
+		 * 
+		 * String ipAdrress = IpAdrressUtil.getIpAdrress(request);
+		 */
+		
 		StringBuffer b = new StringBuffer();
 		try {
 			URL u = new URL("https://way.jd.com/jisuapi/weather?city=深圳&appkey=3aa9dfcfc136e1953edb18c45d1835f6");
