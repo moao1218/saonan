@@ -85,7 +85,6 @@ public class UsersController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(b.toString());
 		return b.toString();
 	}
 }
