@@ -1,8 +1,8 @@
 package cn.saonan.mapper;
 
-import cn.saonan.pojo.Users;
+import cn.saonan.pojo.Clerk;
 
 public interface UsersMapper {
 
-	public Users isLogin(Users user);
+	public Clerk isLogin(Clerk user);
 }

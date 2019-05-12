@@ -3,7 +3,37 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.saonan.mapper.UsersMapper">
-   <select id="isLogin"  resultType="cn.saonan.pojo.Users" >
-   		select username,realname from users where username=#{username} and userpwd=#{userpwd}
+
+	<sql id="showUsers">
+		magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, emergency, join_date, area, phone, del_status
+	</sql>
+	
+   <select id="isLogin"  resultMap="clerkinfo" >
+   		select <include refid="showUsers"></include> from clerk where username=#{username} and userpwd=#{userpwd}
    </select>
+   
+   <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">
+		<id property="magid" column="magid" />
+		<result property="roleid" column="roleid" />
+		<result property="username" column="username" />
+		<result property="userpwd" column="userpwd" />
+		<result property="job" column="job" />
+		<result property="realname" column="realname" />
+		<result property="email" column="email" />
+		<result property="sex" column="sex" />
+		<result property="nation" column="nation" />
+		<result property="address" column="address" />
+		<result property="linkman" column="linkman" />
+		<result property="emergency" column="emergency" />
+		<result property="join_date" column="join_date" />
+		<result property="phone" column="phone" />
+		<result property="del_status" column="del_status" />
+		<association property="city" column="area" select="cn.saonan.mapper.UsersMapper.findCityById"></association>
+		
+	</resultMap>
+   
+   <select id="findCityById" resultType="cn.saonan.pojo.City">
+   		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city WHERE code=#{area}
+   </select>
+   
 </mapper>

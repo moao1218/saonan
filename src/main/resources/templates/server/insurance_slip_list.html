@@ -124,9 +124,9 @@
 				        <option>...</option>
 				      </select>
 				    </div>
+				    <button type="submit" class="btn btn-primary">查询</button>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-primary">Sign in</button>
 				</form>
 			    
 			    
@@ -154,14 +154,14 @@
                     <td th:text="${alist.policyid}" class="hidden-phone"><i class="fa fa-bookmark"></i>保单号</td>
                     <td th:text="${alist.coverage.coverage_name}"><i class="fa fa-bookmark"></i> 险种</td>
                     <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>投保人姓名</td>
-                    <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>初审状态</td>
-                    <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>复审状态</td>
-                    <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>终审状态</td>
+                    <td th:text="${alist.status.statusid}<=5?${alist.status.status_name}:'初审已通过'" ><i class=" fa fa-bookmark"></i>初审状态</td>
+                    <td th:text="${alist.status.statusid}>5 and ${alist.status.statusid}<=10?${alist.status.status_name}:(${alist.status.statusid}>10?'复审已通过':'未复审')" ><i class=" fa fa-bookmark"></i>复审状态</td>
+                    <td th:text="${alist.status.statusid}>10 and ${alist.status.statusid}<=14?${alist.status.status_name}:(${alist.status.statusid}>14?'复审已通过':'未终审')"><i class=" fa fa-bookmark"></i>终审状态</td>
                     <td th:text="${alist.insure_date}"><i class=" fa fa-bookmark"></i>投保时间</td>
-                    <td th:text="${alist.area}"><i class=" fa fa-bookmark"></i>区域</td>
+                    <td th:text="${alist.city.region_name_c}"><i class=" fa fa-bookmark"></i>区域</td>
                     <td th:text="${alist.premium}"><i class=" fa fa-bookmark"></i>保费</td>
                     <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>操作人</td>
-                    <td><span class="label label-warning label-mini">紧急状态</span></td>
+                    <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
                     <td>
                       <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
                     </td>

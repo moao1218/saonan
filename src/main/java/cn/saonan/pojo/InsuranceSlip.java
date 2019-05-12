@@ -7,7 +7,6 @@ public class InsuranceSlip implements Serializable {
 	private String policyid;
 	private String insure_name;
 	private String insure_card;
-	private String area;
 	private String address;
 	private String relation;
 	private String holder_name;
@@ -19,7 +18,6 @@ public class InsuranceSlip implements Serializable {
 	private String first_auditor;
 	private String second_auditor;
 	private String third_auditor;
-	private Integer insure_status;
 	private String scout;
 	private String scout_status;
 	private String license;
@@ -32,6 +30,9 @@ public class InsuranceSlip implements Serializable {
 	private String pol_property;
 	private String del_status;
 	private Coverage coverage;
+	private City city;
+	private Status status;
+	private String urg;
 	
 	public String getPolicyid() {
 		return policyid;
@@ -50,12 +51,6 @@ public class InsuranceSlip implements Serializable {
 	}
 	public void setInsure_card(String insure_card) {
 		this.insure_card = insure_card;
-	}
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
 	}
 	public String getAddress() {
 		return address;
@@ -189,17 +184,29 @@ public class InsuranceSlip implements Serializable {
 	public void setCoverage(Coverage coverage) {
 		this.coverage = coverage;
 	}
-	public Integer getInsure_status() {
-		return insure_status;
-	}
-	public void setInsure_status(Integer insure_status) {
-		this.insure_status = insure_status;
-	}
 	public Integer getIndustry_code() {
 		return industry_code;
 	}
 	public void setIndustry_code(Integer industry_code) {
 		this.industry_code = industry_code;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	public City getCity() {
+		return city;
+	}
+	public void setCity(City city) {
+		this.city = city;
+	}
+	public String getUrg() {
+		return urg;
+	}
+	public void setUrg(String urg) {
+		this.urg = urg;
 	}
 	
 	

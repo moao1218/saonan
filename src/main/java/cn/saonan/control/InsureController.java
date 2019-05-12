@@ -1,5 +1,8 @@
 package cn.saonan.control;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +22,7 @@ public class InsureController {
 	private InsuranceSlipService insuranceSlipService ;
 
 	@GetMapping(value="/jumpInsuranceList")
-	public String goList(Model model) {
+	public String goList(Model model) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
@@ -27,8 +30,21 @@ public class InsureController {
 		map.put("ps", ps);
 		insuranceSlipService.findInsuranceSlipList(map);
 		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		for (InsuranceSlip insuranceSlip : insureList) {
+			Date parse = date.parse(insuranceSlip.getInsure_date());
+			if(d.getTime()<parse.getTime()+12*60*60*1000) {
+				insuranceSlip.setUrg("正常");
+			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+				insuranceSlip.setUrg("预警");
+			}else {
+				insuranceSlip.setUrg("报警");
+			}
+//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+		}
 		Integer count = (Integer) map.get("v_count");
-		System.out.println(count);
 		model.addAttribute("insureList", insureList);
 		return "server/insurance_slip_list";
 	}

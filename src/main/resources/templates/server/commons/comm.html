@@ -50,7 +50,8 @@
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
           <h5 class="centered" th:text="${session.user.realname}" >熊蕃猛是个傻子</h5>
-          
+          <p style="color:white;margin-left:60px" >所属区域:<span th:text="${session.user.city.region_name_c}" style="color:#4ECDC4" ></span></p>
+          <p style="color:white;margin-left:60px" >职位:<span th:text="${session.user.job}" style="color:#4ECDC4" ></span></p>
           <li class="mt">
             <a class="active" href="index.html" 
             th:class="${activeUri=='index.html'?'active':''}">
@@ -87,11 +88,11 @@
           <li class="sub-menu">
             <a href="javascript:;">
               <i class="fa fa-book"></i>
-              <span>财务模块</span>
+              <span>现场勘查</span>
               </a>
             <ul class="sub">
-              <li><a href="blank.html">查看已完成理赔单</a></li>
-              <li><a href="login.html">查看未完成理赔单</a></li>
+              <li><a href="blank.html">待勘查保单</a></li>
+              <li><a href="login.html">已勘查保单</a></li>
               
             </ul>
           </li>
