@@ -117,5 +117,4 @@ public class Clerk implements Serializable {
 		this.city = city;
 	}
 	
-	
 }
