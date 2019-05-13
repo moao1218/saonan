@@ -10,7 +10,7 @@ public interface ClerkMapper {
 	/*
 	 * 登录
 	 */
-	public Clerk login(Clerk user);
+	public Clerk Clerklogin(Clerk user);
 	
 	/*
 	 * 分页查询员工表
