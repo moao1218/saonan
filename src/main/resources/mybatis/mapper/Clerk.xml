@@ -84,7 +84,7 @@
   
   <!--员工删除  -->
 	  
-	 <update id="clerkupddele" parameterMap="java.lang.Integer">
+	 <update id="clerkupddele" parameterType="java.lang.Integer">
 	  	update clerk set del_status = 1 where magid = #{magid};
 	 </update>
   
