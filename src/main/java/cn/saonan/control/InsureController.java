@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
@@ -27,25 +29,14 @@ public class InsureController {
 	private InsuranceSlipService insuranceSlipService ;
 	
 	@Autowired
-	private UsersService usersService;
+	private UsersService usersService ;
 
-	@RequestMapping(value="/jumpInsuranceList")
-	public String goList(Model model,HttpServletRequest request) throws ParseException {
+	@ResponseBody
+	@GetMapping(value="/jumpInsuranceList")
+	public String goList(Model model) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
-		
-		String cpp = request.getParameter("cp");
-		
-		if(cpp!=null&&!"".equals(cpp)){
-			cp = Integer.parseInt(cpp);
-		}
-		
-		String pss = request.getParameter("ps");
-		if(pss!=null&&!"".equals(pss)){
-			ps = Integer.parseInt(pss);
-		}
-		
 		map.put("cp", cp);
 		map.put("ps", ps);
 		insuranceSlipService.findInsuranceSlipList(map);
@@ -64,15 +55,8 @@ public class InsureController {
 			}
 //			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
 		}
-		Integer v_count = (Integer) map.get("v_count");
-		int totalpage = (v_count-1)/ps + 1;
-		model.addAttribute("cp", cp);
-		model.addAttribute("ps", ps);
-		
-		List<City> cityList = usersService.findAllCity();
+		Integer count = (Integer) map.get("v_count");
 		model.addAttribute("insureList", insureList);
-		model.addAttribute("totalpage", totalpage);
-		model.addAttribute("cityList", cityList);
 		return "server/insurance_slip_list";
 	}
 	
@@ -169,3 +153,4 @@ public class InsureController {
 		return "server/insurance_Details";
 	}
 }
+
