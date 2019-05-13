@@ -33,7 +33,7 @@
 	</resultMap>
    
    <select id="findCityById" resultType="cn.saonan.pojo.City">
-   		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city WHERE code=#{area}
+   		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city where code=#{area}
    </select>
    
 </mapper>

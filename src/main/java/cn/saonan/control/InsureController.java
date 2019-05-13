@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.InsuranceSlipService;
@@ -21,6 +22,7 @@ public class InsureController {
 	@Autowired
 	private InsuranceSlipService insuranceSlipService ;
 
+	@ResponseBody
 	@GetMapping(value="/jumpInsuranceList")
 	public String goList(Model model) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
