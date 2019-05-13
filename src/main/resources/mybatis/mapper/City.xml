@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.CityMapper">
+	
+	<select id="findCityById" parameterType="java.lang.String" resultType="cn.saonan.pojo.City">
+   		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city WHERE code=#{area}
+  	</select>
+	
+</mapper>
