@@ -17,6 +17,8 @@
 			#{v_property,mode=IN,jdbcType=VARCHAR},
 			#{v_status,mode=IN,jdbcType=VARCHAR},
 			#{v_order,mode=IN,jdbcType=VARCHAR},
+			#{v_city,mode=IN,jdbcType=VARCHAR},
+			#{v_role,mode=IN,jdbcType=INTEGER},
 			
 			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},
 			#{v_count,mode=OUT,jdbcType=INTEGER}
@@ -56,4 +58,6 @@
 	<select id="findStatusById" resultType="cn.saonan.pojo.Status">
 		SELECT statusid, status_name FROM status WHERE statusid=#{insure_status}  
 	</select>
+	
+	
 </mapper>
