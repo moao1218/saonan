@@ -3,6 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.saonan.mapper.InsuranceSlipMapper">
+
+	<sql id="showAllInsurance">
+		policyid, insure_name, insure_card, area, address, relation, holder_name, holder_card, holder_sex, holder_phone, holder_email, insure_date, first_auditor, second_auditor, third_auditor, insure_status, scout, scount_status, license, industry_code, acreage, firm_name, userid, premium, pol_property, del_status, paystatus
+	</sql>
+
    <select id="findInsuranceSlipList" resultType="java.util.Map" statementType="CALLABLE" >
 		{call pro_insurance_slip
 		(	#{cp,mode=IN,jdbcType=INTEGER},
@@ -12,7 +17,8 @@
 			#{v_area,mode=IN,jdbcType=VARCHAR},
 			#{v_lopremium,mode=IN,jdbcType=VARCHAR},
 			#{v_hipremium,mode=IN,jdbcType=VARCHAR},
-			#{v_joindate,mode=IN,jdbcType=VARCHAR},
+			#{v_lojoindate,mode=IN,jdbcType=VARCHAR},
+			#{v_hijoindate,mode=IN,jdbcType=VARCHAR},
 			#{v_coverageid,mode=IN,jdbcType=INTEGER},
 			#{v_property,mode=IN,jdbcType=VARCHAR},
 			#{v_status,mode=IN,jdbcType=VARCHAR},
@@ -59,5 +65,13 @@
 		SELECT statusid, status_name FROM status WHERE statusid=#{insure_status}  
 	</select>
 	
+	<!-- 通过父级找他下面的所有城市 -->
+	<select id="findCityRegion" resultType="cn.saonan.pojo.City">
+		select code, country_code, region_name_e, region_name_c, rlevel, upper_region from city where upper_region =#{code} 
+	</select>
 	
+	<!-- 通过投保单号查找投保单详情 -->
+	<select id="findOneInsurance" resultMap="insureinfo">
+		select <include refid="showAllInsurance"/> from insurance_slip where policyid=#{pid}
+	</select>
 </mapper>

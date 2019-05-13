@@ -84,14 +84,32 @@ public class InsureController {
 		int ps = 5;
 		
 		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		String v_city = clerk.getCity().getCode();
 		Integer roleid = clerk.getRoleid();
 		String v_role = "";
+		String rList = "";
 		if(roleid==1) {
 			v_role = "1";
+			map.put("v_city", v_city);
+			map.put("v_role", v_role);
 		}else if(roleid==2) {
 			v_role = "7";
+			List<City> cityRegion = insuranceSlipService.findCityRegion(v_city);
+			for (City city : cityRegion) {
+				rList = rList  + city.getCode()  + ",";
+			}
+			String substring = rList.substring(0,rList.length()-1);
+			map.put("v_city", substring);
+			map.put("v_role", v_role);
 		}else if(roleid==3) {
 			v_role = "11";
+			List<City> cityRegion = insuranceSlipService.findCityRegion(v_city);
+			for (City city : cityRegion) {
+				rList = rList + city.getCode() + ",";
+			}
+			String substring = rList.substring(0,rList.length()-1);
+			map.put("v_city", substring);
+			map.put("v_role", v_role);
 		}
 		
 		String cpp = request.getParameter("cp");
@@ -132,6 +150,22 @@ public class InsureController {
 		model.addAttribute("insureList", insureList);
 		model.addAttribute("totalpage", totalpage);
 		model.addAttribute("cityList", cityList);
-		return "server/insurance_slip_list";
+		return "server/pending_insurance";
+	}
+	
+	@RequestMapping(value="/jumpDetails")
+	public String details(String pid,Model model) {
+		
+		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+		model.addAttribute("insurance", insurance);
+		return "server/insurance_Details";
+	}
+	
+	@RequestMapping(value="/acceptPro")
+	public String acceptPro(String pid,Model model,HttpServletRequest request) {
+		
+		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+		model.addAttribute("insurance", insurance);
+		return "server/insurance_Details";
 	}
 }

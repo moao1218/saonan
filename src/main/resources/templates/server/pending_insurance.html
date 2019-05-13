@@ -50,6 +50,10 @@
 				sform.submit();
 		}
 	  }
+	  
+	function jumpDetails(pid){
+			  location.href = "/jumpDetails?pid="+pid;
+	  }
   </script>
   <script type="text/javascript">
   $(function(){
@@ -162,7 +166,7 @@
        
 		<div class="col-md-12">
             <div class="content-panel">
-              <form action="/jumpInsuranceList" method="post" id="sform" name="sform">
+              <form action="/jumpPending" method="post" id="sform" name="sform">
               <input type="hidden"  name="cp"  id="cp" th:value="${cp}"/>
               <input type="hidden"  name="ps"  id="ps" th:value="${ps}"/>
 				<input type="hidden" name="totalpage"  id="totalpage" th:value="${totalpage}" />
@@ -277,7 +281,7 @@
                     <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>操作人</td>
                     <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
                     <td>
-                      <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
+                      <button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${alist.policyid}]])"><i class="fa fa-pencil"></i></button>
                     </td>
                   </tr>
                 </tbody>
@@ -286,9 +290,9 @@
              	 <ul class="pagination" >
 				    <li><a href="javascript:void(0);" th:onclick="goToPage(1);">&laquo;</a></li>
 				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp-1}');|">&lt;</a></li>
-				    <li th:if="${cp-3}>3"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-3}');|">...</a></li>
-				    <li th:if="${cp-2}>2"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-2}');|" th:text="${cp-2}"></a>1</li>
-				    <li th:if="${cp-1}>1"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-1}');|" th:text="${cp-1}">2</a></li>
+				    <li th:if="${cp-3}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-3}');|">...</a></li>
+				    <li th:if="${cp-2}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-2}');|" th:text="${cp-2}"></a>1</li>
+				    <li th:if="${cp-1}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-1}');|" th:text="${cp-1}">2</a></li>
 				    <li class="active"><a href="javascript:void(0)" th:text="${cp}">3</a></li>
 				    <li th:if="${cp+1}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+1}');|" th:text="${cp+1}">4</a></li>
 				    <li th:if="${cp+2}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+2}');|" th:text="${cp+2}">5</a></li>
