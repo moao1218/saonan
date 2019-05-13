@@ -36,4 +36,8 @@
    		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city where code=#{area}
    </select>
    
+   <select id="findUserByUserId" parameterType="java.lang.String" resultType="cn.saonan.pojo.Users">
+   		select userid, username, userpwd, realname, phone, join_date, bank_card, del_status, yuliu from users where userid = #{userid}
+   </select>
+   
 </mapper>

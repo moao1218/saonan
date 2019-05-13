@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.PolicyMapper">
+	
+	<select id="findPolicyByMoreCondition" parameterType="java.util.Map" statementType="CALLABLE"> 
+	
+		{call pro_policy(
+			#{cp,mode=IN,jdbcType=INTEGER},
+			#{ps,mode=IN,jdbcType=INTEGER},
+			#{policyId,mode=IN,jdbcType=VARCHAR},
+			#{insured_name,mode=IN,jdbcType=VARCHAR},
+			#{area,mode=IN,jdbcType=VARCHAR},
+			#{lo_premium,mode=IN,jdbcType=VARCHAR},
+			#{hi_premium,mode=IN,jdbcType=VARCHAR},
+			#{v_date,mode=IN,jdbcType=VARCHAR},
+			#{lo_insured_date,mode=IN,jdbcType=VARCHAR},
+			#{hi_insured_date,mode=IN,jdbcType=VARCHAR},
+			#{coverage,mode=IN,jdbcType=INTEGER},
+			#{pol_preoperty,mode=IN,jdbcType=VARCHAR},
+			#{rank,mode=IN,jdbcType=VARCHAR},
+			#{v_count,mode=OUT,jdbcType=INTEGER},
+			#{totalPage,mode=OUT,jdbcType=INTEGER},
+			
+			#{resource_list,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=resource_list}
+		)}
+		
+	</select>
+	
+	<!-- 自定义结果集(policy) -->
+	<resultMap type="cn.saonan.pojo.Policy" id="resource_list">
+		<id property="policyid" column="policyid"/>
+		<association property="city" column="area" select="cn.saonan.mapper.CityMapper.findCityById"></association>
+		<association property="users" column="userid" select="cn.saonan.mapper.UsersMapper.findUserByUserId"></association>
+	</resultMap>
+	
+</mapper>
