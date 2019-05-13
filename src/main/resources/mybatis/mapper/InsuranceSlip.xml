@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.InsuranceSlipMapper">
+   <select id="findInsuranceSlipList" resultType="java.util.Map" statementType="CALLABLE" >
+		{call pro_insurance_slip
+		(	#{cp,mode=IN,jdbcType=INTEGER},
+			#{ps,mode=IN,jdbcType=INTEGER},
+			#{v_id,mode=IN,jdbcType=VARCHAR},
+			#{v_name,mode=IN,jdbcType=VARCHAR},
+			#{v_area,mode=IN,jdbcType=VARCHAR},
+			#{v_lopremium,mode=IN,jdbcType=VARCHAR},
+			#{v_hipremium,mode=IN,jdbcType=VARCHAR},
+			#{v_joindate,mode=IN,jdbcType=VARCHAR},
+			#{v_coverageid,mode=IN,jdbcType=INTEGER},
+			#{v_property,mode=IN,jdbcType=VARCHAR},
+			#{v_status,mode=IN,jdbcType=VARCHAR},
+			#{v_order,mode=IN,jdbcType=VARCHAR},
+			
+			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},
+			#{v_count,mode=OUT,jdbcType=INTEGER}
+		)}
+	</select>
+	
+	<resultMap type="cn.saonan.pojo.InsuranceSlip" id="insureinfo">
+		<id property="policyid" column="policyid" />
+		<result property="insure_name" column="insure_name" />
+		<result property="insure_card" column="insure_card" />
+		<result property="address" column="address" />
+		<result property="relation" column="relation" />
+		<result property="holder_name" column="holder_name" />
+		<result property="holder_card" column="holder_card" />
+		<result property="holder_sex" column="holder_sex" />
+		<result property="holder_phone" column="holder_phone" />
+		<result property="holder_email" column="holder_email" />
+		<result property="insure_date" column="insure_date" />
+		<result property="first_auditor" column="first_auditor" />
+		<result property="second_auditor" column="second_auditor" />
+		<result property="third_auditor" column="third_auditor" />
+		<result property="scout" column="scout" />
+		<result property="scout_status" column="scout_status" />
+		<result property="license" column="license" />
+		<result property="industry_code" column="industry_code" />
+		<result property="acreage" column="acreage" />
+		<result property="firm_name" column="firm_name" />
+		<result property="pay_status" column="pay_status" />
+		<result property="premium" column="premium" />
+		<result property="pol_property" column="pol_property" />
+		<result property="del_status" column="del_status" />
+		<result property="coverage.coverage_name" column="coverage_name" />
+		<association property="city" column="area" select="cn.saonan.mapper.UsersMapper.findCityById"></association>
+		<association property="status" column="insure_status" select="cn.saonan.mapper.InsuranceSlipMapper.findStatusById"></association>
+	</resultMap>
+	
+	<select id="findStatusById" resultType="cn.saonan.pojo.Status">
+		SELECT statusid, status_name FROM status WHERE statusid=#{insure_status}  
+	</select>
+</mapper>

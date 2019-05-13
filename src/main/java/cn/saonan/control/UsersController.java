@@ -17,16 +17,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.saonan.mapper.UsersMapper;
-import cn.saonan.pojo.Users;
-import cn.saonan.utils.IpAdrressUtil;
+import cn.saonan.pojo.Clerk;
+import cn.saonan.service.UsersService;
 
 
 @Controller
 public class UsersController {
 	
 	@Autowired
-	private UsersMapper usersMapper;
+	private UsersService usersService;
 	
 	@GetMapping(value="/")
 	public String login() {
@@ -39,11 +38,10 @@ public class UsersController {
 //	}
 
 	@PostMapping(value="/login")
-	public String isLogin(Users user,HttpSession session) {
-		Users vo = usersMapper.isLogin(user);
+	public String isLogin(Clerk user,HttpSession session) {
+		Clerk vo = usersService.isLogin(user);
 		if(vo!=null) {
 			session.setAttribute("user", vo);
-			System.out.println(vo.getRealname());
 			return "server/index";
 		}
 		return "server/login";
@@ -85,7 +83,6 @@ public class UsersController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(b.toString());
 		return b.toString();
 	}
 }

@@ -4,33 +4,32 @@ import java.io.Serializable;
 
 public class Clerk implements Serializable {
 
-	private Integer magid; //用户编号
-	private String roleid;	//角色编号
-	private String username;	//员工姓名
-	private String userpwd;		//员工密码
-	private String job;		//职位
-	private String realname;	//真实姓名
-	private String user_card;	//身份证号码
-	private String email;	//邮箱
-	private String sex;		//性别
-	private String nation;		//名族
-	private String address;		//家庭地址
-	private String linkman;		//紧急联系人
-	private String emergency;		//紧急联系人电话
-	private String join_date;		//入职日期
-	private String area;		//负责地区
-	private String phone;		//员工手机号码
-	private String del_status;		//逻辑删除位默认为0  逻辑删除为1
+	private Integer magid;
+	private Integer roleid;
+	private String username;
+	private String userpwd;
+	private String job;
+	private String realname;
+	private String email;
+	private String sex;
+	private String nation;
+	private String address;
+	private String linkman;
+	private String emergency;
+	private String join_date;
+	private String phone;
+	private String del_status;
+	private City city;
 	public Integer getMagid() {
 		return magid;
 	}
 	public void setMagid(Integer magid) {
 		this.magid = magid;
 	}
-	public String getRoleid() {
+	public Integer getRoleid() {
 		return roleid;
 	}
-	public void setRoleid(String roleid) {
+	public void setRoleid(Integer roleid) {
 		this.roleid = roleid;
 	}
 	public String getUsername() {
@@ -56,12 +55,6 @@ public class Clerk implements Serializable {
 	}
 	public void setRealname(String realname) {
 		this.realname = realname;
-	}
-	public String getUser_card() {
-		return user_card;
-	}
-	public void setUser_card(String user_card) {
-		this.user_card = user_card;
 	}
 	public String getEmail() {
 		return email;
@@ -105,12 +98,6 @@ public class Clerk implements Serializable {
 	public void setJoin_date(String join_date) {
 		this.join_date = join_date;
 	}
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
-	}
 	public String getPhone() {
 		return phone;
 	}
@@ -123,6 +110,11 @@ public class Clerk implements Serializable {
 	public void setDel_status(String del_status) {
 		this.del_status = del_status;
 	}
-	
+	public City getCity() {
+		return city;
+	}
+	public void setCity(City city) {
+		this.city = city;
+	}
 	
 }

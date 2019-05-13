@@ -19,9 +19,9 @@
 			
 			<p style="color:red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}" ></p>
 			<label class="sr-only" th:text="#{login.username}" >Username</label>
-			<input value="18627025481" type="text" name="username" class="form-control" placeholder="Username" th:placeholder="#{login.username}" required="" autofocus="">
+			<input value="zhangsan" type="text" name="username" class="form-control" placeholder="Username" th:placeholder="#{login.username}" required="" autofocus="">
 			<label class="sr-only" th:text="#{login.password}" >Password</label>
-			<input value="fxc123456" type="password" name="userpwd" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
+			<input value="123" type="password" name="userpwd" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
 			<div class="checkbox mb-3">
 				<label>
           <input type="checkbox" value="remember-me">[[#{login.remember}]]
