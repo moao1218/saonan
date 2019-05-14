@@ -130,6 +130,12 @@
       
      
     } 
+     
+     
+     function jumpDetails(pid){
+		  location.href = "/clerkdetail?pid="+pid;
+ 		}
+     
   </script>
 
 </head>
@@ -249,7 +255,7 @@
                     <td th:text="${clerklist.city.region_name_c}"><i class=" fa fa-bookmark"></i>负责地区</td>
                     <td th:text="${clerklist.phone}"><i class=" fa fa-bookmark"></i>手机号码</td>
                     <td>
-                 	 	<a class="btn btn-primary btn-xs fa fa-pencil"  href=""></a>
+                 	 	  <button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${clerklist.magid}]])"><i class="fa fa-pencil"></i></button>
                     </td>
                   </tr>
                 </tbody>
