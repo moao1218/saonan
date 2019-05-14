@@ -25,6 +25,7 @@
 			#{v_order,mode=IN,jdbcType=VARCHAR},
 			#{v_city,mode=IN,jdbcType=VARCHAR},
 			#{v_role,mode=IN,jdbcType=INTEGER},
+			#{v_scout,mode=IN,jdbcType=VARCHAR},
 			
 			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},
 			#{v_count,mode=OUT,jdbcType=INTEGER}
@@ -82,6 +83,12 @@
 	
 	<!-- 更改投保单状态 -->
 	<update id="updateInsuranceStatus" parameterType="java.util.Map">
-		update insurance_slip set insure_status = #{newstatus} where policyid=#{policyid}
+		update insurance_slip 
+			<set>
+				<if test="newstatus!=null"> insure_status=#{newstatus}, </if>
+				<if test="scout!=null"> scout=#{scout}, </if>
+			</set>  
+			 where policyid=#{policyid}
 	</update>
+	
 </mapper>

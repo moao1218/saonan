@@ -37,4 +37,6 @@ public interface InsuranceSlipService {
 	 * @return
 	 */
 	public boolean updateInsuranceStatus(Map<String,Object> map);
+	
+
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.saonan.mapper.PolicyVerifyMapper;
+import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.PolicyVerifyService;
 
@@ -19,6 +20,11 @@ public class PolicyVerifyServiceImpl implements PolicyVerifyService {
 	public List<PolicyVerify> findPolicyVerifyByPolicyId(String policyId) {
 		
 		return pvm.findPolicyVerifyByPolicyId(policyId);
+	}
+
+	@Override
+	public List<InsuranceSlip> findInsuranceByScout(String scout) {
+		return pvm.findInsuranceByScout(scout);
 	}
 
 }
