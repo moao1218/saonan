@@ -4,22 +4,23 @@ import java.io.Serializable;
 
 public class Clerk implements Serializable {
 
-	private Integer magid;
-	private Integer roleid;
-	private String username;
-	private String userpwd;
-	private String job;
-	private String realname;
-	private String email;
-	private String sex;
-	private String nation;
-	private String address;
-	private String linkman;
-	private String emergency;
-	private String join_date;
-	private String phone;
-	private String del_status;
-	private City city;
+	private Integer magid; //用户编号
+	private Integer roleid;	//角色编号
+	private String username;	//员工姓名
+	private String userpwd;		//员工密码
+	private String job;		//职位
+	private String realname;	//真实姓名
+	private String user_card;	//身份证号码
+	private String email;	//邮箱
+	private String sex;		//性别
+	private String nation;		//名族
+	private String address;		//家庭地址
+	private String linkman;		//紧急联系人
+	private String emergency;		//紧急联系人电话
+	private String join_date;		//入职日期
+	private String phone;		//员工手机号码
+	private String del_status;		//逻辑删除位默认为0  逻辑删除为1
+	private City city;			//地区
 	public Integer getMagid() {
 		return magid;
 	}
@@ -115,6 +116,12 @@ public class Clerk implements Serializable {
 	}
 	public void setCity(City city) {
 		this.city = city;
+	}
+	public String getUser_card() {
+		return user_card;
+	}
+	public void setUser_card(String user_card) {
+		this.user_card = user_card;
 	}
 	
 }

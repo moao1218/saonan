@@ -5,7 +5,7 @@
 <mapper namespace="cn.saonan.mapper.ClerkMapper">
 
 	<!--分页  -->
-	<select id="findClerkSplit"  resultType="java.util.Map" statementType="CALLABLE">
+	<select id="findClerkSplits"  resultType="java.util.Map" statementType="CALLABLE">
  	{call clerkfindSpilt
  	(
  		#{kw,mode=IN,jdbcType=VARCHAR},
@@ -15,18 +15,19 @@
  		#{cp,mode=IN,jdbcType=INTEGER},
  		#{ps,mode=IN,jdbcType=INTEGER},
  		#{totalpage,mode=OUT,jdbcType=INTEGER},
- 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkinfo},
+ 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkpp},
  		#{c_count,mode=OUT,jdbcType=INTEGER}
  	)}
    </select>
    
-   <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">
+   <resultMap id="clerkpp" type="cn.saonan.pojo.Clerk" >
 	   <id property="magid" column="magid"/>
 	   <result property="roleid" column="roleid"/>
 	   <result property="username" column="username"/>
 	   <result property="userpwd" column="userpwd"/>
 	   <result property="job" column="job"/>
 	   <result property="realname" column="realname"/>
+	   <result property="user_card" column="user_card"/>
 	   <result property="email" column="email"/>
 	   <result property="sex" column="sex"/>
 	   <result property="nation" column="nation"/>
