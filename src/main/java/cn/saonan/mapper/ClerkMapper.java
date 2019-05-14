@@ -20,7 +20,7 @@ public interface ClerkMapper {
 	/*
 	 * 员工详情的查找
 	 */
-	public boolean findaclerk(Clerk ck);
+	public Clerk findaclerk(Integer magid);
 	
 	
 
