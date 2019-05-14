@@ -1,0 +1,1657 @@
+
+
+function onclickjsno(){
+	$("#login-tab-list1").addClass("current");
+	$("#login-tab-list0").removeClass("current");
+
+	$(".account-login").addClass("hide");
+	$(".phone-login").removeClass("hide");
+
+	
+}
+var beforeLogonT = '<span id="vtop"><span>您好，欢迎来到人保！</span><span>[ <a href="javascript:newLogin();">登录</a> ] </span><span>[ <a href="/ecenter/views/ecenterClub/loginRegisterNew/register.jsp">免费注册</a> ] </span></span>';
+var afterLogonT = '<span>&nbsp;<a href="#" onclick="exitSSO();">[退出]</a></span>';
+var beforeLogonR = '';
+var afterLogonR = '';
+
+var vtop = window.parent.document.getElementById("vtop");//头部;
+var vright = window.parent.document.getElementById("vright");//头部右侧;
+
+function showerrorValidateResult(id, msg){
+	if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+        $("#" + id).parents(".input-item").removeClass("error");
+    }
+    if (msg != "") {
+    	$("#" + id).parents(".input-item").addClass("error");
+        $("#" + id).after("<p class='error-msg'  id='error_" + id + "'>"+msg+"</p>");
+    	//$("#" + id).after("<span class='error_span'  id='error_" + id + "' style='position: absolute;color:red;display: inline;'>"+msg+"</span>");
+    }
+}
+function showerrorValidateResultB(id, msg){
+	if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<p class='error-msg'  id='error_" + id + "'  style='display: block;'>"+msg+"</p>");
+    }
+}
+
+function showerrorValidateResultspile(id, msg){
+	if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<span class='error_span '   id='error_" + id + "' style='display:block;width:300px;line-height:18px;clear:both;color:#f00;font-size:12px;'>"+msg+"</span>");
+    }   
+}
+
+function checkrecommendCodeEmail(){
+	var recommendCode=$("#recommendCodeEmail").val();
+	var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!#￥……&*（）&;|{}【】‘；：”“'。，、？]";
+	if(recommendCode.match(regStr)){
+		showerrorValidateResult("error_recommendCodeEmail","您输入的推荐码无效，请核实");
+		return false;
+	}
+	return true;
+}
+function checkRecommendCodeEcenter(){
+	showerrorValidateResultspile("error_recommendCode","");
+	var recommendCode=$("#recommendCode").val();
+	var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!#￥……&*（）&;|{}【】‘；：”“'。，、？]";
+	if(recommendCode.match(regStr)){
+		showerrorValidateResult("error_recommendCode","您输入的推荐码无效，请核实");
+		return false;
+	}
+	return true;
+}
+
+
+//显示错误信息;
+//flag，0：清除内容，1：错误提示;
+//logintype,0:登录,1:注册;
+function showErrMsgNew(id, flag, msgcontent, logintype){
+	if(flag == '0'){
+		$('#' + id).html("&nbsp;");
+	}else{
+			$('#' + id).html(msgcontent);
+			//$('#' + id).css(display,'');
+	}
+}
+
+function shoujihao(){
+	showerrorValidateResultspile("error","请填写正确的手机号，以便接收订单通知，找回密码等。");
+}
+
+/*获取验证码倒计时*/	
+$("#passwordGetCode").click(function() {     
+   var delay = 60, trigger = this, revert = $(trigger).val();  
+     $(trigger).attr({ 'disabled': true }).val(delay + $(trigger).attr("data-waiting")).css('color','#999');    
+	 $(this).parent().addClass('cxhq')
+	 var counter = setInterval(function() {  
+     $(trigger).val($(trigger).val().replace(delay, --delay));           
+	 	 if(delay == 0) {      
+		     window.clearInterval(counter);        
+		     $(trigger).val(revert).removeAttr("disabled").removeAttr("style");
+			 $('.cxhq').removeClass('cxhq')
+			} }, 1000);
+
+		var reg=/^\d{6}$/;
+		var checkcode=$("#checkcode").val();
+		var mobile = $('#registerMobile').val();
+		if(mobile=="请输入手机号码"||mobile==""){
+			showErrMsgNew("msg_shoujiahao","1","请输入手机号","1");
+			return false;
+		}
+		if(wait==0||wait==60){
+			sendCheck=false;
+		}
+		//手机注册发送验证短信
+		if(!sendCheck){
+			var mobile = $('#registerMobile').val();
+			$.ajax({
+				type:'post',
+				dataType:'html',
+				url:'/ecenter/ecenterClub/loginRegisterNew/registerMobileAndEmail/sendMobileAgain',
+				async:false,
+				data:{
+					mobile:mobile
+				},
+				contentType:'application/x-www-form-urlencoded;charset=utf-8',
+				success:function(data){
+					if(data=='1'){
+						sendCheck=true;
+						$("#errMsg").html("<span class='wrong_msg' style='position: relative;'><font style='color:red'>同一手机号码当日只能获取5次验证码，请次日再试</font></span>");
+						return false;
+					}
+					if(data=='2'){
+						sendCheck=true;
+						$("#errMsg").html("<span class='wrong_msg' style='width:auto;float:none;position: relative;'><font style='color:red'>60秒内只能发送一次验证码</font></span>");
+						return false;
+					}
+					if(data=='3'){
+						 timesGo();
+						//helpdialog("提示","<p class='picc_resetsuccess' style='padding-left: 42px;margin: 24px auto;background: url(/ecenter/images/picc_register_rt.jpg) no-repeat 10px 5px;font-size: 18px;color: black;height: 30px;margin-left:139px;'>已发送</p><p align='center'><input type='button' onmouseover='addclass(this);' onmouseout='removeclass(this);'  class='but_sure  btns_nomal ' onclick='closedialog(\".dialog\");' value='确定' ></p>");
+						$(".dialog").slideDown().delay(3000).fadeOut(500,function(){
+							$(".mask").remove();
+						});
+					}
+					if(data=='4'){
+						sendCheck=true;
+						$("#errMsg").html("<span class='wrong_msg' style='width:auto;float:none;position: absolute;top: 23px;left: 274px;display:inline'><font style='color:red'></font></span>");
+						return false;
+					}
+
+				},err:function(data){}
+			});
+		}
+});
+
+
+//手机注册发送验证短信到手机
+var wait = 60;
+var sendCheck=true;
+function sendCheckcode(){
+	if(!checkMobile()){
+		return false;
+	}
+	if(!validCCode()){
+		return false;
+	}
+	var reg=/^\d{6}$/;
+	var checkcode=$("#checkcode").val();
+	var mobile = $('#registerMobile').val();
+	if(mobile=="请输入手机号码"||mobile==""){
+		showerrorValidateResult("error","请输入手机号");
+		//showErrMsgNew("msg_shoujiahao","1","请输入手机号","1");
+		return false;
+	}
+	if(wait==0||wait==60){
+		sendCheck=false;
+	}
+     
+	if(!sendCheck){
+		var mobile = $('#registerMobile').val();
+		var verifyCodeshouji = $('#verifyCode').val();
+		$.ajax({
+			type:'post',
+			dataType:'html',
+			url:'/ecenter/ecenterClub/loginRegisterNew/registerMobileAndEmail/sendMobileSmsAgain',
+			async:false,
+			data:{
+				mobile:mobile,
+				verifyCodeshouji:verifyCodeshouji,
+				uuid:$('#uuid').val()
+			},
+			contentType:'application/x-www-form-urlencoded;charset=utf-8',
+			success:function(data){
+				if(data=='1'){
+					sendCheck=true;
+					//$("#errMsg").html("<span class='wrong_msg' style='position: relative;'><font style='color:red'></font></span>");
+					//showErrMsgNew("msg_checkcode","1","同一手机号码当日只能获取5次验证码，请次日再试","1");
+					showerrorValidateResult("error_code","同一手机号码当日只能获取5次验证码，请次日再试");
+					return false;
+				}
+				if(data=='2'){
+					sendCheck=true;
+					showerrorValidateResult("error_code","60秒内只能发送一次验证码");
+					return false;
+				}
+				if(data=='3'){
+					timesGo();
+					showerrorValidateResult("error_code","");
+					$(".dialog").slideDown().delay(3000).fadeOut(500,function(){
+						$(".mask").remove();
+					});
+				}
+				if(data=='4'){
+					sendCheck=true;
+					showerrorValidateResult("error_code","");
+					return false;
+				}if(data=='5'){
+					sendCheck=true;
+					showerrorValidateResult("checkSmsRandCode","验证码错误");
+					return false;
+				}
+
+			},err:function(data){}
+		});
+	}
+}
+var speed = 1000; //速度
+var wait = 60; //停留时间
+function timesGo(){
+	wait--;
+	var b=document.getElementById('passwordGetCode');
+	//document.getElementById("passwordGetCode").style.cssText = "height: 38px;line-height: 38px; width: 105px;color: #999";
+	$("#passwordGetCode").addClass("disabled");
+	if(wait == 0){
+		$("#passwordGetCode").parent().removeClass('cxhq');
+/*		document.getElementById("passwordGetCode").style.cssText = "display: block;background-color: #fff9f2;height: 38px;line-height: 38px; width: 105px;text-align: center;border: 1px solid #ffbdb2;font-size: 14px;color: #ff7a66;width: 100px;"
+*/		$("#passwordGetCode").removeClass("disabled");
+		b.value = "获取验证码";
+		b.disabled = false;
+		wait=60;
+	}
+	else{
+		$("#passwordGetCode").parent().addClass('cxhq');
+		b.value = wait+"秒后重新获取";
+		b.disabled="true";                
+		window.setTimeout("timesGo()",speed);
+		$(this).parent().addClass('cxhq')
+	}
+}
+
+function checkNewPassword(){
+	var regStrnew = /^[0-9a-zA-Z]*$/g;
+	var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!@#￥……&*（）&;|{}【】‘；：”“'。，、？.-]";
+	var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+	var regnew=new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+	var newPassword=$("#newPassword").val();
+	if(newPassword==""){
+		showerrorValidateResult("error_newPassword","请输入密码");
+		return false;
+	}else if($.trim(newPassword).length < 6){
+		showerrorValidateResult("error_newPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(newPassword.match(regStr)){
+		showerrorValidateResult("error_newPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(reg.test(newPassword)){
+		showerrorValidateResult("error_newPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(!(regnew.test(newPassword))){
+		showerrorValidateResult("error_newPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(!(regStrnew.test(newPassword))){
+		showerrorValidateResult("error_newPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}
+	//showValidateResultpassword("newPassword","");
+	showerrorValidateResult("error_newPassword","");
+	return true;
+	
+}
+function checkConfirmPassword(){
+	var regStrnew = /^[0-9a-zA-Z]*$/g;
+	var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!@#￥……&*（）&;|{}【】‘；：”“'。，、？.-]";
+	var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+	var confirmPassword=$("#confirmPassword").val();
+	var newPassword=$("#newPassword").val();
+	var regnew=new RegExp(/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/);
+	if(confirmPassword==""){
+		//showValidateResultirmPassword("confirmPassword","确认密码不能为空");
+		showerrorValidateResult("error_confirmPassword","确认密码不能为空");
+		return false;
+	}else if($.trim(confirmPassword).length<6){
+		showerrorValidateResult("error_confirmPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(confirmPassword.match(regStr)){
+		showerrorValidateResult("error_confirmPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(reg.test(confirmPassword)){
+		showerrorValidateResult("error_confirmPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(!(regnew.test(confirmPassword))){
+		showerrorValidateResult("error_confirmPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(!(regStrnew.test(confirmPassword))){
+		showerrorValidateResult("error_confirmPassword","请输入6-20位数字、字母组合，区分大小写");
+		return false;
+	}else if(newPassword==confirmPassword){
+		showerrorValidateResult("error_confirmPassword","");
+		return true;
+	}else {
+		showerrorValidateResult("error_confirmPassword","两次密码输入不一致");
+		return false;
+	}
+	showerrorValidateResult("error_confirmPassword","");
+	return true;
+}
+//两次密码输入是否一致
+function checkPassword(){
+	var newPassword=$("#newPassword").val();
+	var confirmPassword=$("#confirmPassword").val();
+	if(newPassword==confirmPassword){
+		showerrorValidateResult("error_confirmPassword","");
+		return true;
+	}else{
+		showerrorValidateResult("error_confirmPassword","两次密码不一致");
+		return false;
+	}
+	showerrorValidateResult("error_confirmPassword","");
+	return true;
+}
+
+//用户名是否存在错误提示
+function showValidateResultencenter(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+       /* $('#tanchucengsucc').hide();
+		$('.pop_service').show();*/
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error'  style='display: block;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+//校验密码
+function checkpwd(){
+	  var pwd = $("#newPassword").val();//密码
+	  var ispwd=new RegExp(/^[a-zA-Z0-9_]+$/).test(pwd);
+	  if($.trim(pwd)=="" ||$.trim(pwd) == null ){
+		  $("#erropwd").html("请输入密码");
+		  $("#newPassword").addClass("yxred");
+		  return false;
+	  }
+	  if(!ispwd){
+		  $("#erropwd").html("请输入字母、数字或下划线");
+		  $("#newPassword").addClass("yxred");
+		  return false;
+	  }
+	  if(bytes(pwd) > 20 || bytes(pwd) < 6){
+		  $("#erropwd").html("密码长度为6-20位");
+		  $("#newPassword").addClass("yxred");
+		  return false;
+	  }
+	  $("#erropwd").html("&nbsp;");
+	  $("#newPassword").removeClass("yxred");
+}
+
+
+
+
+function bytes(str){
+	if(typeof(str)!='string'){
+		str = str.value;
+	}
+	var len = 0;
+	for(var i = 0; i < str.length; i++){
+		if(str.charCodeAt(i) > 127){
+			len++;
+		}
+		len++;
+	}
+	return len;
+}
+
+function ssoforjsonp(data){
+	try {
+		var webIp=window.location.protocol+"//"+document.location.host;
+		var remoteurls = data.remoteUrls;
+		for (var i = 0; i < remoteurls.length; i++) {
+			var currentVar =  remoteurls[i]; 
+			if(currentVar.indexOf("ecashier")>-1){
+				currentVar = webIp+ currentVar;
+				currentVar =currentVar.replace(/http/g, "https");
+				if(currentVar.indexOf("httpss") > -1) {
+					currentVar =currentVar.replace("httpss", "https");
+				}
+			  }else if(currentVar.indexOf("club")>-1){
+			  }else{
+				  currentVar = webIp+ currentVar;
+			  }
+			$.ajax({ 
+				url : currentVar, 
+				async : false, 
+				cache : false, 
+				timeout: 1000,
+				type : "GET", 
+				dataType : 'jsonp', 
+				success : function (result,textStatus){ 
+				},
+			    complete: function(XMLHttpRequest, textStatus) {
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+			    }
+			}); 
+		}
+	} catch (e) {
+	}
+}
+
+function registerssussessShouJi(){
+	$("#new_loginReg").hide();
+	var ifra = window.parent.document.getElementById("loginIframe");
+	var mask = window.parent.document.getElementById("mask");
+	var divLogin = window.parent.document.getElementById("divLogin");
+ 	ifra.style.height = "274px";
+ 	ifra.style.width = "540px";
+ 	try {
+ 		window.parent.trkIstDimention("prop24", "reg_02", "trkIstDimention");
+	} catch (e) {
+	}
+	mask.id="maskPhoneSussess";
+	divLogin.id="divLoginPhoneSussess"
+	$("#liuChenPhoneSussess").show();
+}
+function registerssussessEmail(){
+	$(".new_loginReg").hide();
+	var ifra = window.parent.document.getElementById("loginIframe"); 
+ 	ifra.style.height = "274px";
+ 	ifra.style.width = "540px";
+ 	var userEmail=$("#liuChenEmail").val();
+ 	var sfsdf = ["@163.com","@126.com","@sina.com","@yahoo.cn","@yahoo.com.cn","@sohu.com","@yeah.net","@139.com","@tom.com","@21cn.com","@51.com","@qq.com","@gmail.com","@sogou.com","@hotmail.com"];
+ 	if($.inArray($.trim(userEmail.substr(userEmail.indexOf("@"))), sfsdf)>-1){//常用邮箱
+	$("#liuChenEmailSussess").show();
+	}else{
+		$("#liuChenEmailSussessbuchangyong").show();
+		
+	}
+}
+function enceyptTwoNew(userMobile, password) { 
+
+	//加密文本传输
+	userMobile = encodeURI(userMobile);
+	password=encodeURI(password);
+	
+	//清空之前加密的数据 
+	$("#MUserMobileSJ").attr("value",""); 
+	$("#MPasswordSJ").attr("value",""); 
+	$("#pswSJ").attr("value",""); 
+
+	var prand = ""; 
+	var psw=""; 
+	for(var i=0;i<4;i++){ 
+		psw+=Math.floor(Math.random()*10); 
+	} 
+	var psw1 = psw; 
+	for(var i=0; i<psw.length; i++) { 
+		prand += psw.charCodeAt(i).toString(); 
+	} 
+	var sPos = Math.floor(prand.length / 5); 
+	var mult = Number(prand.charAt(sPos) + prand.charAt(sPos*2) + prand.charAt(sPos*3)); 
+	var incr = Math.ceil(psw.length / 2); 
+	var modu = Math.pow(2, 16) - 1; 
+	var salt = Math.round(Math.random() * 10000) % 1000; 
+	prand += salt; 
+	while(prand.length > 8) { 
+		prand = (parseInt(prand.substring(0, 4)) + parseInt(prand.substring(4, 8))).toString(); 
+	} 
+	prand = (mult * prand + incr) % modu; 
+	var enc_pwd = ""; 
+	var enc_pwd1 = ""; 
+	
+	var enc_mobile = ""; 
+	var enc_mobile1 = ""; 
+	
+	var pd = prand; 	
+	var prand1 = prand; 			
+	var pd1 = prand;
+	
+
+	for(var i=0; i<userMobile.length; i++) { 
+		enc_mobile = parseInt(userMobile.charCodeAt(i) ^ Math.floor((pd1 / modu) * 20)); 
+		if(enc_mobile < 16) { 
+			enc_mobile1 += "0" + enc_mobile.toString(16); 
+		} else enc_mobile1 += enc_mobile.toString(16); 
+		pd1 = (mult * pd1 + incr) % modu; 
+	} 
+	for(var i=0; i<password.length; i++) { 
+		enc_pwd = parseInt(password.charCodeAt(i) ^ Math.floor((pd / modu) * 20)); 
+		if(enc_pwd < 16) { 
+			enc_pwd1 += "0" + enc_pwd.toString(16); 
+		} else enc_pwd1 += enc_pwd.toString(16); 
+		pd = (mult * pd + incr) % modu; 
+	} 
+	
+	salt = salt.toString(16); 
+	while(salt.length < 8)salt = "0" + salt; 
+	enc_pwd1 += salt;
+	enc_mobile1+=salt;
+	$("#MUserMobileSJ").attr("value",enc_mobile1);
+	$("#MPasswordSJ").attr("value",enc_pwd1); 
+	$("#pswSJ").attr("value",psw1); 
+	return enc_mobile1+"-"+enc_pwd1+"-"+psw1 
+}
+
+
+function question_a(){
+	$(this).toggleClass('questioned');
+	//$("#answer_p").show();
+}
+function huodejiadain(){
+	showValidateResultlong("registerMobile","请填写正确的手机号,以便接收订单通知,找回密码等");
+}
+function showValidateResultlong(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error'  style='display: block;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>请填写正确的手机号，以便<br/>接收订单通知，找回密码等。</p></div><div class='e_right'></div></div>");
+
+    }
+}
+function showValidateResultlongtwoEmails(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error'   style='position: relative;left:198px;top:-36px;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>请填写正确的手机号，以便<br/>接收订单通知，找回密码等。</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+
+function showValidateResultlongtwo(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error'  style='display: block;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>此手机号码已使用，<br/>请重新更换。</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+
+function showValidateResultlongtwoEmail(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' style='position: relative;left:198px;top:-36px;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>"+msg+"</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultvalidCCode(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' style='position: relative;left:239px;top:80px;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>"+msg+"</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultlongtwoEmaillong(id, msg) {
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' style='position: relative;left:198px;top:-36px;' id='error_" + id + "'><div class='pe_left'></div><div class='pe_cen' ><p>此手机号码已使用，<br/>请重新更换。</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultVerification(id, msg) {
+	$("#error_" + id).remove();
+    $("#error_" + id).hide();
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' id='error_" + id + "' style='display: block;left: 110px;position: relative;top: -36px;'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultpassword(id, msg) {
+	$("#error_" + id).remove();
+    $("#error_" + id).hide();
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' id='error_" + id + "' style='display: block;'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultirmPassword(id, msg) {
+	$("#error_" + id).remove();
+    $("#error_" + id).hide();
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' id='error_" + id + "' style='display: block;'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function showValidateResultrecommendCode(id, msg) {
+	$("#error_" + id).remove();
+    $("#error_" + id).hide();
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' id='error_" + id + "' style='left: 225px;position: relative;top: -36px;'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+function charMode(n){  
+	  if (n>=48 && n <=57) //数字  
+			return 0;  
+		if (n>=65 && n <=90) //大写  
+			return 1;  
+		if (n>=97 && n <=122) //小写  
+			return 1;  
+		if (n==95) //下划线   
+			return 2;
+}
+//校验邮箱
+function checkEmailenceter(){
+	  var email = $("#userEmail").val();//用户名
+	  var isemail=new RegExp(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/).test(email);
+	  if($.trim(email)=="" ||$.trim(email) == null ){
+		  showerrorValidateResult("msg_userEmail","");
+		  return true;
+	  }
+	  if(!isemail){
+		  showerrorValidateResult("msg_userEmail","请输入正确的邮箱");
+		  return false;
+	  }
+		showerrorValidateResult("msg_userEmail","");
+		return true;
+}
+function showValidateResultEmail(id, msg) {
+	$("#error_" + id).remove();
+    $("#error_" + id).hide();
+    if ($("#error_" + id).length > 0) {
+        $("#error_" + id).remove();
+        $("#error_" + id).hide();
+    }
+    if (msg != "") {
+        $("#" + id).after("<div class='phone_error' id='error_" + id + "' style='left: 200px;position: relative;top: -39px;'><div class='pe_left'></div><div class='pe_cen' ><p>" + msg + "</p></div><div class='pe_right'></div></div>");
+
+    }
+}
+//登录验证码  看不清楚？换个图片 。
+function newVerifyPic()
+{
+	var uuid = $('#uuid').val();
+	url="/idprovider/CreateImageNew?randName=registerRandshouji&next="+Math.random() + '&uuid=' + uuid;
+	//$('#verifypic').attr('src', url);
+	$('#logonImg').attr('src', url);
+}
+//手机短信动态码登录,验证码
+function newVerifyPicnew()
+{
+	var uuid = $('#uuid').val();
+	url="/idprovider/CreateImageNew?randName=registerRandshouji&next="+Math.random() + '&uuid=' + uuid;
+	//$('#verifypic').attr('src', url);
+	$('#logonImgnew').attr('src', url);
+}
+//手机注册验证码
+function newVerifyPicshouji()
+{
+	var uuid = $('#uuid').val();
+	url="/ecenter/CreateImageNew?randName=registerRandshouji&next="+Math.random() + '&uuid='+uuid;
+	$('#verifypic').attr('src', url);
+	//$('#logonImg').attr('src', url);
+}
+
+
+//校验输入的验证码
+function validCCode(){
+	  var verifyCode = $("#verifyCode").val();//验证码  
+	  var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!#￥……&*（）&;|{}【】‘；：”“'。，、？]";
+	  if(verifyCode === null || verifyCode === "" || verifyCode.length == 0) {
+		  showerrorValidateResult("checkSmsRandCode","请输入验证码");
+			return false;
+		}
+	  if($.trim(verifyCode).length!=4){
+		// $('#erroCode').html("请输入四位验证码");
+		 // showValidateResultvalidCCode("confirmPasswordEmail","请输入四位验证码")
+		  showerrorValidateResult("checkSmsRandCode","请输入四位验证码");
+
+		  return false;
+	  }else if(verifyCode.match(regStr)){
+		    showerrorValidateResult("checkSmsRandCode","验证码错误");
+			return false;
+		}else{
+			showerrorValidateResult("checkSmsRandCode","");
+			return true;
+		}
+}
+
+
+
+function intoEmail(){
+	var useremail = $("#userEmail").val();
+	if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@163.com"){
+		window.open("http://mail.163.com");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@126.com"){
+		window.open("http://mail.126.com");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@sina.com"){
+		window.open("http://mail.sina.com.cn");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@yahoo.cn"){
+		window.open("http://mail.cn.yahoo.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@yahoo.com.cn"){
+		window.open("http://mail.cn.yahoo.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@sohu.com"){
+		window.open("http://mail.sohu.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@yeah.net"){
+		window.open("http://www.yeah.net/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@tom.com"){
+		window.open("http://mail.tom.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@21cn.com"){
+		window.open("http://mail.21cn.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@51.com"){
+		window.open("http://www.51.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@qq.com"){
+		window.open("http://mail.qq.com");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@gmail.com"){
+		window.open("http://mail.google.com");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@sogou.com"){
+		window.open("http://mail.sogou.com/");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@hotmail.com"){
+		window.open("http://www.hotmail.com");
+	}else if($.trim(useremail).substr($.trim(useremail).indexOf("@"))=="@139.com"){
+		window.open("http://mail.10086.cn/");
+	}
+}
+//过滤除数字以外的所有字符
+function YZMremoveCharacters(ckID){	
+	$('#'+ckID).val($('#'+ckID).val().replace(/[^0-9]/gi,''));
+	return true;
+}
+function enceyptThree(userEmail,passWord,userMobile) { 
+
+	//加密文本传输
+	userEmail=encodeURI(userEmail);
+	passWord = encodeURI(passWord);
+	userMobile=encodeURI(userMobile);
+	
+	//清空之前加密的数据 
+	$("#MUserEmail").attr("value",""); 
+	$("#MPasswordEmail").attr("value",""); 
+	$("#MUserMobileEmail").attr("value",""); 
+	$("#psw").attr("value",""); 
+
+	var prand = ""; 
+	var psw=""; 
+	for(var i=0;i<4;i++){ 
+		psw+=Math.floor(Math.random()*10); 
+	} 
+	var psw1 = psw; 
+	for(var i=0; i<psw.length; i++) { 
+		prand += psw.charCodeAt(i).toString(); 
+	} 
+	var sPos = Math.floor(prand.length / 5); 
+	var mult = Number(prand.charAt(sPos) + prand.charAt(sPos*2) + prand.charAt(sPos*3)); 
+	var incr = Math.ceil(psw.length / 2); 
+	var modu = Math.pow(2, 16) - 1; 
+	var salt = Math.round(Math.random() * 10000) % 1000; 
+	prand += salt; 
+	while(prand.length > 8) { 
+		prand = (parseInt(prand.substring(0, 4)) + parseInt(prand.substring(4, 8))).toString(); 
+	} 
+	prand = (mult * prand + incr) % modu; 
+	
+	var enc_email = ""; 
+	var enc_email1 = ""; 
+	
+	var enc_pwd = ""; 
+	var enc_pwd1 = ""; 
+	
+	var enc_mobile = ""; 
+	var enc_mobile1 = ""; 
+	
+	var pd = prand; 	
+	var prand1 = prand; 			
+	var pd1 = prand;
+	
+	
+	for(var i=0; i<passWord.length; i++) { 
+		enc_pwd = parseInt(passWord.charCodeAt(i) ^ Math.floor((pd / modu) * 20)); 
+		if(enc_pwd < 16) { 
+			enc_pwd1 += "0" + enc_pwd.toString(16); 
+		} else enc_pwd1 += enc_pwd.toString(16); 
+		pd = (mult * pd + incr) % modu; 
+	} 
+	
+	for(var i=0; i<userEmail.length; i++) { 
+		enc_email = parseInt(userEmail.charCodeAt(i) ^ Math.floor((prand1 / modu) * 20)); 
+		if(enc_email < 16) { 
+			enc_email1 += "0" + enc_email.toString(16); 
+		} else enc_email1 += enc_email.toString(16); 
+		prand1 = (mult * prand1 + incr) % modu; 
+	} 
+	
+
+	
+	for(var i=0; i<userMobile.length; i++) { 
+		enc_mobile = parseInt(userMobile.charCodeAt(i) ^ Math.floor((pd1 / modu) * 20)); 
+		if(enc_mobile < 16) { 
+			enc_mobile1 += "0" + enc_mobile.toString(16); 
+		} else enc_mobile1 += enc_mobile.toString(16); 
+		pd1 = (mult * pd1 + incr) % modu; 
+	} 
+	
+	salt = salt.toString(16); 
+	while(salt.length < 8)salt = "0" + salt; 
+	enc_email1+=salt;
+	enc_pwd1 += salt;
+	enc_mobile1+=salt;
+	$("#MUserEmail").attr("value",enc_email1); 
+	$("#MPasswordEmail").attr("value",enc_pwd1); 
+	$("#MUserMobileEmail").attr("value",enc_mobile1); 
+	$("#pswEmail").attr("value",psw1); 
+
+	return enc_email1+"-"+enc_pwd1+"-"+enc_mobile1+"-"+psw1 
+}
+
+$(document).ready(function(){
+	//add 20150204 点击后退按钮	清空输入框中的信息
+//	  var userName = $("#userName").val();//用户名
+//	  var email = $("#userEmail").dval();//邮箱
+//	  var pwd = $("#registpassword").val();//密码
+//	  var mobile = $("#userMobile").val();//手机号 
+//	  var verifyCode = $("#verifyCode").val();//验证码 
+//	if($.trim(userName)!="" ||$.trim(userName) != null ){
+		$("#userName").val("");
+//	}
+//	if($.trim(email)!="" ||$.trim(email) != null){
+		 $("#userEmail").val("");
+//	}
+//	if($.trim(pwd)!="" ||$.trim(pwd) != null ){
+		$("#registpassword").val("");
+//	}
+//	if($.trim(mobile)!="" ||$.trim(mobile) != null){
+		 $("#userMobile").val("");
+//	}
+//	if($.trim(verifyCode)!="" ||$.trim(verifyCode) != null){
+		 $("#verifyCode").val("");
+//	}
+	
+	//生成验证码;
+	var uuid = $('#uuid').val();
+	$('#verifypic').attr('src', '/ecenter/CreateImageNew?next=' + Math.random() + '&randName=registerRandshouji&uuid=');
+	setTimeout("newVerifyPic()",500);
+	setTimeout("newVerifyPicnew()",500);
+	newVerifyPicshouji();
+	//显示隐藏密码
+		$('.dispas').click(function(){
+			
+			var newpwd=new String($('#registpassword').val());
+			if(newpwd!=""){
+				
+				var pwdclass = "";
+				if($("#registpassword").hasClass("yxred")){
+					pwdclass = "passwordinput pain passwordval yxred";
+				}else{
+					pwdclass = "passwordinput pain passwordval";
+				}
+				$('.dispas').toggleClass("displaypasswordShow");
+				if($('.dispas').hasClass("displaypasswordShow")){
+					$("#pwdshowhd").children().eq(1).remove();		
+					$("#pwdshowhd").children().eq(0).after("<input id=\"registpassword\" onchange=\"checkpwd();\" maxlength=\"20\" type=\"text\" class=\""+pwdclass+"\" value='"+newpwd+"'/>");
+				}else{
+					$('#displaypassword').addClass("displaypassword");	
+					$('#displaypassword').removeClass("displaypasswordShow");
+					$("#pwdshowhd").children().eq(1).remove();		
+					$("#pwdshowhd").children().eq(0).after("<input id=\"registpassword\" onchange=\"checkpwd();\" maxlength=\"20\" type=\"password\" class=\""+pwdclass+"\" value='"+newpwd+"'/>");				
+				}
+			}
+		});
+		
+		
+		
+})
+
+function qiehuan(obj){
+		$(obj).addClass('current').siblings().removeClass('current');
+		$('.loginCont>ul').eq($(obj).index()).show().siblings("ul").hide();
+		var sdf = $(obj).index();
+		if(sdf == "1"){
+			$(".loginCont").css("top","40%");
+		}else{
+			$(".loginCont").css("top","50%");
+		}
+ }
+$('.classes span').click(function(){ 
+var spanInd =$(this).index(); 
+if(spanInd == 0){$('.top_botom').css('left','0px');}else{$('.top_botom').css('left','145px');} 
+$('.loginbord_center').eq(spanInd).show(); 
+$('.loginbord_center').eq(spanInd).siblings('.loginbord_center').hide(); 
+});
+function email_reg(obj){
+	
+	$('.reg_bot').css('left','146px');
+	$("#mobile_reg").hide();
+ $("#email_reg").show();
+ var uuid = $('#uuid').val();
+	$('#verifypic').attr('src', '/ecenter/CreateImageNew?next=' + Math.random() + '&randName=registerRand&uuid=' + uuid);
+	setTimeout("newVerifyPic()",500);
+}
+function mobile_reg(obj){
+	$('.reg_bot').css('left','0px');
+	$("#email_reg").hide();	
+	$("#mobile_reg").show();
+}
+function codeyanzhengma(){
+	$("#codeyanzhengma").hide();
+	//$("#checkcode").focus();
+}
+function codecheckNewPassword(){
+	$("#codecodecheckNewPassword").hide();
+	//$("#newPassword").focus();
+}
+function codeconfirmPassword(){
+	$("#codeconfirmPassword").hide();
+	//$("#confirmPassword").focus();
+}
+function coderecommendCode(){
+	$("#coderecommendCode").hide();
+	//$("#recommendCode").focus();
+}
+function codeuserEmail(){
+	$("#codeuserEmail").hide();
+	//$("#userEmail").focus();
+}
+function codenewPasswordEmail(){
+	$("#codenewPasswordEmail").hide();
+	//$("#newPasswordEmail").focus();
+}
+function codeconfirmPasswordEmail(){
+	$("#codeconfirmPasswordEmail").hide();
+	//$("#confirmPasswordEmail").focus();
+}
+function coderegisterMobileEmail(){
+	$("#coderegisterMobileEmail").hide();
+	//$("#registerMobileEmail").focus();
+}
+function codeverifyCode(){
+	$("#codeverifyCode").hide();
+	//$("#verifyCode").focus();
+}
+function coderecommendCodeEmail(){
+	$("#coderecommendCodeEmail").hide();
+	//$("#recommendCodeEmail").focus();
+}
+function coderegisterMobile(){
+	$("#coderegisterMobile").hide();
+	//$("#registerMobile").focus();
+}
+
+function checkzhanghao(){
+	var userName=$("#userName").val();
+	if (userName=='') {
+		showerrorValidateResult("error_zhanghao","请输入帐号");
+		return false;
+	}
+	showerrorValidateResult("error_zhanghao","");
+	return true;
+}
+//登录
+function submitLogon(pageToGo){
+	try {
+		window.parent.trkIstDimention("prop24", "login_01");
+	} catch (e) {
+		// TODO: handle exception
+	}
+	//用户登陆
+	if(! checkErrorTimes()) {
+		return false;
+	}
+	//密码数字，字母、下划线验证;
+	if(!checkPwdSam()) {
+		return false;
+	}
+	showerrorValidateResult("msg_pwd", "");
+	//add 20140726 EBS-4306 
+	var errorTimes=$('#errorTimes').val();
+	if(errorTimes>=2 && "none" == $('#randCode').css('display')){
+		
+		if($.trim($('#rand').val())==""){
+			//499
+			var ifra = window.parent.document.getElementById("loginIframe"); 
+		 	ifra.style.height = "542px";
+			showerrorValidateResult('error_rand', '请输入验证码');
+	  //$("#rand").focus();
+	  $("#password").addClass("yxred_erro_ly");
+	  return false;
+	 }
+	}
+	showerrorValidateResult("error_rand", "");
+	var remember = "";
+	//登录用户名密码加密
+	var securityVal = enceypt($.trim($("#userName").val()), $.trim($("#password").val()));
+	var enc_str = $("#MUserCode").val(); 
+	var enc_pwd1 = $("#MPassword").val(); 
+	var pswKey = $("#psw").val(); 
+	var userAgent = get32Md5Str(navigator.userAgent);
+	var param = "userName=" + enc_str + "&password=" + enc_pwd1 + "&pswkey=" + pswKey
+		+ "&rand=" + $.trim($("#rand").val()) + "&remember=" + remember + "&uuid=" + $("#uuid").val()+"&randName=loginRandDiv&loginType=loginBySampleDiv&userAgent" + userAgent;
+
+		$.ajax({
+			url:'/idprovider/login',
+			data:param,
+			async:false,
+			type:'post',
+			contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+			dataType: "json",
+			success:function(data){
+				logonResult(data);
+			},
+			error:function(){
+				showerrorValidateResult("error_zhanghao", "用户名与密码不匹配");
+			}
+		});
+}
+//登录注册回调函数;
+function logonResult(dataStr){
+	var uname = dataStr.entryId;
+	var result = dataStr.result;
+	var errorTimes=dataStr.errorTimes;
+	var nickName=dataStr.nickName;
+	var userAgent = get32Md5Str(navigator.userAgent);
+	if("1" != result){// 登陆失败
+		try {
+			window.parent.trkIstDimention("prop24", "login_03");
+		} catch (e) {
+		}
+		$("#errorTimes").val(errorTimes);
+		showerrorValidateResult("error_zhanghao", "");
+		if(errorTimes>=2&& "none" == $('#randCode').css('display')){
+			newVerifyPic();
+			showerrorValidateResult("checkLoginRandCodeSam","请输入验证码");
+		$("#rand").focus();
+		$("#randCode").show();
+		return false;
+		 }
+		if('2' == result){
+			showerrorValidateResult("error_zhanghao", "用户名信息与密码不匹配");
+			return false;
+		}
+		showerrorValidateResult("error_zhanghao", "");
+		if('3' == result){
+			showerrorValidateResult("error_zhanghao", "您的登录账号异常，请联系在线客服解决");
+			return false;
+		}
+		showerrorValidateResult("error_rand", "");
+		if('4' == result){
+			if(errorTimes>=2 && "block" == $('#randCode').css('display')){
+				newVerifyPic();
+				//showErrorMsg("checkLoginRandCodeSam","请输入验证码");
+			}
+			showerrorValidateResult("msg_pwd", "用户名信息与密码不匹配");
+			document.getElementById("password").focus();
+			return false;
+		}
+		showerrorValidateResult("error_zhanghao", "");
+		if('5' == result){
+			showerrorValidateResult("error_rand", "验证码错误");
+		  	document.getElementById("rand").focus();
+		  	newVerifyPic();
+		  	return false;
+		}
+		/*if('6' == resultcode){
+			showerrorValidateResult("error_zhanghao", "您的登录账号异常，请联系在线客服解决");
+			return false;
+		}*/
+		showerrorValidateResult("msg_pwd", "");
+		return false;
+	}else if("1" == result){// 登陆成功!
+		$("#epiccLogin").val("正在登录...");
+		if(null != dataStr.remoteUrls && dataStr.remoteUrls.length > 0){
+			ssoforjsonp(dataStr);
+			setTimeout(function (){
+				logonResultB(dataStr.entryId,dataStr.nickName);
+			}, 300);
+		}else {
+			logonResultB(dataStr.entryId,dataStr.nickName);
+		}
+	}
+}
+
+//
+
+//登陆成功后,顶部显示状态更新
+function loginSuccessChangeTop(uname,nickname) {
+	if(vtop != null){
+		//vtop.style.display = 'inline-block';
+		if(document.getElementById('addPlanFrame')){
+			document.getElementById('addPlanFrame').contentWindow.document.getElementById('entryID').value=uname; 
+		}
+		 vtop.style.width = '100%';
+		if(nickname !=""){
+			vtop.innerHTML = '<span>您好，' + (nickname.length > 30 ? (nickname.substring(0,30) + '..'):nickname) + '&nbsp;&nbsp;</span>' + afterLogonT;
+			//vtop.innerHTML = '<span class="welcome" style="display:inline-block;height:29px;line-height:29px;vertical-align:middle;">您好，' + (nickname.length > 30 ? (nickname.substring(0,30) + '..'):nickname) + '&nbsp;&nbsp;</span>' + afterLogonT;
+		}else{
+			vtop.innerHTML = '<span>您好，' + (uname.length > 30 ? (uname.substring(0,30) + '..'):uname)+ '&nbsp;&nbsp;</span>' + afterLogonT;
+			//vtop.innerHTML = '<span class="welcome" style="display:inline-block;height:29px;line-height:29px;vertical-align:middle;">您好，' + (uname.length > 30 ? (uname.substring(0,30) + '..'):uname)+ '&nbsp;&nbsp;</span>' + afterLogonT;
+		}
+	}
+
+}
+//普通登录 验证码 输入检查
+function checkRandCodeSam() {
+	var randCode = $("#rand").val();
+	if(randCode === null || randCode === "" || randCode.length == 0) {
+		showerrorValidateResult("checkLoginRandCodeSam","请输入验证码");
+	}else if(randCode.length < 4){
+		showerrorValidateResult("checkLoginRandCodeSam","请输入正确的验证码");
+	}else{
+		showerrorValidateResult("checkLoginRandCodeSam","");
+	}
+}
+
+function doLogon(){
+	if(window.parent.document.getElementById("cmpid")){
+		if(window.parent.document.getElementById("cmpid").value!="null"&&window.parent.document.getElementById("cmpid").value!=""){
+		    var cmpid=$("#cmpid").val();
+		       var entryId = "";
+		    if(window.parent.document.getElementById("entryId")){
+			   entryId = window.parent.document.getElementById("entryId").value==null?"":window.parent.document.getElementById("entryId").value;
+			}
+			$.ajax({
+				type:'get',
+				async : false,
+				url:'/EbsWeb/marketActivity.do',
+				data:{cmpid:cmpid,entryId:entryId},
+				dataType:'html',
+				success:function(data){
+					
+				}
+			});
+		}
+	}
+	
+	try{window.parent.addentryId();}catch(e){}
+	//登陆成功 隐藏按钮 
+	if($("#myPolicy").css("display")=="block"){
+	document.getElementById("myPolicy").style.display="none";
+	document.getElementById("dengLuBaoDan_shouYe").style.display="block";
+	document.getElementById("weiDengLuBaoDan_shouYe").style.display="none";
+	}
+	try{window.parent.ecenterCallback();}catch(e){}	
+	try{
+		var hostport=document.location.href;
+		if(hostport.indexOf("ecar")>=0){
+			window.parent.checkLoginEntryId();
+		}
+	}catch(e){}
+}
+
+
+//关闭弹出层;
+function close_LoginDiv(){
+	if (IETester()){
+		window.parent.document.getElementById("mask").removeNode(true);
+		window.parent.document.getElementById("divLogin").removeNode(true);
+		window.parent.document.getElementById("loginIframe").removeNode(true);
+	}else {
+		window.parent.document.getElementById("mask").remove();
+		window.parent.document.getElementById("divLogin").remove();
+		window.parent.document.getElementById("loginIframe").remove();
+	}
+	
+}
+//关闭弹出层;
+function close_LoginDivShouji(){
+	if (IETester()){
+		window.parent.document.getElementById("maskPhoneSussess").removeNode(true);
+		window.parent.document.getElementById("divLoginPhoneSussess").removeNode(true);
+	}else {
+		window.parent.document.getElementById("maskPhoneSussess").remove();
+		window.parent.document.getElementById("divLoginPhoneSussess").remove();
+	}
+}
+function close_LoginDivShoujinew(){
+	if (IETester()){
+		window.parent.document.getElementById("maskPhoneSussess").style.display="none";
+		window.parent.document.getElementById("divLoginPhoneSussess").style.display="none";
+	}else {
+		window.parent.document.getElementById("maskPhoneSussess").style.display="none";
+		window.parent.document.getElementById("divLoginPhoneSussess").style.display="none";
+	}
+}
+
+function newRandImg(rand){
+	if(rand=='yzImg'){
+		document.getElementById(rand).src="<%=contextURL %>/ecenter/CreateImageNew?randName=registRandDiv&uuid="+$("#uuid").val()+"&next="+Math.random();
+		}
+	else{
+		document.getElementById(rand).src="<%=contextURL %>/ecenter/CreateImageNew?randName=loginRandDiv&uuid="+$("#uuid").val()+"&next="+Math.random();
+		}
+}
+function  checkErrorTimes(){
+	var entryId=$("#userName").val();
+	var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!#￥……&*（）&;|{}【】‘；：”“'。，、？]";
+	if(entryId==null||entryId==""||entryId==undefined){
+		showerrorValidateResult("error_zhanghao", "请输入已验证的手机号/已验证的邮箱/用户名");
+		return false;
+	}else if(entryId.match(regStr)){
+		showerrorValidateResult("error_zhanghao", "请输入正确的用户名");
+		return false;
+	}else {
+		showerrorValidateResult("error_zhanghao", "");
+		return true;
+	}
+}
+function changeclose(obj){  
+	var hostport=window.parent.location.href
+	var strs=hostport.substring(hostport.length-1);  
+	 var strExp=/^[0-9]+$/; 
+	if (hostport.indexOf("continue") >= 0) {  
+		window.parent.closeBox();  
+	}else{  
+		close_LoginDiv();
+	}  
+}
+
+function code(){
+	showerrorValidateResultspile("error_recommendCode","输入朋友的推荐码，赢推荐好礼");
+}
+function Register(){
+	
+	  $("#login-tab-list").childern("li").eq(0).click();
+	
+}
+function loginnew(){
+	if ($("#login-tab-list0").hasClass('current')) {
+		var index="0";
+	}
+	if ($("#login-tab-list1").hasClass('current')) {
+		var index="1";
+	}
+	if(index=="1"){
+		newVerifyPicnew();
+	}else{
+		newVerifyPic();
+	}
+	window.parent.loginheight(index);
+	$("#new_loginReg").hide();
+	$("#new_loginReglog").show();
+}
+//登录检查手机号
+function checkphoneNum(){
+	var phoneNum=$("#phoneNum").val();
+	var reg = /^0{0,1}(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9]|166|198|199)[0-9]{8}$/;
+	var ismobile = new RegExp(/^0{0,1}(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9]|166|198|199)[0-9]{8}$/).test(phoneNum);
+	var flag=false;
+	
+	$errorMsg = $("#phoneNum").parents(".login-form").find(".jsErrorMsg");	
+	if("请输入手机号"==phoneNum||phoneNum==""){
+		showerrorValidateResultspile("error_phoneNum","请输入手机号");
+		return false;
+	}else if(!ismobile){
+		showerrorValidateResultspile("error_phoneNum","请输入正确的手机号");
+		return false;			
+	}else if(reg.test(phoneNum)){
+		$.ajax({
+			url:'/idprovider/api/SAMLLogin/checkRegisterMobile',
+			type:'get',
+			async:false,
+			data:{
+				phoneNum:phoneNum,
+				loginType:"loginBySmsCodeDiv"
+			},
+			success:function(data){
+			 if(data=="3"){
+				    showerrorValidateResultspile("error_phoneNum","您的登录账号异常，请联系在线客服解决");
+					flag=false;
+				}else{
+					flag=true;
+				    showerrorValidateResultspile("error_phoneNum","");
+
+				}
+			},err:function(){
+				
+			}
+			
+		});
+	}
+	return flag;
+}
+//校验验证码
+function checkcaptcha2(){
+	 var captcha2=$("#captcha2").val();
+	 var regStr="[`~!#%$^&*()=|{}':;',\\[\\]<>/?~！!#￥……&*（）&;|{}【】‘；：”“'。，、？]";
+	 if(captcha2 === null || captcha2 === "" || captcha2.length == 0) {
+		 showerrorValidateResult("error_captcha2","请输入验证码");
+		 return false;
+    }else if($.trim(captcha2).length!=4){
+		 showerrorValidateResult("error_captcha2","请输入四位验证码");
+		 return false;
+	}else if (captcha2.match(regStr)) {
+		 showerrorValidateResult("error_captcha2","验证码错误");
+		 return false;
+	}else {
+		 showerrorValidateResult("error_captcha2","");
+		 return true;
+	}
+}
+
+//发送验证码到手机
+var wait = 60;
+var sendCheck=true;
+//手机验证短信登录
+function sendcaptcha(){
+	if(!checkphoneNum()){
+		return false;
+	}
+	var isShow=$('#captcha').css('display');
+	if (isShow!="none") {
+		if(!checkcaptcha2()){
+			return false;
+		}
+	}
+
+	if(wait==0||wait==60){
+		sendCheck=false;
+	}
+     
+	if(!sendCheck){
+		var mobile = $('#phoneNum').val();
+		var verifyCodeshouji = $('#captcha2').val();
+		$.ajax({
+			type:'get',
+			dataType:'html',
+			url:'/idprovider/api/SAMLLogin/sendMobileAgain',
+			async:false,
+			data:{
+				mobile:mobile,
+				imgRandCode:verifyCodeshouji,
+				uuid:$('#uuid').val(),
+				isShow:isShow
+			},
+			contentType:'application/x-www-form-urlencoded;charset=utf-8',
+			success:function(data){
+				if(data=='7'){
+					sendCheck=true;
+					showerrorValidateResult("error_smsCaptcha","您登录的账号异常，请联系客服解决");
+					return false;
+				}
+				if(data=='1'){
+					sendCheck=true;
+					showerrorValidateResult("error_smsCaptcha","发送过于频繁请稍候再试");
+					return false;
+				}
+				if(data=='2'){
+					sendCheck=true;
+					showerrorValidateResult("error_smsCaptcha","60秒内只能发送一次动态码");
+					return false;
+				}
+				if(data=='3'){
+					timesGoB();
+					showerrorValidateResult("error_smsCaptcha","");
+					$(".dialog").slideDown().delay(3000).fadeOut(500,function(){
+						$(".mask").remove();
+					});
+				}
+				if(data=='4'){
+					sendCheck=true;
+					newVerifyPicnew();
+					$("#captcha").show();
+					showerrorValidateResult("error_captcha2","请输入正确的验证码");
+					return false;
+				}if(data=='5'){
+					sendCheck=true;
+					newVerifyPicnew();
+					$("#captcha").show();
+					showerrorValidateResult("error_captcha2","请输入验证码");
+					return false;
+				}
+				if(data=='6'){
+					sendCheck=true;
+					$("#captcha").hide();
+					return false;
+				}
+
+			},err:function(data){
+				alert("发送失败"+data);
+			}
+		});
+	}
+
+}
+function checkPwdSam() {
+	var flag = false;
+	var regPwd = /^[a-zA-Z0-9_]+$/;
+	var pwd = $('#password').val();
+	if(pwd == null || pwd == "" || pwd.length == 0){
+  		showerrorValidateResult("msg_pwd", "请输入密码");
+	  //$('#password').focus();
+	  return false;
+	}else if(pwd.length < 6){
+		// 密码长度校验;
+		showerrorValidateResult("msg_pwd", "密码长度为6-20位");
+	}else if(!pwd.match(regPwd)){
+	    // 密码数字，字母、下划线验证;
+		showerrorValidateResult("msg_pwd", "请输入字母、数字或者下划线");
+	}else{
+		showerrorValidateResult("msg_pwd", "");
+		flag = true;
+	}
+	return flag;
+}
+function  checksmsCaptcha(){
+	var reg=/^\d{6}$/;
+	var checkcode=$("#smsCaptcha").val();
+	var mobile = $('#phoneNum').val();
+	if (checkcode== null || checkcode == "") {
+		showerrorValidateResult("error_smsCaptcha","请输入动态登录码");
+		return false;
+	}else if(checkcode.length != 6){
+		showerrorValidateResult("error_smsCaptcha","请输入正确的动态登录码");
+		return false;
+	}else if(!checkcode.match(reg)){
+		showerrorValidateResult("error_smsCaptcha","请输入正确的动态登录码");
+		return false;
+	}else {
+		showerrorValidateResult("error_smsCaptcha","");
+		return true;
+	}
+	/*var flag=true;
+		$.ajax({
+			 url: "/idprovider/api/SAMLLogin/validTel",
+			    type:"post",
+			    async:false,
+			    data: {
+			    	checkcode:checkcode,
+			    	mobile:mobile
+			    	},
+			contentType:'application/x-www-form-urlencoded;charset=utf-8',
+			success:function(data){
+				data=data.message;
+				if(data=="0"){
+					// showValidateResultVerification("errMsg","");
+					showerrorValidateResult("error_smsCaptcha","");
+					flag=true;
+				}else  if(data=="2"){
+					showerrorValidateResult("error_smsCaptcha","动态码失效");
+					flag=false;
+				}else if(data == '1'){
+					showerrorValidateResult("error_smsCaptcha","请先发送动态登录码");
+					flag=false;
+				}else if(data == '3'){
+					showerrorValidateResult("error_smsCaptcha","请输入正确的动态登录码");
+					flag=false;
+				}
+			},err:function(data){}
+		});
+		//showValidateResultVerification("errMsg","");
+		return flag;*/
+}
+function timesGoB(){
+	wait--;
+	var b=document.getElementById('get-captcha');
+	$("#get-captcha").addClass("disabled");
+	if(wait == 0){
+		$("#get-captcha").parent().removeClass('cxhq');
+		$("#get-captcha").removeClass("disabled");
+		b.value = "重发动态密码";
+		b.disabled = false;
+		wait=60;
+	}
+	else{
+		$("#get-captcha").parent().addClass('cxhq');
+		b.value = wait+"秒后重新发送";
+		b.disabled="true";                
+		window.setTimeout("timesGoB()",speed);
+		$(this).parent().addClass('cxhq')
+	}
+}
+function submitLogonB(){
+	var isShow=$('#captcha').css('display');
+	if(!checkphoneNum()){
+		return false;
+	}
+	
+	if (isShow!="none") {
+		if(!checkcaptcha2()){
+			return false;
+		}
+		if(!checkcaptcha3()){
+			return false;
+		}
+	}
+	if(!checksmsCaptcha()){
+		return false;
+	}
+	var securityVal = enceypt($.trim($("#phoneNum").val()), $.trim($("#smsCaptcha").val()));
+	var enc_str = $("#MUserCode").val(); 
+	var enc_pwd1 = $("#MPassword").val(); 
+	var pswKey = $("#psw").val(); 
+	var userAgent = get32Md5Str(navigator.userAgent);
+	var flag=true;
+		$.ajax({
+			 url: "/idprovider/login",
+			    type:"POST",
+			    async:false,
+			    dataType: "json",
+			    data: {
+			    	enc_str:enc_str,
+			    	enc_pwd1:enc_pwd1,
+			    	pswKey:pswKey,
+			    	loginType:"logonBySmsCodeDiv",
+			    	userAgent:userAgent,
+			    	uuid: $('#uuid').val(),
+			    	isShow:isShow,
+			    	smsRandCode:$("#captcha2").val()
+			    	},
+			contentType:'application/x-www-form-urlencoded;charset=utf-8',
+			success:function(datastr) {
+            	var newData=datastr.result.split("#");
+                data = newData[0];
+				if(data=="0"){
+					showerrorValidateResult("error_smsCaptcha","");
+					showerrorValidateResult("error_phoneNum","");
+					showerrorValidateResult("checkSmsRandCode","");
+					$("#submitLogonSms").val("正在登录...");
+					flag=true;
+					flag=true;
+					if(null != datastr.remoteUrls && datastr.remoteUrls.length > 0) {
+						ssoforjsonp(datastr);
+						setTimeout(function (){
+							logonResultB(datastr.entryId,datastr.nickName);
+						}, 300);
+					}else {
+						logonResultB(datastr.entryId,datastr.nickName);
+					}
+				}else if(data=="2"){
+					showerrorValidateResult("error_smsCaptcha","动态码失效");
+					flag=false;
+				}else if(data == '1'){
+					showerrorValidateResult("error_smsCaptcha","请先发送动态登录码");
+					flag=false;
+				}else if(data == '3'){
+					showerrorValidateResult("error_smsCaptcha","请输入正确的动态登录码");
+					flag=false;
+				}else if(data == '5'){
+					showerrorValidateResult("checkSmsRandCode","请输入正确的验证码");
+					flag=false;
+				}
+				/*else if(data == '4'){
+					showerrorValidateResult("error_phoneNum","请先注册该手机号");
+					flag=false;
+				}*/
+			},err:function(data){}
+		});
+		//showValidateResultVerification("errMsg","");
+		return flag;
+}
+function logonResultB(username,nickname){
+	$("#submitLogon").val("正在登录...");
+	var entryId=window.parent.document.getElementById("entryId");
+	entryId.value=username;
+	doLogon();
+	try {
+		dwb_picc = {} 
+		dwb_picc.prop24 = "login_02";     
+		dwb_picc.prop25 = entryId.value;   
+		window.parent.trkIstObject(dwb_picc);
+	} catch (e) {
+	}
+	var entryIdHidden=window.parent.document.getElementById("entryIdHidden");
+	if (entryIdHidden!=null) {
+		entryIdHidden.value=username;
+	}
+	var entryid =window.parent.document.getElementById("entryId").value;
+	if(entryid != null){
+		entryid.value = username;
+	}
+	loginSuccessChangeTop(username,nickname);
+	close_LoginDiv();
+}
+//手机短信登录验证码校验
+function checkcaptcha3(){
+	var captcha2=$("#captcha2").val();
+	var flag=true;
+	$.ajax({
+		url:'/idprovider/api/SAMLLogin/checkVaCode',
+		type:'post',
+		async:false,
+		data:{
+			captcha2:captcha2
+		},
+		success:function(data){
+		if(data.message=="0"){
+			showerrorValidateResult("error_captcha2","请输入正确的验证码");
+			flag=false;
+		}else if(data.message=="1"){
+			showerrorValidateResult("error_captcha2","");
+			flag=true;
+		}
+	},err:function(){
+			
+		}
+
+	});
+	return flag;
+}
+	 
+function callEcenter(project){
+	try {
+		if(document.getElementById("maskPhoneSussess")!=undefined){
+			if("eproperty"==project){
+				//判断流程第几部
+				if ($("#processbar").val()=="Intro"||$("#processbar").val()=="Input"||
+					$("#processbar").val()=="Confirm"||$("#processbar").val()=="Calc"||
+					$("#processbar").val()=="Info") {
+					close_LoginDivShoujinew();
+				}else{
+					if ($("#productcode").val()=="LAY_A") {
+						close_LoginDivShoujinew();
+					}
+				}
+			}else{
+				close_LoginDivShoujinew();
+			}
+		}
+	} catch (e) {
+		// TODO: handle exception
+	}
+
+}
+function IETester(userAgent){
+    var UA =  userAgent || navigator.userAgent;
+    if(/msie/i.test(UA)){
+        return UA.match(/msie (\d+\.\d+)/i)[1];
+    }else if(~UA.toLowerCase().indexOf('trident') && ~UA.indexOf('rv')){
+        return UA.match(/rv:(\d+\.\d+)/)[1];
+    }
+    return false;
+}
+

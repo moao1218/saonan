@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.PolicyVerifyMapper">
+
+	<select id="findPolicyVerifyByPolicyId" parameterType="java.lang.String" resultMap="pvInfo">
+		select pol_ver_id, itemid, item_name, site_photo, 
+			third_pic, item_age, invoice_pic, invoice, mark, 
+			pmodel, house_no, house_pic, address, building_pic, 
+			acreage, house_market, house_age, completed_date, 
+			verify_date, scout, insureid, coverageid, del_status, 
+			yuliu1, yuliu2 
+		from policy_verify where insureid = #{policyId}
+	</select>
+	
+	<resultMap type="cn.saonan.pojo.PolicyVerify" id="pvInfo">
+		<id property="pol_ver_id" column="pol_ver_id"/>
+		<association property="items" column="itemid" select="cn.saonan.mapper.PolicyVerifyMapper.findItemsById" ></association>
+		<association property="coverage" column="coverageid" select="cn.saonan.mapper.CoverageMapper.findCoverageById"></association>
+	</resultMap>
+	
+	<!-- 根据清单编号查询清单 -->
+	<select id="findItemsById" parameterType="java.lang.Integer" resultType="cn.saonan.pojo.ItemsList">
+		select itemid, item_name, deductible, excess, dep_rate, industry, del_status, yuliu from items_list where itemid = #{itemid}
+	</select>
+	
+</mapper>

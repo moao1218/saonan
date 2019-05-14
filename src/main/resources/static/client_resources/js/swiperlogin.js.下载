@@ -1,0 +1,384 @@
+
+var tncode={
+		isCanclick:true,
+		isCanRefreash:false,
+		count:0,
+		id:'',
+		tipsDom:$("#J-phoneLogin-prompt-ss"),
+		$scanlogin_box_con:$("#scanlogin_box_con"),
+		$scanlogin_box_text:$('.scanlogin_box_text'),
+		$er_b:$('#er_b'),
+		apiurl:(/\:\/\/www.4008000000.com/.test(location.href) || /\:\/\/baoxian.pingan.com/.test(location.href) || /\:\/\/www.pingan.com/.test(location.href))?'captcha-api.pingan.com':'captcha-api-stg.pingan.com:10530',
+		appidTj : '',
+		init:function(){
+			var self = this;
+			if(/\:\/\/(test-)?www.4008000000.com/.test(location.href) || /\:\/\/www.pingan.com/.test(location.href) || /\:\/\/dmzstg1.pa18.com/.test(location.href)){
+				//this.setDomIdName();
+				this.showTabTitle();
+				//增加appid2019/02/22
+				self.appidTj = "pa-web-400cx" ;
+			}else if(/\:\/\/baoxian.pingan.com/.test(location.href) || /\:\/\/www.pingan.com/.test(location.href)){
+				self.appidTj = "pa-mo-baoxian" ;
+			}else{
+				self.appidTj = " " ;
+			}
+			this.bind();
+		},
+		bind:function(){
+			var self = this;
+			getUserID("optPhoneID-ss", "J-phoneLogin-phone-ss");
+			self.inGee()
+		},
+		inGee:function(){
+			var self = this;
+			$.ajax({
+				url:"/customer/getHCZSlideCode.do?"+new Date().getTime(),
+				dataType:'json',
+				type:"get",
+				success:function(data){
+					self.toinitGeetest(data.data)
+				},
+				error:function(data){
+					console.log("getHCZSlideCode--"+data.code)
+				}
+			})
+		},
+		toinitGeetest:function(data){
+				var self = this;
+				initGeetest({
+					gt: data.gt || '',
+	                challenge: data.challenge || '',
+	                offline: !data.success || false, // 表示用户后台检测极验服务器是否宕机
+	                new_captcha: data.new_captcha || true, // 用于宕机时表示是新验证码的宕机
+	                //static_servers:'captcha-static-stg.pingan.com',
+	                api_server:self.apiurl,//'captcha-api-stg.pingan.com:10530',
+	                product: "bind", // 产品形式，包括：float，popup
+	                width: "300px"
+				},function(captchaObj){
+					window.captchaObj = captchaObj;
+					captchaObj.onReady(function(){
+						console.info("captchaObj.onReady")
+					})
+					.onSuccess(function(){
+					      var result = captchaObj.getValidate();
+					      if(!result){
+					    	  return self.dealTips('请完成验证')
+					      }
+					      var sd = {
+				                    mobilePhone: $('#J-phoneLogin-phone-ss').val(),
+				                    challenge: result.geetest_challenge,
+				                    validate: result.geetest_validate,
+									seccode: result.geetest_seccode,
+									appid: self.appidTj
+						      }
+					      var op = {
+					    		  url:"/customer/validateHCZSlideCode.do",//发送验证码接口
+						    	  data:sd,
+						    	  type:"post"
+					      };
+					      self.comAjax(op,function(res){
+					    	  if(res){
+					    		  if(res.code =='0'){
+					    			  //发送短信成功
+					    			  self.doTimeoutCount();
+					    			  $("#J-phoneLogin-sms-ss").attr("disabled","");
+					    		  }else{
+					    			  //验证码有误
+					    			  if(res.code =='6002'){
+					    				  self.dealTips('亲，验证码错误');
+					    			  }else if(res.code=='2052'){
+					    				  self.dealTips('发送短信过于频繁')
+					    			  }else{
+					    				  self.dealTips('验证失败了!0_0');
+					    			  }
+					    			  captchaObj.reset();
+					    		  }
+				    		  }else{
+				    			  self.dealTips("服务器开小差了,请稍后再试.")
+				    		  }
+					      })
+					}).onError(function(){
+						console.log('initGeetest--onError')
+					})
+				$("#J-phoneLogin-sms-btn-ss").unbind('click').click(function(){
+					if(self.isCanclick){
+						if($('#J-phoneLogin-phone-ss').val().length ==''){
+							self.dealTips('请输入手机号');
+							return;
+						}
+						if(/^1[3-9]\d{9}$/.test($('#J-phoneLogin-phone-ss').val())){
+							captchaObj.verify()
+						}else{
+							self.dealTips('请输入正确的手机号');
+							return;
+						}
+					}
+				})
+				$("#J-phoneLogin-submit-ss").unbind('click').click(function(){
+					var mobilePhone = $('#J-phoneLogin-phone-ss').val();
+					var dynamicCode = $('#J-phoneLogin-sms-ss').val();
+					if(mobilePhone==''){
+						self.dealTips('请输入手机号');
+						return;
+					}
+					if(!/^1[3-9]\d{9}$/.test(mobilePhone)){
+						self.dealTips('请输入正确手机号');
+						return;
+					}
+					if(dynamicCode ==''){
+						self.dealTips('请输入验证码')
+						return;
+					}
+					if(!/^\d{6}$/.test(dynamicCode)){
+						self.dealTips('请输入正确验证码')
+						return;
+					}
+					var sd = {
+							mobilePhone:mobilePhone,
+							dynamicCode:dynamicCode,
+							appid: self.appidTj
+					};
+					var op = {
+							url:"/customer/loginForPcFromHcz.do",//登录接口
+							data:sd,
+							type:"post",
+							dataType:"json"
+				      };
+					self.comAjax(op,function(res){
+						if(res&&res.code==0){
+//							var tourl = getParams('target');
+							var tourl = this.getRequest('target');
+
+							// 记住手机号
+        	                if($('#J-phoneLogin-remembertel-ss').attr("checked")) {
+        	                    setUserID('optPhoneID-ss', $('#J-phoneLogin-phone-ss').val());
+        	                }
+        	                // 登录成功
+        	                self.getToBackPage();
+						}else if(res&&res.code==1309){
+							self.dealTips('登录过期，请重新登录')
+						}else{
+							self.dealTips('此刻登录的人太多啦，稍后再试！。')
+						}
+					})
+				})
+			});
+		},
+		getToBackPage:function(){
+			var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = '/customer/logon/loginTickets.jsp';
+            document.body.appendChild(iframe);
+		},
+		doTimeoutCount:function(){
+			var  self = this,count = 59,timer_v='';
+			self.isCanclick=false;
+			self.msTimer && clearInterval(self.msTimer);
+			self.msTimer = setInterval(function(){
+				timer_v = count--+'s后重新发送';
+				$('#J-phoneLogin-sms-btn-ss').html(timer_v);
+				if(count == 0){
+					self.msTimer && clearInterval(self.msTimer);
+					self.isCanclick=true;
+					timer_v = '发送短信动态密码';
+					$('#J-phoneLogin-sms-btn-ss').html(timer_v)
+				}
+			},1000)
+		},
+		dealTips:function(data){
+			var self = this;
+			self.tipsDom.html(data).show()
+			setTimeout(function(){
+				self.tipsDom.html('').hide()
+			},1500)
+		},
+		comAjax:function(op,callback){
+			var self = this;
+			$.ajax({
+				url:op.url || "",
+				type:op.type || "get",
+				dataType:op.dataType || "json",
+				data:op.data || {},
+				success:function(res){
+					callback && callback(res)
+				},
+				error:function(res){
+					callback && callback(res)
+				}
+			})
+		},
+		//以上是滑块登录，以下是扫码登录
+		scanLogin:function(){
+			var self = this;
+			self.$scanlogin_box_con.removeClass('a_pointer');
+			var op = {
+					url:"/customer/getHczScanURL.do",
+					type:"post",
+					dataType:"json"
+		      };
+			self.$er_b.hide();
+			self.comAjax(op,function(res){
+				$('#qcode').html('加载中...');
+				if(res){
+					setTimeout(function(){
+						//生成二维码
+						self.id=res.id;
+						self.creatQcodeOpen(res.data);  //Img
+						//self.creatQcode(res.data.uri)
+						self.pollingFn();
+					},0)
+				}else{
+					self.scanTips("此刻登录的人太多啦，稍后再试！.")
+				}
+			})
+		},
+        //生成二维码
+		setDomIdName:function(){
+			$(".sendEide")[0].id='';
+			$(".phoneLogin-prompt")[0].id='';
+			$(".phoneLogin-phone")[0].id='';
+			$(".phoneLogin-sms")[0].id='';
+			$(".mr5")[0].id='';
+			$(".btn_submit")[0].id='';
+			$(".sendEide")[0].id='J-phoneLogin-sms-btn-ss';
+			$(".phoneLogin-prompt")[0].id='J-phoneLogin-prompt-ss';
+			$(".phoneLogin-phone")[0].id='J-phoneLogin-phone-ss';
+			$(".phoneLogin-sms")[0].id='J-phoneLogin-sms-ss';
+			$(".mr5")[0].id='J-phoneLogin-remembertel-ss';
+			$(".btn_submit")[0].id='J-phoneLogin-submit-ss';
+		},
+		showTabTitle:function(){
+			var self = this;
+			$(".jbTitle02").show().addClass("newcurrent").siblings().removeClass("newcurrent");
+			$(".newcurrent").css({
+				fontSize : "20px"
+			})
+			$(".jbTitle01").show();
+			$(".disfdl_b").hide();
+	        $('#J-tabCont1').hide();
+//	        $('#J-tabCont2').hide();
+	        // $('#J-tabCont2Old').hide();
+	        $('#J-tabCont2New').show();
+	        $('#J-tabCont0').hide();
+			$("#J-tabTitle > li").css({
+				width: '120px'
+			})
+			setTimeout(function(){
+				self.scanLogin();
+			},0)
+		},
+		lostTest:function(){
+			hostValue = window.location.host;
+		},
+		getRequest:function(param_name){
+			return (window.location.search.match(new RegExp('[&?]'+param_name + '=([^&]*)', 'i')) || [''])[0].split('=')[1];
+		},
+		creatQcodeOpen:function(imgUrl){
+			var self = this;
+			$('#qcode').html('<img src="data:image/png;base64,'+imgUrl+'">');
+			//$('#qcode').html('<img src="data:image/png;base64,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">');
+
+		},
+		creatQcode:function(codeUrl){
+			var self = this;
+			$('#qcode').html('');
+			new QRCode(document.getElementById('qcode'), {
+				render:'table',
+			    text: codeUrl,
+			    width: 170,
+			    height: 170,
+			    colorDark : "#000000",
+			    colorLight : "#ffffff"
+			});
+			$("#qcode").attr("title","");
+		},
+		pollingFn:function(){
+			var self = this;
+			if(self.$scanlogin_box_text.is(':hidden')){
+				return
+			}
+			var pollingTime = 3*60*1000;
+			self.pollingTimeout && clearTimeout(self.pollingTimeout)
+			self.count = 0;
+			self.pollingTimeout = setTimeout(function(){
+				self.pollingInterface();
+			},3000)
+		},
+		pollingInterface:function(){
+			var self = this,count = 0;
+			var sd={
+					id:self.id
+			};
+			var op = {
+					url:"/customer/pollScanLogin.do",
+					type:"post",
+					data:sd,
+					dataType:"json"
+		      };
+			self.comAjax(op,function(res){
+				switch(res.code){
+				//已登录-->跳转页面
+					case 0:
+						self.getToBackPage();
+						break;
+					case -1:
+//					case  1:
+					case -2:
+					case -3:
+					case -5:
+						/*self.isCanRefreash=true;
+						self.toRefreash();
+						self.scanTips("好多人登录，刷新再挤一下");
+						break;*/
+						//过期
+					case -4://二维码失效，遮罩显示
+						clearTimeout(self.pollingTimeout)
+						self.$er_b.show();
+						self.$er_b.unbind('click').click(function(){
+							self.scanLogin();
+						})
+						break;
+					case 1://扫码成功，遮罩显示
+						self.$er_b.show();
+						self.$er_b.unbind('click').click(function(){
+							self.scanLogin();
+						})
+						self.pollingFn();
+						break;
+					case -6://不断掉接口查验是否扫码
+					default:
+						self.pollingFn()
+						break;
+				}
+			})
+		},
+		toRefreash:function(){
+			var self = this;
+			$("#qcode").html("点击此处刷新");
+			self.$scanlogin_box_con.unbind('click').click(function(e){
+				if(self.isCanRefreash){
+					self.isCanRefreash = false;
+					self.scanLogin();
+				}
+			}).addClass('a_pointer')
+		},
+		scanTips:function(data){
+			var self = this;
+			$("#scanlogin_box_tip").html(data).show();
+			setTimeout(function(){
+				$("#scanlogin_box_tip").html('').hide();
+			},3500)
+		}
+}
+tncode.init();
+
+
+
+
+
+
+
+
+
+
+
