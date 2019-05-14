@@ -52,7 +52,7 @@ public class ClerkController {
 		  model.addAttribute("clerklist", clerklist);
 		
 		 
-		return "server/findAllClerk";
+		return "server/clerk_findAll";
 
 	}
 	
@@ -114,8 +114,23 @@ public class ClerkController {
 		  model.addAttribute("totalpage", totalpage);
 		  model.addAttribute("clerklist", clerklist);
 		  
-		  return "server/findAllClerk";
-
+		  return "server/clerk_findAll";
+	}
+	
+	
+	@RequestMapping(value="/clerkdetail")
+	public String detallsclerk(Model model,HttpServletRequest request) {
+		String pid = request.getParameter("pid");
+		Integer magid = Integer.parseInt(pid);
+		Clerk findaclerk = clerkservice.findaclerk(magid);
+		model.addAttribute("findaclerk", findaclerk);
+		return "server/clerk_Details";
+	}
+	
+	@RequestMapping(value="/addclerk")
+	public String addclerk(Model model) {
+		
+		return null;
 	}
 	
 	

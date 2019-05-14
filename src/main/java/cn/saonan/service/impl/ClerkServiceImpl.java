@@ -33,9 +33,9 @@ public class ClerkServiceImpl implements ClerkService {
 	
 	// 员工详情的查找
 		@Override
-		public boolean findaclerk(Clerk ck) {
+		public Clerk findaclerk(Integer magid) {
 				
-			return clerkmapper.findaclerk(ck);
+			return clerkmapper.findaclerk(magid);
 		}
 	
 
