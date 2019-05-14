@@ -27,15 +27,15 @@ public class ClerkServiceImpl implements ClerkService {
 	@Override
 	public void  findClerkSplits(Map<String,Object> map) {
 			
-		clerkmapper.findClerkSplits(map);
+		clerkmapper.findClerkSplit(map);
 	}
 
 	
 	// 员工详情的查找
 		@Override
-		public boolean findaclerk(Clerk ck) {
+		public Clerk findaclerk(Integer magid) {
 				
-			return clerkmapper.findaclerk(ck);
+			return clerkmapper.findaclerk(magid);
 		}
 	
 
@@ -72,6 +72,11 @@ public class ClerkServiceImpl implements ClerkService {
 	public boolean clerkdelete(Clerk ck) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<Clerk> findClerkByRole(Integer roleid) {
+		return clerkmapper.findClerkByRole(roleid);
 	}
 
 }

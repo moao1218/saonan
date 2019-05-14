@@ -79,4 +79,9 @@
 	<select id="findAllCoverage" resultType="cn.saonan.pojo.Coverage">
 		select coverageid, coverage_name, coverage_rate, upper_limit, lower_limit, del_status from coverage 
 	</select>
+	
+	<!-- 更改投保单状态 -->
+	<update id="updateInsuranceStatus" parameterType="java.util.Map">
+		update insurance_slip set insure_status = #{newstatus} where policyid=#{policyid}
+	</update>
 </mapper>

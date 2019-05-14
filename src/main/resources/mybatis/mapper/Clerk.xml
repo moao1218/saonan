@@ -5,7 +5,7 @@
 <mapper namespace="cn.saonan.mapper.ClerkMapper">
 
 	<!--分页  -->
-	<select id="findClerkSplit"  resultType="java.util.Map" statementType="CALLABLE">
+	<select id="findClerkSplits"  resultType="java.util.Map" statementType="CALLABLE">
  	{call clerkfindSpilt
  	(
  		#{kw,mode=IN,jdbcType=VARCHAR},
@@ -15,18 +15,19 @@
  		#{cp,mode=IN,jdbcType=INTEGER},
  		#{ps,mode=IN,jdbcType=INTEGER},
  		#{totalpage,mode=OUT,jdbcType=INTEGER},
- 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkinfo},
+ 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkpp},
  		#{c_count,mode=OUT,jdbcType=INTEGER}
  	)}
    </select>
    
-   <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">
+   <resultMap type="cn.saonan.pojo.Clerk" id="clerkpp">
 	   <id property="magid" column="magid"/>
 	   <result property="roleid" column="roleid"/>
 	   <result property="username" column="username"/>
 	   <result property="userpwd" column="userpwd"/>
 	   <result property="job" column="job"/>
 	   <result property="realname" column="realname"/>
+	   <result property="user_card" column="user_card"/>
 	   <result property="email" column="email"/>
 	   <result property="sex" column="sex"/>
 	   <result property="nation" column="nation"/>
@@ -44,18 +45,18 @@
    
    
    <!--查找员工  -->
-	 <select id="findaclerk" parameterType="cn.saonan.pojo.Clerk" resultType="java.lang.Integer">
-   	select magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, 
-   	 emergency, join_date, area, phone, del_status from clerk where magid=#{magid}
-   </select>
+	 <select id="findaclerk" parameterType="java.lang.Integer" resultMap="clerkpp">
+	   	select magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, emergency, join_date, area, phone, del_status from clerk where magid=#{magid}
+  	 </select>
    
+  
    
    <!-- 添加员工 -->
    
    <insert id="docreate" parameterType="cn.saonan.pojo.Clerk">
    	insert into clerk( roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, 
    	 emergency, join_date, area, phone, del_status) values 
-  	( #{roleid}, #{username}, #{userpwd}, #{job}, #{realname}, #{user_card}, #{email}, #{sex}, #{nation}, #{address}, #{linkman}, #{emergency}, #{join_date}, #{area}, #{phone}, #{del_status});
+  	( #{roleid}, #{username}, #{userpwd}, #{job}, #{realname}, #{user_card}, #{email}, #{sex}, #{nation}, #{address}, #{linkman}, #{emergency}, #{join_date}, #{area}, #{phone}, #{del_status})
    </insert>
    
    <!--用户名验证  -->
@@ -94,5 +95,9 @@
 	</delete>
    
    
+    <!-- 根据角色查找员工 -->
+   <select id="findClerkByRole" resultType="cn.saonan.pojo.Clerk">
+   		select magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, emergency, join_date, area, phone, del_status from clerk where roleid=#{roleid}
+   </select>
    
 </mapper>

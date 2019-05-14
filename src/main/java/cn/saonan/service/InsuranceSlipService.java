@@ -31,4 +31,10 @@ public interface InsuranceSlipService {
 	 * @return
 	 */
 	public List<Coverage> findAllCoverage();
+	
+	/**更改保单状态
+	 * @param map
+	 * @return
+	 */
+	public boolean updateInsuranceStatus(Map<String,Object> map);
 }

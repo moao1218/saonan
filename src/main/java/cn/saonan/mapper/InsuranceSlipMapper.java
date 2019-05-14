@@ -16,4 +16,6 @@ public interface InsuranceSlipMapper {
 	public InsuranceSlip findOneInsurance(String pid);
 	
 	public List<Coverage> findAllCoverage();
+	
+	public int updateInsuranceStatus(Map<String,Object> map);
 }
