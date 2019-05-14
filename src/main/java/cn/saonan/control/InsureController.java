@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +20,10 @@ import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
+import cn.saonan.service.ClerkService;
+import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.InsuranceSlipService;
+import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.UsersService;
 import cn.saonan.utils.IdCard;
 
@@ -32,7 +35,13 @@ public class InsureController {
 	
 	@Autowired
 	private UsersService usersService ;
+	
+	@Autowired
+	private ClerkService clerkService;
+	
+	private PolicyVerifyService pvs;
 
+	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
 	public String goList(Model model,HttpServletRequest request) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -82,7 +91,7 @@ public class InsureController {
 		return "server/insurance_slip_list";
 	}
 	
-	
+	//待处理投保单列表
 	@RequestMapping(value="/jumpPending")
 	public String pending(Model model,HttpServletRequest request) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -159,23 +168,70 @@ public class InsureController {
 		return "server/pending_insurance";
 	}
 	
+	//投保单详情页面
 	@RequestMapping(value="/jumpDetails")
 	public String details(String pid,Model model) {
 		
+		System.out.println(pid);
+		
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
+		
+		System.out.println(pvList.get(0).getPol_ver_id());
+		
 		model.addAttribute("insurance", insurance);
+		model.addAttribute("pvList", pvList);
 		return "server/insurance_Details";
 	}
 	
-	@RequestMapping(value="/acceptPro")
-	public String acceptPro(String pid,Model model,HttpServletRequest request) {
-		
+	
+	/*
+	 * @RequestMapping(value="/acceptPro") public String acceptPro(String pid,Model
+	 * model,HttpServletRequest request) {
+	 * 
+	 * InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+	 * model.addAttribute("insurance", insurance); return
+	 * "server/insurance_Details"; }
+	 */
+	
+	//详情页面中受理后跳转投保单受理页面
+	@PostMapping(value="/firstHandle")
+	public String firstHandle(String pid,Model model,HttpServletRequest request) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("newstatus", 2);
+		map.put("policyid", pid);
+		insuranceSlipService.updateInsuranceStatus(map);
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		model.addAttribute("insurance", insurance);
-		return "server/insurance_Details";
+		return "server/insurance_Accept";
+	}
+	
+	//分派专业指导员
+	@ResponseBody
+	@PostMapping(value="/assignGuide")
+	public List<Clerk> assignGuide(String pid,Model model) {
+		Map<String,Object> insuranceMap = new HashMap<String,Object>();
+		insuranceMap.put("newstatus", 0);
+		insuranceMap.put("policyid", pid);
+		insuranceSlipService.updateInsuranceStatus(insuranceMap);
+		
+		Map<String,Object> clerkMap = new HashMap<String,Object>();
+		clerkMap.put("rol", 8);
+		clerkService.findClerkSplits(clerkMap);
+		List<Clerk> clerks = (List<Clerk>) clerkMap.get("clerks");
+		model.addAttribute("clerks", clerks);
+		System.out.println("jinrule");
+		return clerks;
+	}
+	
+	//分派现场勘察员
+	@PostMapping(value="/assignScout")
+	public String assignScout() {
+		return "";
 	}
 	
 	@RequestMapping(value="/checkIdCard")
+	@ResponseBody
 	public String checkIdCard(HttpServletRequest request) {
 		
 		String idCrad = request.getParameter("idCard");

@@ -24,9 +24,18 @@
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
   <script type="text/javascript">
-  	function acceptPro(){
-  		location.href="/acceptPro";
+  	function assignGuide(pid){
+  		$.post("/assignGuide",{"pid":pid},function(data){
+  			var arr = eval("("+data+")");
+  			$.each(arr,function(i,n){
+				$("#guide").append("<option value='"+n.magid+"'>"+n.realname+"</option>");
+			});
+  		},"json");
   	}
+  	
+  	/* function assignScout(){
+  		$.post();
+  	}  */
   </script>
 
   <!-- =======================================================
@@ -172,9 +181,16 @@
 			      <td th:text="${insurance.pol_property}==0?'个人':'企业'">Larry</td>
 			    </tr>
 			  </tbody>
-			</table>		
-			   <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="acceptPro()">分派专业指导人员</button>
-			   <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="acceptPro()">分派现场勘察人员</button>
+			</table>	
+			<div style="margin-left: 350px">
+			   <button type="button" class="btn btn-danger" th:onclick="assignGuide([[${insurance.policyid}]])">分派专业指导人员</button>
+			   <button type="button" class="btn btn-success" th:onclick="assignScout()">分派现场勘察人员</button>
+			</div>
+			<div >
+				<select name="guide" id="guide" >
+					<option value="">--请选择--</option>
+				</select>
+			</div>	   
         </div>
      </section>
 	  

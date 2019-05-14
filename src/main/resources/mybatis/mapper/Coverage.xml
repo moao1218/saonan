@@ -4,4 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.saonan.mapper.CoverageMapper">
    
+   	<select id="findCoverageById" parameterType="java.lang.Integer" resultType="cn.saonan.pojo.Coverage">
+   		select coverageid, coverage_name, coverage_rate, upper_limit, 
+   			lower_limit, del_status, yuliu 
+   		from coverage where coverageid =#{coverageid}
+   	</select>
+   
 </mapper>

@@ -41,4 +41,12 @@ public class InsuranceSlipServiceImpl implements InsuranceSlipService {
 		return insuranceMapper.findAllCoverage();
 	}
 
+	@Override
+	public boolean updateInsuranceStatus(Map<String, Object> map) {
+		if(insuranceMapper.updateInsuranceStatus(map)>0) {
+			return true;
+		}
+		return false;
+	}
+
 }
