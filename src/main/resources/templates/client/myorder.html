@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://www.epicc.com.cn/newecenter/#order -->
+<html style="overflow-x: hidden; width: 100%;"><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style type="text/css"> 
+		.btn-group{
+		}
+		
+		
+	</style>
+    <!--默认的通用样式-->
+    <link rel="stylesheet" type="text/css" href="client_resources/css/member_center.css">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+ 
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+ 
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <!--添加样式-->
+    <title>会员中心</title>
+<body style="width: 100%;">
+	
+	
+<!------导入模版------>
+<div style="display: none;" id="universalTemplate"><!--//我的订单大模板-->
+<script type="text/template" id="bigorderTemplate">
+    <div class="content-box" >
+        <div class="content-top-box">
+                <span class="content-top-right">
+                    <a href="#order/recycle" class="content-top-password" id="clickRecycle"><span></span><p>回收站</p></a>
+                    <a href="javascript:;" class="content-top-play"><span></span><p>添加保单</p></a>
+                </span>
+            <ul>
+                <li class="active act-first"><a href="#order" id="clickAll">全部订单</a></li>
+                <li id="getProposal" class="hasNum"><a href="#order/proposal" id="clickProposal">投保中<span></span></a></li>
+                <li id="getTopay" class="hasNum"><a href="#order/topay" id="clickTopay">待支付<span></span></a></li>
+                <li id="getPayed" class="hasNum"><a href="#order/payed" id="clickPayed">已支付<span></span></a></li>
+            </ul>
+        </div>
+        <input type="hidden" id="orderAction" name="orderAction" value=""/>
+        <div class="content-list-box">
+            <ul class="content-list-top" id="mytool">
+                <li style="width:326px;margin-left:90px" class="content-list-top-items">
+                    <span class="items-title">订单信息</span>
+                </li>
+                <li style="width:153px;margin-left:50px;" class="content-list-top-items">
+                    <span class="items-title">金额</span>
+                </li>
+                <li style="width:127px;" class="content-list-top-items content-list-top-items2">
+                    <span class="items-title">全部状态<i></i></span>
+                    <ul class="three-indent-list">
+
+                    </ul>
+                </li>
+                <li style="width:189px;" class="content-list-top-items">
+                    <span class="items-title">操作</span>
+                </li>
+            </ul>
+            <div id="midorder">
+
+            </div>
+            <div class="page-paging-box" id="page-paging-box">
+            </div>
+        </div>
+    </div>
+    <!--备注-->
+    <div class="page-mask1 JS-page-mask3" style="display: none;" id="remark">
+    </div>
+    <!--添加保单等待弹层======================================-->
+    <div class="tc_baodan" id="addSuccess" style="display:none;">
+        <p class="tc_title"><span>温馨提示</span><a href="javascript:;" class="guanbi"></a></p>
+        <div class="tc_baodan_detail" style="padding-bottom:70px;">
+            <p>添加成功，您可以去已支付中进行查看<br><span>窗口将在<span class="addsecond" style="color:red;">3</span>秒后关闭</span></p>
+        </div>
+    </div>
+    <div class="tc_baodan" id="addWaiting" style="display: none;">
+        <p class="tc_title"><span>添加保单</span><a href="javascript:;" class="guanbi" ></a></p>
+        <div class="tc_baodan_detail" style="padding-left:70px;">
+            <h4></h4>
+            <p style="padding-left:43px;text-align: left;">系统正在验证您的保单号，请稍等...</p>
+        </div>
+    </div>
+    <div class="tc_baodan" id="addFail" style="display: none;">
+        <p class="tc_title"><span>温馨提示</span><a href="javascript:;" class="guanbi"></a></p>
+        <div class="tc_baodan_detail">
+            <p>尊敬的用户，非常抱歉未能查询到该保单。</p>
+        </div>
+    </div>
+    <!--添加保单等待弹层结束===================================-->
+    <div class="page-mask2 JS-page-mask4" style="display:none;" id="deleteOrderResult">
+        <p class="page-mask1-title"><i></i>温馨提示</p>
+        <div class="page-mask1-content">
+            <div class="comment-btn-box">
+                <p class="content-text">删除订单失败！</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-mask2" style="display:none;" id="cannotpay">
+        <p class="page-mask1-title"><i></i>温馨提示</p>
+        <div class="page-mask1-content" style="width: 310px;margin-left: 43px;">
+            <div class="comment-btn-box" style="width:300px">
+                <p class="content-text" style="margin: 0px 0 43px;text-align: left;text-indent:2em">您好，您的支付信息有误，请刷新页面重新选择。</p>
+                <a  class="comment-btn-right" style="text-align: center;position:relative; left: 88px;float:none;">我知道了</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="combineStartdateApproach" class="pj_yesorno" style="display:none;">
+        <p style="padding-left:10px">温馨提示</p><a href="javascript:;" id="combineStartdateApproach_cancel"></a>
+        <div class="pj_info">
+            <div class="tupianbeijsucce_error" style="display:none;"></div>
+            <div style="float:left;">
+                <p style="font-size: 15px; height: 35px; margin-left: 20px; margin-top: 20px; color: #333; padding: 0; line-height: 35px; text-align: center;" >您好，您投保的车险即将生效，为保证爱车如期获得保障，请您尽快前往附近的人保分支机构柜台支付保费。<br />
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="policyArea_code" value="" />
+
+    <div class="page-mask2 JS-page-mask4" style="display:none;" id="downloadPEQResult">
+        <p class="page-mask1-title"><i></i>温馨提示</p>
+        <div class="page-mask1-content">
+            <div class="comment-btn-box">
+                <p class="content-text" id="PEQWrongMSG"></p>
+            </div>
+        </div>
+    </div>
+	 <div class="page-mask2 JS-page-mask4" style="display:none;width: 500px;margin-left: -250px;" id="jsCombineResult">
+        <p class="page-mask1-title"><i></i>温馨提示</p>
+        <div class="page-mask1-content">
+            <div class="comment-btn-box" style="width:auto">
+                <p class="content-text" style="line-height: 25px;"id="CombineWrongMSG"></p>
+            </div>
+        </div>
+    </div>
+</script>
+<!--普通订单中心工具栏-->
+<script type="text/template" id="otherOrderToolTemplate">
+    <li style="width:326px;margin-left:90px" class="content-list-top-items">
+        <span class="items-title">订单信息</span>
+    </li>
+    <li style="width:153px;margin-left:50px;" class="content-list-top-items">
+        <span class="items-title">金额</span>
+    </li>
+    <li style="width:127px;" class="content-list-top-items content-list-top-items2 status">
+        <span class="items-title show-status-title">全部状态<i></i></span>
+        <ul class="three-indent-list display-status">
+            <li class="three-indent-list-first">
+                <span class="items-title show-status-span">全部状态<i></i></span>
+            </li>
+            <li class="three-indent-list-span three-indent-list-span2 three-indent-list-old three-indent-list-old2">
+                <a class="status-a" href="#order/statusIndex/a">全部状态</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status0" href="#order/statusIndex/proposal0">投保中</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status1" href="#order/statusIndex/topay1">待支付</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status4" href="#order/statusIndex/payed4">保单生成中</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status5" href="#order/statusIndex/payed5">未起保</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status6" href="#order/statusIndex/payed6">承保中</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status7" href="#order/statusIndex/payed7">已过期</a></li>
+            <li class="three-indent-list-span three-indent-list-span2"><a class="status-a" id="status8" href="#order/statusIndex/payed8">已退保</a></li>
+        </ul>
+        <input type="hidden"  name="statusIndex" value="a">
+    </li>
+    <li style="width:189px;" class="content-list-top-items">
+        <span class="items-title">操作</span>
+    </li>
+</script>
+
+<!--首页左侧导航栏内层li模板-->
+<script type="text/template" id="leftMenuInLiTemplate">
+    <li><a href="<%=liHref%>" url="<%=liUrl%>" id="<%=liId%>" class="<%=liClass%>"><%=mText%></a></li>
+</script></div>
+    <!-----------左侧导航栏----------->
+    <!-------右侧主窗口------->
+    <div class="m_right_main" id="rightmain" >
+    <div class="content-box" style="background-color: #DCDCDC;">
+        <div class="content-top-box" >
+                <span class="content-top-right">
+                    <a href="http://www.epicc.com.cn/newecenter/#order/recycle" class="content-top-password" id="clickRecycle"><span></span><p>回收站</p></a>
+                    <a href="javascript:;" class="content-top-play"><span></span><p>添加保单</p></a>
+                </span>
+            <ul>
+                <li class="active act-first"><a href="http://www.epicc.com.cn/newecenter/#order" id="clickAll">全部订单</a></li>
+                <li id="getProposal" class="hasNum"><a href="http://www.epicc.com.cn/newecenter/#order/proposal" id="clickProposal">投保中<span>0</span></a></li>
+                <li id="getTopay" class="hasNum"><a href="http://www.epicc.com.cn/newecenter/#order/topay" id="clickTopay">待支付<span>0</span></a></li>
+                <li id="getPayed" class="hasNum"><a href="http://www.epicc.com.cn/newecenter/#order/payed" id="clickPayed">已支付<span>0</span></a></li>
+            </ul>
+        </div>
+        <input type="hidden" id="orderAction" name="orderAction" value="">
+        
+        <div class="btn-group" role="group" aria-label="..."  style="margin-bottom:10px ; " >
+        	<div class="btn-group" role="group" >
+			    <button type="button" class="btn btn-default dropdown-toggle" style="margin-right: 130px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			      	全部订单
+			      <span class="caret"></span>
+			    </button> 
+			    <ul class="dropdown-menu">
+			      <li><a href="#">全部订单</a></li>
+			      <li><a href="#">近三个月订单</a></li>
+			      <li><a href="#">今年内订单</a></li>
+			      <li><a href="#">2018年订单</a></li>
+			      <li><a href="#">2017年订单</a></li>
+			      <li><a href="#">2017年以前订单</a></li>
+			    </ul>
+		 	</div>
+		    <button type="button" disabled="disabled" class="btn btn-default" style="margin-right: 151px;">订单信息</button>
+		    <button type="button" disabled="disabled" class="btn btn-default" style="margin-right: 150px;">金额</button>
+
+			<div class="btn-group" role="group" style="margin-right: 130px;">
+			    <button   type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			      	全部状态
+			      <span class="caret"></span>
+			    </button>
+			    <ul class="dropdown-menu">
+			      <li><a href="#">全部装态</a></li>
+			      <li><a href="#">投保中</a></li>
+			      <li><a href="#">待支付</a></li>
+			      <li><a href="#">保单生成中</a></li>
+			      <li><a href="#">未起保</a></li>
+			      <li><a href="#">承保中</a></li>
+			      <li><a href="#">已过期</a></li>
+			      <li><a href="#">已退保</a></li>
+			    </ul>
+			</div>
+			    <button type="button" disabled="disabled" class="btn btn-default" style="margin-left: 60px;">操作</button>
+		</div>
+    </div>
+
+</body></html>

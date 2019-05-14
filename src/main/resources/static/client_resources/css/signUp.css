@@ -1,0 +1,535 @@
+/****/
+.ad_banner_wrap {position: relative;height: 474px;	width: 100%;margin: 0 auto;overflow: hidden;}
+.ad_banner {height: 474px;position: absolute;width: 2000px;margin: 0 auto;left: 50%;margin-left: -1000px;}
+.ad_banner img {vertical-align: bottom;}
+.ad_banner_login_text {position: absolute;bottom: 110px;width: 1000px;left: 50%;margin-left: -500px;}
+.ad_banner_login_text p {font-size: 14px;line-height: 25px;font-family: "Microsoft Yahei";}
+.signUp_box_wrap {margin: 0 auto;
+    background: url(../images/banner1.jpg) no-repeat center top;
+    height: 532px;
+    border-top: 1px solid #8b96c4;
+    width: 100%;}
+.signUp_tit, .ad_banner_register_text dt, .dd_item {background: url(//pimg1.4008000000.com/app_images/4008000000/v10/sign_up_ico.gif) no-repeat;}
+.signUp_box h2 {line-height: 26px;margin: 11px 0;margin-top:30px;}
+.login_tit {background-position: 0 -287px;}
+.register_tit {background-position: 0 -337px;}
+.signUp_tit {display: block;text-indent: -99999px;width: 102px;height: 24px;}
+.signUp_box h2 .arrow_right {color: #ff6633;}
+.signUp_box {
+	width: 360px;
+    margin-top: 30px;
+    float: right;
+    }
+.signUp_box01 {width: 400px;}
+.login_box {min-height: 440px;_height: 440px;background-color: #fff;}
+.register_box {	min-height: 400px; *min-height: 404px;_height: 404px;padding: 23px 0 0 28px; *padding-top: 20px;background-color: #fff;	border: 1px solid #c6c6c6;}
+.ad_banner_register_text {position: absolute;width: 1000px;left: 50%;margin-left: -500px;}
+.ad_banner_register_text dl {padding: 42px 0 0 54px;width: 235px;}
+.ad_banner_register_text dt {background-position: 0 -386px;text-indent: -99999px;height: 20px;margin-bottom: 24px;}
+.ad_banner_register_text .dd_item {line-height: 18px;padding-left: 42px;margin-bottom: 20px;}
+.ad_banner_register_text .dd_ico1 {background-position: 0 3px;}
+.ad_banner_register_text .dd_ico2 {background-position: 0 -52px;}
+.ad_banner_register_text .dd_ico3 {background-position: 0 -108px;}
+.ad_banner_register_text .dd_ico4 {	background-position: 0 -163px;}
+.ad_banner_register_text .dd_ico5 {background-position: 0 -218px;}
+.mt85 {margin-top: 85px;}
+.loginbanner {min-height: 560px;_height: 560px;background: url(//pimg1.4008000000.com/app_images/4008000000/v10/loginbanner.jpg) no-repeat top center;width: 100%;position: relative;}
+.loginmain {
+	width: 632px;
+	position: absolute;
+	right: 50%;
+	margin-right: -500px;
+}
+.logintitle {
+	width: 95px;
+	height: 30px;
+	background: url(//pimg1.4008000000.com/app_images/4008000000/v10/logintitle.gif) no-repeat 0 3px;
+}
+.loginmaintabs {
+	width: 100%;
+}
+.loginmaintabs li {
+	width: 50%;
+	height: 40px;
+	float: left;
+	text-align: center;
+	font: bold 16px /40px "Microsoft Yahei";
+	background: #ddd;
+	color: #333;
+	cursor: pointer;
+}
+.loginmaintabs li.active {
+	background: #f63;
+	color: #fff;
+}
+.loginCont {
+	min-height: 420px;
+	_height: 420px;
+	/*border-top: 3px solid #f63;*/
+	/*border: 1px solid #ddd;*/
+	background: #fff;
+}
+.loginvipframe {
+	width: 600px;
+	margin: 0 auto;
+}
+/*------------�̳ǵ�¼��ע��---------------*/
+.sclogin_wrap {
+	position: relative;
+	width: 100%;
+	height: 532px;
+	background: url(../images/banner2.jpg) no-repeat center top;
+}
+.sclogin_banner_text {
+	position: absolute;
+	bottom: 110px;
+	left: 50%;
+	margin-left: -500px;
+}
+.sclogin_banner_text li {
+	font: 14px /24px "Microsoft Yahei";
+}
+.sclogin {
+	width: 360px;
+	position: absolute;
+	top: 6%;
+	right: 46%;
+	margin-right: -500px;
+	min-height: 395px;
+	_height: 395px;
+	background:#fff;
+	font-family: Microsoft Yahei;
+}
+.sclogin h2 {
+	height: 36px;
+	padding-top: 4px;
+}
+.sclogin_tit {
+	font: bold 20px /24px "Microsoft Yahei";
+	color: #666;
+	padding: 0 12px 0 35px;
+}
+.verify_tips {
+	width: 414px;
+	border: 1px solid #ffd7bd;
+	background: #fff9e6 url(//pimg1.4008000000.com/app_images/4008000000/v10/sclogin_icon.gif) no-repeat 10px -247px;
+	padding-left: 35px;
+	margin: 20px auto 15px;
+	line-height: 26px;
+	color: #dd230a;
+}
+.scloginCont {
+	padding-left: 40px;
+}
+.scloginCont li p {
+	line-height: 20px;
+	color: #999;
+}
+.user, .password {
+	width: 230px;
+}
+.verify {
+	width: 158px;
+}
+.inputline {
+	border:0;
+	height: 36px;
+	vertical-align: middle;
+}
+.inputline span, .password label {
+	width: 33px;
+	height: 33px;
+	display: block;
+	float: left;
+	/* background: url(//pimg1.4008000000.com/app_images/4008000000/v10/sclogin_icon.gif) no-repeat; */
+}
+.inputline span.pic02 {
+	background-position: 0 -40px;
+}
+.inputline span.pic03 {
+	background: url(../images/iconAll.png) no-repeat;
+    background-position-y: -136px;
+}
+.password label {
+	background-position: 0 -150px;
+}
+.inputline input {
+	padding: 8px;
+	line-height: 17px;
+	font-size: 14px;
+	color: #666;
+	float: left;
+}
+.user input {
+	width: 180px;
+}
+.password input {
+	width: 160px;
+}
+.verify input {
+	width: 109px;
+}
+.verifyImg {
+	vertical-align: middle;
+	margin-right: 8px;
+	border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
+.btn_submit {
+	display: block;
+	width: 230px;
+	height: 39px;
+	font: 16px /39px "Microsoft Yahei";
+	color: #FFF;
+	background: #00c888;
+	border: 1px solid #00c888;
+	border-radius:5px;
+	text-align: center;
+}
+.btn_submit:hover {
+	text-decoration: none;
+	color: #FFF;
+	background-color: #00C851;
+}
+.register_sc {
+	margin: 0 auto;
+	font-family: Microsoft Yahei;
+}
+.register_sc h2 {
+	height: 32px;
+	background: url(//pimg1.4008000000.com/app_images/4008000000/v10/register_sc01.gif) no-repeat;
+}
+.register_sc h2 p {
+	width: 50%;
+	float: left;
+	text-align: center;
+	line-height: 32px;
+	font-size: 14px;
+}
+.register_scont {
+	padding-top: 30px;margin-top:5px;
+}
+.register_scont th {
+	text-align: right;
+	font-weight: normal;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 33px;
+}
+.register_scont .input_text {
+	line-height: 20px;
+	padding: 7px 8px;
+	font-size: 14px;
+	color: #666;
+	width: 216px;
+}
+.sendverify {
+	    width: 110px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    color: #8b8787;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+}
+.register_scont .pa_ui_validator_onerror {
+	border: 1px solid #ffd7bd;
+	background: #fff9e6 url(//pimg1.4008000000.com/app_images/4008000000/v10/sclogin_icon.gif) no-repeat 10px -247px;
+	padding-left: 35px;
+	line-height: 26px;
+	color: #dd230a;
+	height: 25px;
+}
+/*------------�̳ǵ�¼��ע��---------------*/
+/**add 2014 0418 1757**/
+.sclogin-wordcup-link{display: block; height: 19px; line-height: 19px; width: 400px; color: #fff;position: absolute;padding: 127px 0 150px 8px;top: 100px;*top: 102px;left: 50%;margin-left: -460px;text-indent:-99999px;}
+.sclogin-wordcup-link:hover{ color: #fff;text-decoration: none}
+.sclogin-wordcup-text{position: absolute;top: 481px;left: 50%;margin-left: -460px; padding-top: 7px;}
+.s-w-text-tit{ float: left; font-weight: bold; color: #fff; padding-right: 20px;margin-top:3px;}
+.s-w-text-item{ float: left; padding-right: 12px; color: #fff; white-space:nowrap;}
+.s-w-text-point{font-family: Airal;font-weight: bold \9;margin-right: 5px \9;_font-weight:normal;}
+/*2018.4.18ע�����ҳ����*/
+.v_register h2{color: #17cc93;
+    background: #fff;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 30px 0 -10px 50px;}
+.all_front_img{
+	background: url(../images/iconAll.png) no-repeat;
+	width: 26px;
+    height: 33px;
+    display: inline-block;
+    float: right;
+}
+.phone_front_img{
+
+    background-position-y: 6px;
+}
+.pwd_front_img{
+    background-position-y: -40px;
+}
+.confirmpwd_front_img{
+    background-position-y: -90px;
+}
+.vcode_front_img{
+    background-position-y: -136px;
+}
+.phonecode_front_img{
+    background-position-y: -181px;
+}
+.v_to_login{
+    text-align: center;
+    background: #e6e1e1;
+    padding: 8px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e1e1e1;}
+.v_to_login a{color:#17cc93;}
+/*login_page*/
+.J-tabTitle li{
+	width: 180px;
+    float: left;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+        line-height: 36px;
+}
+.scloginCont input{
+	background-color:#fff;
+	border:0;
+	border-bottom: 1px solid #e1e1e1;
+}
+.pic01{
+	background:url(../images/iconAll.png) no-repeat;
+	    background-position-y: -228px;
+}
+.pic04{
+	background:url(../images/iconAll.png) no-repeat;
+	    background-position-y: 8px;
+}
+.pic02{
+	background:url(../images/iconAll.png) no-repeat;
+}
+.ano_2e84ca{
+	    display: inline-block;
+    line-height: 60px;
+    font-size: 14px;
+}
+.n_s_c_s{color:#00c888;}
+.disfdl_b{
+	width: 360px;
+    border-top: 1px solid #e1e1e1;
+    height: 60px;
+    background: #f9f9f9;
+}
+.disfdl_s{
+	    height: 60px;
+    line-height: 60px;
+    margin-left: 40px;
+}
+.ta_box_log{margin-top: 40px;}
+.J-tabTitle li.newcurrent{
+	color: #17cc93;
+	font-size:24px;
+	font-weight: bold;
+}
+.tatno_2e84ca{
+	color: #2E84CA;
+}
+.tatno_2e84ca:hover{
+	color: #2E84CA;
+}
+.sclogin_tab{margin-top:20px;}
+.phoneLogin-phone{width:230px;}
+.phoneLogin-authCode{width:100px;}
+.phoneLogin-sms{width:110px;}
+.telsend:hover{color: #2E84CA;}
+.t_s_t_sano_2e84ca{
+	font-size: 14px;
+	color: #2E84CA;
+}
+.ano_2e84ca_xy_f{
+	color: #2E84CA;
+	font-size: 12px;
+}
+.footer_n_s{
+	    background: #2c353a;
+    text-align: center;
+    color: #62737c;
+    font-size: 12px;
+    font-family:"Microsoft Yahei";
+}
+.set_u_box{
+	    width: 1172px;
+    	margin: 0 auto;
+}
+.toregists{
+	font-size: 16px;
+    color: #17cc93;
+}
+
+.get_k_frames{
+	         width: 20px;
+    height: 146px;
+    position: absolute;
+    z-index: 0;
+    top: -52px;
+    left: 0px;
+    transform: rotate(-66deg);
+    background: rgba(255,255,255,.2);
+    animation: sc_submit_btn_anim 3s linear infinite;
+}
+
+@keyframes sc_submit_btn_anim{
+	0%{left:-40px;}
+	100%{left:330px;}
+}
+
+input.pa_ui_element_focus{border:0 !important;}
+.f_c_999{width:290px;}
+.n_s_m{margin-left:20px;}
+
+.anquanwangluotip{
+	text-align: left;
+    color: red;
+    margin-top: 5px;
+    width: 305px;
+    margin-left: 40px;
+}
+.sc_1 {
+    margin-top: 1px;
+    padding-top: 25px;
+}
+.sc_2,.sc_3,.sc_4 {
+    margin-top: 10px;
+}
+.sc_4 {
+    padding-bottom: 35px;
+}
+.sclogin {
+	height: 475px;
+	overflow:hidden;
+}
+
+.disfdl_b {
+	position: absolute;
+    bottom: 0;
+}
+.new_zhe_log{
+	width: 100%;
+	height: 100%;
+	background: #000;
+	position: absolute;
+	z-index: 1;
+	opacity: 0.5;
+	top: 0;
+}
+.new_log_b{
+	width: 360px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -180px 0 0 -180px;
+	z-index: 1;
+	background: #fff;
+	height: 400px;
+}
+.new_huad_login{
+	/* margin-top:12px; */
+}
+.telsend{
+	display: inline-block;
+	width: 110px;
+	text-align: center;
+}
+.new_zhe_tip{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	height: 200px;
+	background: #fff;
+	z-index: 1;
+	margin: -100px 0 0 -150px;
+	text-align: center;
+	color: #7c6558;
+}
+.tip_count{
+	color:#ff850f;
+}
+.t_vip_self{
+		height: 20px;
+	line-height: 20px;
+}
+.t_vip_self_bg{
+	height: 95px;
+	width: 120px;
+	margin: 0 auto;
+	margin-top: 20px;
+	background: url(/customer/images/tk_tip.png);
+}
+
+.er_b{display: block;
+position: relative;
+cursor: pointer;
+z-index: 100;
+}
+.er_z{
+position: absolute;
+height: 180px;
+width: 180px;
+background: #000;
+opacity: 0.7;
+filter: alpha(opacity=70);
+}
+.er_t{
+position: absolute;
+color: #fff;
+width: 182px;
+height: 182px;
+text-align: center;
+line-height: 182px;
+font-weight: bold;
+font-size: 14px;
+}
+.t_vip_timeout{margin-top: 10px;}
+.scanlogin_box_con{
+width: 180px;
+height: 180px;
+border: 1px solid;
+margin: 0 auto;
+margin-top: 60px;
+position: relative;
+z-index: 2;
+}
+.scanlogin_box_text{
+text-align: center;
+margin-top: 10px;
+color: #17cc93;
+font-size: 16px;
+position: relative;
+}
+.scanlogin_box_tip{
+text-align: center;
+color: red;
+}
+.re_qcode{
+/* margin:5px; */text-align: center;line-height: 172px;cursor:pointer;
+position: absolute;
+left: 50%;
+margin-left: -110px;
+top: -8%;
+/* margin-top: -135px; */
+}
+.re_qcode img{
+width:220px;
+}
+.scanlogin_box{
+position: relative;
+}
+.a_pointer{cursor:pointer;}
+/**/
+input::-moz-placeholder{color:#ccc;} /*ff*/
+input::-webkit-input-placeholder{color:#ccc;} /*chrom safari*/
+input:-ms-input-placeholder{color:#ccc;} /*ie10*/
