@@ -27,6 +27,24 @@
   	function acceptPro(){
   		location.href="/acceptPro";
   	}
+  	
+  	function checkIdCard(idCard){
+  		console.log("idcard")
+  		
+  		$.post("/checkIdCard",{"idCrad":idCard},function(data){
+  			
+  		console.log(data);
+  		if(data.result.data.resp.code==0){
+  			${"#idCardSpan"}.html("合理");
+  		}else{
+  			${"#idCardSpan"}.html("不合理");
+  			
+  		}
+  			
+  		},"json")
+  		
+  	}
+  	
   </script>
 
   <!-- =======================================================
@@ -74,105 +92,176 @@
 			    <tr>
 			      <th scope="row">投保单编号</th>
 			      <td th:text="${insurance.policyid}">Mark</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">被保人姓名</th>
 			      <td th:text="${insurance.insure_name}">Jacob</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">被保人证件号码</th>
 			      <td th:text="${insurance.insure_card}">Larry</td>
+			      <td>
+			      	<button type="button" class="btn btn-primary" th:onclick="checkIdCard(440182199110102159);"  >检测是否真实</button>
+			      	<span id="idCardSpan"></span>
+			      </td>
 			    </tr>
 			    <tr>
 			      <th scope="row">区域</th>
 			      <td th:text="${insurance.city.region_name_c}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">财产标的地址</th>
 			      <td th:text="${insurance.address}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">与被保人关系</th>
 			      <td th:text="${insurance.relation}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人姓名</th>
 			      <td th:text="${insurance.holder_name}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人证件号码</th>
 			      <td th:text="${insurance.holder_card}">Larry</td>
+			      <td><button type="button" class="btn btn-primary"  >检测是否真实</button></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人性别</th>
 			      <td th:text="${insurance.holder_sex}==1?'男':'女'" >Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人手机号码</th>
 			      <td th:text="${insurance.holder_phone}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人电子邮箱</th>
 			      <td th:text="${insurance.holder_email}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保日期</th>
 			      <td th:text="${insurance.insure_date}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单一审人</th>
 			      <td th:text="${insurance.first_auditor}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单二审人</th>
 			      <td th:text="${insurance.second_auditor}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单三审人</th>
 			      <td th:text="${insurance.third_auditor}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单审核状态</th>
 			      <td th:text="${insurance.status.status_name}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">勘察员</th>
 			      <td th:text="${insurance.scout}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">营业执照(企业)</th>
 			      <td th:text="${insurance.license}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">行业编号(企业)</th>
 			      <td th:text="${insurance.industry_code}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">营业面积(企业)</th>
 			      <td th:text="${insurance.acreage}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">企业名称(企业)</th>
 			      <td th:text="${insurance.firm_name}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">会员编号</th>
 			      <td th:text="${insurance.userid}">Larry</td>
+			      <td><button type="button" class="btn btn-primary"  >检测是否黑名单</button></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">支付状态</th>
 			      <td th:text="${insurance.pay_status}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">保费</th>
 			      <td th:text="${insurance.premium}">Larry</td>
+			      <td></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保性质</th>
 			      <td th:text="${insurance.pol_property}==0?'个人':'企业'">Larry</td>
+			      <td></td>
 			    </tr>
 			  </tbody>
-			</table>		
+			</table>
+			
+			<h2>保单物品清单表</h2>	
+			
+			<table class="table table-striped">
+				<thead>
+			    <tr>
+			      <th scope="col">勘察编号</th>
+			      <th scope="col">物品名称</th>
+			      <th scope="col">现场拍摄照片</th>
+			      <th scope="col">第三方证明</th>
+			      <th scope="col">物品使用年限</th>
+			      <th scope="col">发票图片</th>
+			      <th scope="col">房产证号码</th>
+			      <th scope="col">房产证照片</th>
+			      <th scope="col">房屋地址</th>
+			      <th scope="col">房屋照片</th>
+			      <th scope="col">房屋面积</th>
+			      <th scope="col">房屋市值</th>
+			      <th scope="col">房屋使用年限</th>
+			      <th scope="col">房屋竣工时间</th>
+			      <th scope="col">险种</th>
+			    </tr>
+			  	</thead>
+			  	<tbody>
+				<tr>
+			      <td >勘察编号</td>
+			      <td >物品名称</td>
+			      <td >现场拍摄照片</td>
+			      <td >第三方证明</td>
+			      <td >物品使用年限</td>
+			      <td >发票图片</td>
+			      <td >房产证号码</td>
+			      <td >房产证照片</td>
+			      <td >房屋地址</td>
+			      <td >房屋照片</td>
+			      <td >房屋面积</td>
+			      <td >房屋市值</td>
+			      <td >房屋使用年限</td>
+			      <td >房屋竣工时间</td>
+			      <td >险种</td>
+			    </tr>
+			    </tbody>
+			</table>
 			   <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="acceptPro()">受理</button>
         </div>
      </section>

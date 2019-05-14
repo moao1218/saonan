@@ -21,6 +21,7 @@ import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.IdCard;
 
 @Controller
 public class InsureController {
@@ -31,7 +32,6 @@ public class InsureController {
 	@Autowired
 	private UsersService usersService ;
 
-	@ResponseBody
 	@GetMapping(value="/jumpInsuranceList")
 	public String goList(Model model) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -151,6 +151,15 @@ public class InsureController {
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		model.addAttribute("insurance", insurance);
 		return "server/insurance_Details";
+	}
+	
+	@RequestMapping(value="/checkIdCard")
+	public String checkIdCard(HttpServletRequest request) {
+		
+		String idCrad = request.getParameter("idCard");
+		String resource = IdCard.checkIdCard(idCrad);
+		
+		return resource;
 	}
 }
 
