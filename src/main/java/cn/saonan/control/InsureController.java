@@ -17,15 +17,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.saonan.pojo.BlackList;
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.ClerkService;
 import cn.saonan.pojo.PolicyVerify;
+import cn.saonan.service.BlackListService;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.UsersService;
+import cn.saonan.service.impl.BlackListServiceImpl;
 import cn.saonan.utils.IdCard;
 
 @Controller
@@ -33,15 +36,15 @@ public class InsureController {
 	
 	@Autowired
 	private InsuranceSlipService insuranceSlipService ;
-	
 	@Autowired
 	private UsersService usersService ;
-	
 	@Autowired
 	private ClerkService clerkService;
 	
 	@Autowired
 	private PolicyVerifyService pvs;
+	@Autowired
+	private BlackListService bls;
 
 	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
@@ -176,7 +179,6 @@ public class InsureController {
 		
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
-		
 		model.addAttribute("insurance", insurance);
 		model.addAttribute("pvList", pvList);
 		return "server/insurance_Details";
@@ -253,6 +255,21 @@ public class InsureController {
 		String resource = IdCard.checkIdCard(idCrad);
 		
 		return resource;
+	}
+	
+	@RequestMapping(value="/CheckBlack")
+	@ResponseBody
+	public String CheckBlack(HttpServletRequest request) {
+		
+		String userId = request.getParameter("userId");
+		BlackList blackList = bls.findBlackListById(userId);
+		
+		if(blackList==null) {
+			return "\""+"ture"+"\"";
+		}else {
+			return "\""+"false"+"\"";
+		}
+
 	}
 }
 
