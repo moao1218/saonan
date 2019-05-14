@@ -45,6 +45,20 @@
   		
   	}
   	
+  	function checkBlack(userId){
+  		
+  		$.post("",{"userId":userId},function(data){
+  			
+  			if(data){
+  				$("#blackSpan").html("buzai");
+  			}else{
+  				$("#blackSpan").html("zai");
+  			}
+  			
+  		},"json");
+  		
+  	}
+  	
   </script>
 
   <!-- =======================================================
@@ -103,7 +117,7 @@
 			      <th scope="row">被保人证件号码</th>
 			      <td th:text="${insurance.insure_card}">Larry</td>
 			      <td>
-			      	<button type="button" class="btn btn-primary" th:onclick="checkIdCard(440182199110102159);"  >检测是否真实</button>
+			      	<button type="button" class="btn btn-primary" th:onclick="checkIdCard([[${insurance.insure_card}]]);"  >检测是否真实</button>
 			      	<span id="idCardSpan"></span>
 			      </td>
 			    </tr>
@@ -130,7 +144,7 @@
 			    <tr>
 			      <th scope="row">投保人证件号码</th>
 			      <td th:text="${insurance.holder_card}">Larry</td>
-			      <td><button type="button" class="btn btn-primary"  >检测是否真实</button></td>
+			      <td><button type="button" class="btn btn-primary" th:onclick="checkIdCard([[${insurance.holder_card}]]);"  >检测是否真实</button></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保人性别</th>
@@ -200,7 +214,10 @@
 			    <tr>
 			      <th scope="row">会员编号</th>
 			      <td th:text="${insurance.userid}">Larry</td>
-			      <td><button type="button" class="btn btn-primary"  >检测是否黑名单</button></td>
+			      <td>
+			      	<button type="button" class="btn btn-primary" th:onclick="checkBlack([[${insurance.userid}]])"  >检测是否黑名单</button>
+			      	<span id="blackSpan"></span>
+			      </td>
 			    </tr>
 			    <tr>
 			      <th scope="row">支付状态</th>

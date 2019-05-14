@@ -16,14 +16,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.saonan.pojo.BlackList;
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.pojo.PolicyVerify;
+import cn.saonan.service.BlackListService;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.UsersService;
+import cn.saonan.service.impl.BlackListServiceImpl;
 import cn.saonan.utils.IdCard;
 
 @Controller
@@ -31,12 +34,12 @@ public class InsureController {
 	
 	@Autowired
 	private InsuranceSlipService insuranceSlipService ;
-	
 	@Autowired
 	private UsersService usersService ;
-	
 	@Autowired
 	private PolicyVerifyService pvs;
+	@Autowired
+	private BlackListService bls;
 
 	@RequestMapping(value="/jumpInsuranceList")
 	public String goList(Model model,HttpServletRequest request) throws ParseException {
@@ -172,7 +175,7 @@ public class InsureController {
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
 		
-		System.out.println(pvList.get(0).getPol_ver_id());
+
 		
 		model.addAttribute("insurance", insurance);
 		model.addAttribute("pvList", pvList);
@@ -195,6 +198,21 @@ public class InsureController {
 		String resource = IdCard.checkIdCard(idCrad);
 		
 		return resource;
+	}
+	
+	@RequestMapping(value="/CheckBlack")
+	@ResponseBody
+	public String CheckBlack(HttpServletRequest request) {
+		
+		String userId = request.getParameter("userId");
+		BlackList blackList = bls.findBlackListById(userId);
+		
+		if(blackList==null) {
+			return "\""+"ture"+"\"";
+		}else {
+			return "\""+"false"+"\"";
+		}
+
 	}
 }
 
