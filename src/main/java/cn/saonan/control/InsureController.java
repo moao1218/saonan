@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
+import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.IdCard;
 
 @Controller
 public class InsureController {
@@ -31,12 +33,22 @@ public class InsureController {
 	@Autowired
 	private UsersService usersService ;
 
-	@ResponseBody
-	@GetMapping(value="/jumpInsuranceList")
-	public String goList(Model model) throws ParseException {
+	@RequestMapping(value="/jumpInsuranceList")
+	public String goList(Model model,HttpServletRequest request) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
+		
+		String cpp = request.getParameter("cp");
+		
+		if(cpp!=null&&!"".equals(cpp)){
+			cp = Integer.parseInt(cpp);
+		}
+		
+		String pss = request.getParameter("ps");
+		if(pss!=null&&!"".equals(pss)){
+			ps = Integer.parseInt(pss);
+		}
 		map.put("cp", cp);
 		map.put("ps", ps);
 		insuranceSlipService.findInsuranceSlipList(map);
@@ -55,8 +67,18 @@ public class InsureController {
 			}
 //			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
 		}
-		Integer count = (Integer) map.get("v_count");
+		Integer v_count = (Integer) map.get("v_count");
+		int totalpage = (v_count-1)/ps + 1;
+		
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+		model.addAttribute("cp", cp);
+		model.addAttribute("ps", ps);
+		
+		List<City> cityList = usersService.findAllCity();
 		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
 		return "server/insurance_slip_list";
 	}
 	
@@ -151,6 +173,15 @@ public class InsureController {
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		model.addAttribute("insurance", insurance);
 		return "server/insurance_Details";
+	}
+	
+	@RequestMapping(value="/checkIdCard")
+	public String checkIdCard(HttpServletRequest request) {
+		
+		String idCrad = request.getParameter("idCard");
+		String resource = IdCard.checkIdCard(idCrad);
+		
+		return resource;
 	}
 }
 

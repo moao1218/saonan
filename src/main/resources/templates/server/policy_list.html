@@ -23,6 +23,33 @@
   <link href="back/css/style.css" rel="stylesheet"/>
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
+  <script type="text/javascript">
+	  function goToPage(num){
+			var total = $("#totalpage").val();
+			
+			if(parseInt(num)<1){
+				alert("已经是第一页了!");
+			}else if(parseInt(num)>total){
+				alert("已经是最后一页了!");
+			}else{
+				sform.cp.value=num;
+				sform.submit();
+		}
+	  }
+	  
+	  $(function () {
+		    $('#datetimepicker1').datetimepicker({
+		        format: 'YYYY-MM-DD',
+		        locale: moment.locale('zh-cn')
+		    });
+		    $('#datetimepicker2').datetimepicker({
+		        format: 'YYYY-MM-DD',
+		        locale: moment.locale('zh-cn')
+		    });
+		});
+
+  </script>
+
 
   <!-- =======================================================
     Template Name: Dashio
@@ -59,6 +86,11 @@
         <div class="row">
        
 		<div class="col-md-12">
+		<form name="sform" action="/goPolicyList" method="post">
+			<input type="hidden"  name="cp"  id="cp" th:value="${cp}"/>
+            <input type="hidden"  name="ps"  id="ps" th:value="${ps}"/>
+			<input type="hidden" name="totalpage"  id="totalpage" th:value="${totalPage}" />
+				
             <div class="content-panel">
               <table class="table table-striped table-advance table-hover">
                 <div class="alert alert-success" role="alert">
@@ -66,15 +98,14 @@
 				</div>
                 <thead>
                 
-              <form>
 				  <div class="form-row">
-				    <div class="form-group col-md-6">
+				    <div class="form-group col-md-4">
 				      <label for="inputCity">保单号</label>
-				      <input type="text" class="form-control" id="inputCity">
+				      <input type="text" class="form-control" id="inputCity" name="v_id">
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputZip">被保人姓名</label>
-				      <input type="text" class="form-control" id="inputZip">
+				      <input type="text" class="form-control" id="inputZip" name="v_name">
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputZip">保费(低)</label>
@@ -84,50 +115,58 @@
 				      <label for="inputZip">保费(高)</label>
 				      <input type="text" class="form-control" id="inputZip">
 				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputState">区域</label>
+				      <select id="inputState" class="form-control">
+				      	<option value="">--请选择--</option>
+				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}">Choose...</option>
+				      </select>
+				    </div>
 				  </div>
 				  <div class="form-row">
-				    <div class="form-group col-md-4">
+				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(低)</label>
-				      <select id="inputState" class="form-control">
-				        <option selected>Choose...</option>
-				        <option>...</option>
-				      </select>
-				    </div>
-				    <div class="form-group col-md-4">
-				      <label for="inputState">申请时间(高)</label>
-				      <select id="inputState" class="form-control">
-				        <option selected>Choose...</option>
-				        <option>...</option>
-				      </select>
-				    </div>
-				   <div class="form-group col-md-2">
-				      <label for="inputZip">财险险种</label>
-				      <input type="text" class="form-control" id="inputZip">
+				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="inputZip">
 				    </div>
 				    <div class="form-group col-md-2">
-				      <label for="inputZip">保单状态</label>
-				      <input type="text" class="form-control" id="inputZip">
+				      <label for="inputState">申请时间(高)</label>
+				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="inputZip">
+				    </div>
+				   <div class="form-group col-md-2">
+				      <label for="inputState">险种</label>
+				      <select id="inputState" class="form-control">
+				      	<option value="">--请选择--</option>
+				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}">Choose...</option>
+				      </select>
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputZip">保单有效期</label>
+				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" id="inputZip">
 				    </div>
 				  </div>
 				  <div class="form-row">
-				  	<div class="form-group col-md-4">
+				  	<div class="form-group col-md-2">
 				      <label for="inputState">保单性质</label>
 				      <select id="inputState" class="form-control">
-				        <option selected>Choose...</option>
+				        <option selected>个人</option>
+				        <option selected>企业</option>
 				        <option>...</option>
 				      </select>
 				    </div>
-				    <div class="form-group col-md-4">
+				    
+				    <div class="form-group col-md-2">
 				      <label for="inputState">排序</label>
 				      <select id="inputState" class="form-control">
-				        <option selected>Choose...</option>
+				        <option selected>正序</option>
 				        <option>...</option>
 				      </select>
 				    </div>
-				    <button type="submit" class="btn btn-primary">查询</button>
 				  </div>
 				  
-				</form>
+				  <button type="submit" class="btn btn-primary" style="margin-left: 45%">查询</button>
+				
+			    
+			    <hr/>
 			    
 			    
                   <tr>
@@ -163,7 +202,25 @@
                   
                 </tbody>
               </table>
+              
+              <div style="margin-left: 35%">
+             	 <ul class="pagination" >
+				    <li><a href="javascript:void(0);" th:onclick="goToPage(1);">&laquo;</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp-1}');|">&lt;</a></li>
+				    <li th:if="${cp-3}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-3}');|">...</a></li>
+				    <li th:if="${cp-2}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-2}');|" th:text="${cp-2}"></a>1</li>
+				    <li th:if="${cp-1}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-1}');|" th:text="${cp-1}">2</a></li>
+				    <li class="active"><a href="javascript:void(0)" th:text="${cp}">3</a></li>
+				    <li th:if="${cp}<${totalPage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+1}');|" th:text="${cp+1}">4</a></li>
+				    <li th:if="${cp+1}<${totalPage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+2}');|" th:text="${cp+2}">5</a></li>
+				    <li th:if="${cp+2}<${totalPage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+3}');|" >...</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp+1}');|">&gt;</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage(${totalpage});|">&raquo;</a></li>
+				 </ul>
+			   </div>
+              
             </div>
+            </form>
             <!-- /content-panel -->
           </div>
 
@@ -192,6 +249,16 @@
   <!--script for this page-->
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
+  <script src="back/lib/jquery-ui-1.9.2.custom.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/date.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/moment.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+  <script src="back/lib/advanced-form-components.js"></script>
+  
   <script type="text/javascript">
   $(function(){
 		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
@@ -208,7 +275,7 @@
 		},"json");
 	});
   
-    $(document).ready(function() {
+    /* $(document).ready(function() {
       var unique_id = $.gritter.add({
         // (string | mandatory) the heading of the notification
         title: 'Welcome to Dashio!',
@@ -225,7 +292,7 @@
       });
 
       return false;
-    });
+    }); */
   </script>
   <script type="application/javascript">
       $(document).ready(function() {
@@ -262,6 +329,8 @@
       });
     }); 
 
+
+      
      function myNavFunction(id) {
       $("#date-popover").hide();
       var nav = $("#" + id).data("navigation");

@@ -50,7 +50,9 @@
 				sform.submit();
 		}
 	  }
-	  
+	  function jumpDetails(pid){
+		  location.href = "/jumpDetails?pid="+pid;
+  		}
 	  
   </script>
   <script type="text/javascript">
@@ -203,31 +205,34 @@
 				  <div class="form-row">
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(低)</label>
-				      <select id="inputState" class="form-control" >
+				      <select id="inputState" class="form-control" name="" >
 				        <option selected>Choose...</option>
 				        <option>...</option>
 				      </select>
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(高)</label>
-				      <select id="inputState" class="form-control">
+				      <select id="inputState" class="form-control" name="" >
 				        <option selected>Choose...</option>
 				        <option>...</option>
 				      </select>
 				    </div>
 				   <div class="form-group col-md-2">
-				      <label for="inputZip">财险险种</label>
-				      <input type="text" class="form-control" id="inputZip">
+				      <label for="inputState">财险险种</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option value="">--请选择--</option>
+				        <option th:each="coverage:${coverageList}" th:value="${coverage.coverageid}" th:text="${coverage.coverage_name}">Choose...</option>
+				      </select>
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputZip">保单状态</label>
-				      <input type="text" class="form-control" id="inputZip">
+				      <input type="text" class="form-control" id="inputZip" name="" >
 				    </div>
 				  </div>
 				  <div class="form-row">
 				  	<div class="form-group col-md-2">
 				      <label for="inputState">保单性质</label>
-				      <select id="inputState" class="form-control">
+				      <select id="inputState" class="form-control" name="" >
 				        <option selected>个人</option>
 				        <option selected>企业</option>
 				        <option>...</option>
@@ -236,7 +241,7 @@
 				    
 				    <div class="form-group col-md-2">
 				      <label for="inputState">排序</label>
-				      <select id="inputState" class="form-control">
+				      <select id="inputState" class="form-control" name="" >
 				        <option selected>正序</option>
 				        <option>...</option>
 				      </select>
@@ -280,7 +285,7 @@
                     <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>操作人</td>
                     <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
                     <td>
-                      
+                         <button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${alist.policyid}]])"><i class="fa fa-pencil"></i></button>
                     </td>
                   </tr>
                 </tbody>
@@ -297,7 +302,7 @@
 				    <li th:if="${cp+2}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+2}');|" th:text="${cp+2}">5</a></li>
 				    <li th:if="${cp+3}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+3}');|" >...</a></li>
 				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp+1}');|">&gt;</a></li>
-				    <li><a href="javascript:void(0);" th:onclick="|goToPage(${totalpage});|">&raquo;</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${totalpage}');|">&raquo;</a></li>
 				 </ul>
 			   </div>
 			   </form>

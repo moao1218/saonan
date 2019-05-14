@@ -1,0 +1,201 @@
+(function () {
+
+})();
+
+function insightPMonitor() {
+	try {	
+	var nag = $(".CurrChnlCls");
+	var size = nag.size();
+	var webZone = "";
+	var easyRem = "";
+	var zone2 = "";
+	var zone3 = "";
+	var product = "";
+	var events = "";
+	var nameArray = [ "境内自驾游", ";e-神州自驾游保险", "境内自助游", ";e-神州逍遥游保险", "境内商务出行",
+			";e-神州商务行保险", "境外自助游", ";e-四海逍遥游保险", "境外商务出行", ";e-四海商务行保险",
+			"航空意外年度险", ";航空旅客意外伤害年度保险", "交通工具意外险", ";“e-出行无忧”保险", "人身意外险",
+			";“e-都市白领”人身意外伤害保险", "美满e家组合险", ";“美满e家”自助式组合保险", "e-人居两旺险",
+			";“e-人居两旺”自助式组合保险", "监护人责任险", ";监护人责任保险", "宠物责任险", ";宠物责任保险",
+			"申根签证", ";申根签证保险", "国内高原游", ";e-国内高原游", "国内公路随车行李保险",
+			";国内公路随车行李保险", "国内航空旅客行李保险", ";国内航空旅客行李保险", "航班延误保险",
+			";航空延误损失综合保险", "e家无忧家财险", ";“e家无忧”保险" ];
+
+	var array2Copy = "";
+	var nameArray2 = [ "保险案例:车险", "保险案例:旅游保险", "保险案例:意外保险", "保险案例:家庭保险",
+			"保险资讯:行业资讯", "保险资讯:汽车资讯", "保险资讯:旅游资讯", "保险资讯:交通&航空资讯",
+			"保险资讯:家庭&财产资讯", "保险资讯:出境资讯", "保险资讯:商务行资讯", "公司动态" ];
+
+	if (size <= 1) {
+		webZone = "网站首页";
+		easyRem = webZone;
+		zone2 = webZone;
+		zone3 = webZone;
+	} else {
+		webZone = nag.eq(1).text();
+		for (i = 1; i < size; i++) {
+
+			easyRem = easyRem + nag.eq(i).text() + ":";
+		}
+		easyRem = easyRem.substring(0, easyRem.length - 1);
+		var array = easyRem.split(":");
+		if (array.length > 1) {
+			zone2 = array[0] + ":" + array[1];
+			if (array.length > 2) {
+				zone3 = array[0] + ":" + array[1] + ":" + array[2];
+				array2Copy = array[2];
+			} else {
+				zone3 = zone2;
+			}
+		} else {
+			zone2 = easyRem;
+			zone3 = easyRem;
+		}
+	}
+	if (zone3.indexOf("机动车辆保险") > -1) {
+		insightCPMonitor();
+		return false;
+	}
+
+	var indexFlag = false;
+	for (i = 0; i < nameArray2.length; i++) {
+		if (easyRem.indexOf(nameArray2[i]) > -1) {
+			indexFlag = true;
+			break;
+		}
+	}
+	if (indexFlag == true) {
+		s_picc.pageName = easyRem + ":" + $(document).attr("title");//
+	} else {
+		s_picc.pageName = easyRem;
+	}
+
+	s_picc.channel = webZone;
+	s_picc.prop1 = zone2;
+	s_picc.prop2 = zone3;
+	
+	/*<%--  注释开始
+	s_picc.server = "";
+	s_picc.pageType = "";
+	s_picc.prop3 = "";
+	s_picc.prop4 = "";
+	s_picc.prop5 = "";
+	// Conversion Variables
+	s_picc.campaign = "";
+	s_picc.state = "";
+	s_picc.zip = "";
+	// s_picc.events="event8"
+
+	if (zone3.indexOf("选购保险") > -1) {
+		if (zone3.indexOf("机动车辆保险") > -1) {
+			product = ";家庭自用车保险";
+			events = "prodView";
+		} else {
+			for (i = 0; i < nameArray.length; i++) {
+				if (nameArray[i] == array2Copy) {
+					product = nameArray[i + 1];
+					events = "prodView";
+					break;
+				}
+			}
+		}
+
+	} else {
+		product = "";
+		events = "";
+	}
+
+	var agenttypeinuml = getQueryStringOM('agenttypeinuml') == null ? "" : getQueryStringOM('agenttypeinuml');
+
+	if (agenttypeinuml != "") {
+		if (agenttypeinuml == "01") {
+			s_picc.eVar10 = "团购:非车险:企业团购";
+		} else if (agenttypeinuml == "02") {
+			s_picc.eVar10 = "团购:非车险:散单团购";
+		} else if (agenttypeinuml == "05") {
+			s_picc.eVar10 = "团购:非车险:第三方网站";
+		} else if (agenttypeinuml == "09") {
+			s_picc.eVar10 = "团购:非车险:城网业务";
+		}
+	}
+
+	s_picc.products = product;
+	s_picc.events = events;
+	s_picc.purchaseID = "";
+	s_picc.eVar1 = easyRem;
+	s_picc.eVar2 = "";
+	s_picc.eVar3 = "";
+	s_picc.eVar4 = "";
+	s_picc.eVar5 = "";
+	
+	注释结束 --%>*/
+	s_picc.t();
+	
+	} catch (e) {
+
+	}	
+}
+
+function insightCPMonitor() {
+	try {	
+	s_picc.pageName = "选购保险:机动车辆保险";
+	s_picc.channel = "选购保险";
+	s_picc.prop1 = "选购保险:机动车辆保险";
+	s_picc.prop2 = "选购保险:机动车辆保险";
+	
+	/*<%--  注释开始
+	s_picc.server = "";
+	s_picc.pageType = "";
+	s_picc.prop3 = "";
+	s_picc.prop4 = "";
+	s_picc.prop5 = "";
+	// Conversion Variables;
+	s_picc.campaign = "";
+	s_picc.state = "";
+	s_picc.zip = "";
+	// s_picc.events="event8";
+	s_picc.products = ";家庭自用车保险";
+	s_picc.purchaseID = "";
+	s_picc.eVar1 = "选购保险:机动车辆保险";
+	s_picc.eVar2 = "";
+	s_picc.eVar3 = "";
+	s_picc.eVar4 = "";
+	s_picc.eVar5 = "";
+
+	checkCrossSellOrSeatLinks();
+	注释结束 --%>*/
+	
+	s_picc.t();
+	} catch (e) {
+
+	}	
+}
+
+function getQueryStringOM(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null)
+		return unescape(r[2]);
+	return null;
+}
+
+function checkCrossSellOrSeatLinks() {
+	var thisurl = window.location.href;
+	if (thisurl.indexOf("ID") > -1) {
+		var str = "ID";
+		var Id = GetQueryString("ID");
+		$.ajax({
+			type : "get",
+			url : "/ecar/proposal/checkCrossSellOrSeatLinks?zxID=" + Id + "&time=" + new Date().getTime(),
+			dataType : "json",
+			async : false,
+			success : function(data) {
+				if (data != null && "" != data) {
+					s.eVar10 = "团购:车险:" + data;
+				}
+			},
+			error : function() {
+			}
+		});
+	}
+}

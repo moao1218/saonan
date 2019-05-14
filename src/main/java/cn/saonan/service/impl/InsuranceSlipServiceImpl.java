@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cn.saonan.mapper.InsuranceSlipMapper;
 import cn.saonan.pojo.City;
+import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.InsuranceSlipService;
 
@@ -33,6 +34,11 @@ public class InsuranceSlipServiceImpl implements InsuranceSlipService {
 			return null;
 		}
 		return insuranceMapper.findOneInsurance(pid);
+	}
+
+	@Override
+	public List<Coverage> findAllCoverage() {
+		return insuranceMapper.findAllCoverage();
 	}
 
 }

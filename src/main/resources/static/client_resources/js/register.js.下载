@@ -1,0 +1,46 @@
+/**
+ * @author EX-HUPEIBIN001
+ */
+//展示错误提示
+showErrorInfo = function(str, id) {
+	var _div = "<div class='pa_ui_valid_tip pa_ui_validator_onerror'>" + str + "</div>";
+	$('#' + id).html(_div).show();
+}
+//校验密码
+validate_password_local = function(str, element) {
+	var str = str || element.value;
+	var mobileNo = $("#mobileNo").val();
+	//校验密码强度（密码，登录用户名，手机，生日，证件号码）
+	return checkStrongerPwd(str, mobileNo, "", "", "");
+}
+//验证图形校验码合法性
+validate_checkCode = function(str, element) {
+	var str = str || element.value;
+	var patn = /^[0-9a-zA-Z]{4}$/;
+	if(patn.test(str)) {
+		return true;
+	}
+	return false;
+}
+//验证手机动态码合法性
+validate_activeNo = function(str, element) {
+	var str = str || element.value;
+	var patn = /^[0-9]{6}$/;
+	if(patn.test(str)) {
+		return true;
+	}
+	return false;
+}
+//验证手机号码格式是否正确
+validate_phoneNo = function(str, element) {
+	var str = str || element.value;
+	var patn1 = /^13\d{9}$/;
+	var patn2 = /^14\d{9}$/;
+	var patn3 = /^15\d{9}$/;
+	var patn4 = /^17\d{9}$/;
+	var patn5 = /^18\d{9}$/;
+	if(patn1.test(str) || patn2.test(str) || patn3.test(str) || patn4.test(str) || patn5.test(str)) {
+		return true;
+	}
+	return false;
+}

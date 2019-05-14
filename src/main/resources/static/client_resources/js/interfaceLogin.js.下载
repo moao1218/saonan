@@ -1,0 +1,1366 @@
+// 判断是否为ie6浏览器
+var isMsIe6 = false;
+// 针对IE6 不支持验证码显示的解决方案，显示用户提示
+if($.browser.msie && $.browser.version == '6.0'){
+    isMsIe6 = true;
+    getFcmmValidCode = function(imgId, codeId, url, appId) {
+        $("#" + imgId).attr("src", InterfaceLoginObj.pinganoneUrl + "/pinganone/pa/paic/common/vcode.do?r="+Math.random());
+        $("#" + codeId).attr("name", "");
+        $("#" + codeId).attr("value", "");
+    };              
+    $("#vcodeVer").val("");
+    $('#J_verifyCode_tr').show().data('show', true);
+    $('#validCode').val('').data('isValidCode', true);
+    getFcmmValidCode('validateImg','validCodeId');
+    //showErrorInfo("手机注册不支持IE6浏览器，请升级到IE8以上版本", "check_info");
+}
+//调用一账通的接口是jsonp所以有callback值，改用主账户后这个值照传！有调用一账通的接口此处需要注意。
+var mobileLoginResult = false;//提交错误时提交开放，但是再次提交会提交两次问题解决！
+//展示成功提示
+function showCorrectInfo(str, id) {
+    var _div = "<div class='pa_ui_valid_tip pa_ui_validator_oncorrect'>" + str + "</div>";
+    $('#' + id).html(_div).show();
+}
+//展示错误提示
+function showErrorInfo(str, id) {
+    var _div = "<div class='pa_ui_valid_tip pa_ui_validator_onerror'>" + str + "</div>";
+    $('#' + id).html(_div).show();
+}
+// 输入框添加focus、error样式
+function applyElClass(el, type){
+    el.removeClass('valid_csselfocus').removeClass('valid_csselerror');
+    var elParent = el.parent().removeClass('valid_csselfocus').removeClass('valid_csselerror');
+    if(type){
+        elParent.addClass('valid_cssel'+type);
+    }               
+}
+
+if (!isMsIe6) {
+    $('#userID').bind('blur', function() {
+        // 有改变
+        if ($('#userID').val() != $('#userID').data('name')) {
+            $('#J_verifyCode_tr').hide().data('show', false);
+            $('#validCode').val('').data('isValidCode', false);
+        }
+        $('#userID').data('name',$('#userID').val());
+    });
+}
+$('#J-changeVerifyImg').bind('click', function(){
+    if (isMsIe6) {
+       getFcmmValidCode('validateImg','validCodeId','<c:out value="${pinganoneUrl}" escapeXml="false"></c:out>/pinganone/pa/paic/common/urlvcode.do');
+   } else {
+        // 验证码AJAX
+        phoneLogin.ajaxAuthCode('mima', function(data) {
+            $('#validCodeId').val(data.id);
+            $('#J_verifyCode_tr').show().data('show', true);
+            $('#validateImg').attr('src', data.img);
+            // 记录图形验证码ID
+            $('#validCode').val('').data('isValidCode', true);
+        });
+   }
+});
+function getGrayUser(data,callback){//判断是否是灰度用户
+	 $.ajax({
+         type: "GET",
+         dataType:'json',
+         data : {userinfo:data},
+         url: "/customer/toLoginCheckIsGray.do",
+         success: function(res){
+            callback(res);
+         }
+     });
+};
+function clickSubmit() {
+    var verifyCode_isShow = $('#J_verifyCode_tr').data('show');
+    var isValid = validForm();
+    
+    if (!isValid) {
+        return false;
+    }
+    // 是否已经展示验证输入
+    if (!verifyCode_isShow) {
+        // 验证码AJAX
+        phoneLogin.ajaxAuthCode('mima', function(data) {
+            $('#validCodeId').val(data.id);
+            
+            // 要显示图形验证码
+            if (data.type == '0') {
+                $('#J_verifyCode_tr').show().data('show', true);
+                $('#validateImg').attr('src', data.img);
+                // 记录图形验证码ID
+                $('#validCode').val('').data('isValidCode', true);
+            } else {
+               submitForm(); 
+            }
+            
+        });
+    } else {
+        submitForm();
+    }
+};
+
+$('#loginlink').bind('click', clickSubmit);//登陆按钮事件
+
+function validForm() {
+        //记住用户名选择框被勾选的`时候
+    var remember = $('#remember');
+    // 是否要验证验证码输入
+    var isValidCode = $('#validCode').data('isValidCode');
+    if(remember.attr("checked")){
+        var userID = $('#userID').val();
+        setUserID("userID", userID);
+    }
+    //用户名密码没输入的时候出现的提示信息                
+    var userID = $('#userID').val();
+    var password = $('#v_password').val();
+    var validCode = $('#validCode').val();
+    var errorArray = [];
+    
+    if(''==userID){
+        applyElClass($('#userID'), 'error');
+        errorArray.push('用户名或密码不能为空');
+    }
+    //5.8陆庆需求改为手机号登陆
+   /* if(!/^1[3456789]{1}[0-9]{9}$/.test(userID)){
+    	applyElClass($('#userID'), 'error');
+    	errorArray.push('请输入正确手机号');
+    }*/
+    if(''==password){
+        applyElClass($('#v_password'), 'error');
+        errorArray.push('用户名或密码不能为空');
+    }
+    if(''==validCode && isValidCode){
+        applyElClass($('#validCode'), 'error');
+        errorArray.push('验证码不能为空');
+    }
+    // 判断是否有错误信息
+    if(errorArray.length>0){
+        showErrorInfo(errorArray[0], "sysTip");
+        return false;
+    }
+    
+    var isValid = $('#login_form').validator({triggerOnSubmit : false }).validator('check');
+    return isValid;
+}
+
+//提交按钮
+function submitForm() {
+    var isLoging = $("#loginlink").data('isLoging');
+    if (isLoging) {
+        return false;
+    }
+    if (!isLoging) {
+        //禁用按钮
+        $("#loginlink").text('正在登录，请稍候...').data('isLoging', true);
+
+        if (isMsIe6) {
+            submitLoginForm();
+        } else {
+            
+            if ( $('#J_verifyCode_tr').data('show') ) {
+                var data = {
+                    validCode: $("#validCode").val(),
+                    validCodeId: $("#validCodeId").val(),
+                    appId: InterfaceLoginObj.appId,
+                    userId: $('#userID').val()
+                }
+                //判断是否是灰度用户，非灰度用户走原来的流程，灰度用户走新的！
+	            getGrayUser($('#userID').val(),function(res){
+                    var url = InterfaceLoginObj.pinganoneUrl + '/pinganone/pa/checkAppVcode.do?callback=?';
+	            	if(res.isGray=='Y'){//是灰度用户
+                        url = '/customer/do/commonLoginPAPCheckVCode.do?callback';
+	                }
+	                // 图形验证码检查接口                 
+	                $.getJSON(url, data, function(data) {
+	                    $('#loginlink').attr('data-status', 'checkAppVcode');
+	                    if (data.data.returnCode == '0000') {
+	                        submitLoginForm();
+	                    } else {
+	                        showErrorInfo(data.data.returnMsg, "sysTip");
+	                        //恢复按钮
+	                        $("#loginlink").text('登录').data('isLoging', false);
+	                    }
+	                          
+	                });	
+	                
+	            });
+               
+              
+            } else {
+                submitLoginForm();
+            }
+        }
+        
+    } else {
+        //恢复按钮
+        $("#loginlink").text('登录').data('isLoging', false);
+    }
+    return false;
+}
+// 提交登录请求
+function submitLoginForm(){
+    //密码加密
+    var PublicKey = InterfaceLoginObj.publicKey;
+    var pwd = $("#v_password").val();
+    var RSA = new RSAKey();
+    RSA.setPublic(PublicKey, "10001");    
+    var Res = RSA.encryptPama(pwd);
+    $("#loginPwd").val(Res);
+    //发送签名串给后台
+    $.ajax({
+        type : "GET",
+        async : false,
+        cache : false,
+        url : "./param-sign.ajax",
+        data : {
+            userID : $("#userID").val()
+        },
+        success : function(data) {
+            $('#loginlink').attr('data-status', 'param-sign');
+            var signData = eval("(" + data + ")");
+            $('#signature').val(signData.sign);
+            //获取后台返回的时间戳
+            $('#timestamp').val(signData.timestamp);
+            $('#appId').val(signData.appID);
+            $('#regResource').val(signData.appID);
+            //提交表单
+            $("#login_form").attr("method", "post");
+            if (isMsIe6) {
+                // 验证图形验证码的正确性和有效性
+                $("#login_form").attr("action", InterfaceLoginObj.pinganoneUrl + "/pinganone/pa/appLogin.view");
+            } else {
+                getGrayUser($('#userID').val(),function(res){
+                   if(res.isGray=='Y'){
+                        $("#login_form").attr("action", "/customer/do/commonLoginPAPLogin.do");
+                   }else{
+                         // 移动终端登录认证接口
+                        $("#login_form").attr("action", InterfaceLoginObj.pinganoneUrl + "/pinganone/pa/appVcodeLogin.do"); 
+                   } 
+                });                
+            }
+            // AJAX方式登录
+            login(signData);
+        }
+    });
+}
+function login(signData) {
+    var prame = {
+        appId: signData.appID,
+        userID: $('#userID').val(),
+        loginPwd: $("#loginPwd").val(),
+        validCodeId: $('#validCodeId').val(),
+        validCode: $('#validCode').val(),
+        signature: signData.sign,
+        timestamp: signData.timestamp,
+        backFormat: 'json'
+    };
+    var url = InterfaceLoginObj.pinganoneUrl + "/pinganone/pa/appVcodeLogin.do?callback=?";
+   
+    getGrayUser($('#userID').val(),function(res){
+        if(res.isGray=='Y'){
+            url = '/customer/do/commonLoginPAPLogin.do?callback=?'; //调用主账户接口最后一步同步一账通从一张同获取登陆信息。           
+        }
+
+        $.ajax({
+            url: url,
+            type : "GET",
+            timeout : 5000,
+            async : false,
+            cache : false,
+            dataType:'jsonp',
+            data : prame,
+            success : function(data) {
+                $('#loginlink').attr('data-status', 'appVcodeLogin');
+                if (data && data.status === 'success' ) {
+                    //增加appid2019/02/22
+                    var login_fromto;
+                    if(/\:\/\/(test-)?www.4008000000.com/.test(location.href)){
+                        login_fromto = "PC_4008";
+                    }else if(/\:\/\/baoxian.pingan.com/.test(location.href)){
+                        login_fromto = "PC_BAOXIANSHANGCHENG";
+                    }else{
+                        login_fromto = " ";
+                    }
+                    data.data.ptag = $('#ptag').val(); 
+                    data.data.login_from = login_fromto;
+                    $.ajax({
+                        url: "/customer/commonLogin.do",
+                        type : "POST",
+                        dataType: "json",
+                        async : false,
+                        cache : false,
+                        data : data.data,
+                        success : function(res) {
+                            $('#loginlink').attr('data-status', 'commonLogin');
+                            loginCallback(res);
+                        },
+                        error : function(res) {
+                            // 登录超时
+                            showErrorInfo('登录超时，请重新登录', "sysTip");
+                            $("#loginlink").text('登录').data('isLoging', false);
+                        }
+                    });
+                } else {
+                    //登录失败
+                    var str = data.msg || '一账通登录异常';
+                    showErrorInfo(str, "sysTip");
+                    $("#loginlink").text('登录').data('isLoging', false);
+                }
+            },
+            error: function() {
+                //一账通登录异常
+                showErrorInfo('一账通登录异常', "sysTip");
+                $("#loginlink").text('登录').data('isLoging', false);
+            }
+        });
+    });
+}
+
+function loginCallback(data) {
+    if (data && data.resultCode == 'Y') {
+       $.ajax({
+    	   url:"/customer/user/queryShopUser.do",
+    	   dataType:"json",
+    	   success:function(res){
+    		   if(res && res.result=="Y"){
+    			   if(res.userInfos.mobile==''){
+    				   tipTimeInterval &&　clearInterval(tipTimeInterval);
+    				   $("#register_tip_log").show();
+    				   var tipTimeInterval = '',tiptext="秒后跳转...",cunt=5;
+    				   var $tip_count = $('#tip_count');
+    				   var $tip_text = $('#tip_text');
+    				   tipTimeInterval = setInterval(function(){
+    					   $tip_text.html(tiptext);
+    					   $tip_count.html(cunt);
+    					   cunt--;
+    					   if(cunt == 0){
+    						   tipTimeInterval &&　clearInterval(tipTimeInterval);
+    						   loginsuc();
+    					   }
+    				   },1000)
+    			   }else{
+    				   loginsuc();
+    			   }
+    		   }
+    	   },
+    	   error:function(res){
+    		   loginsuc()
+    		   }
+       })
+    } else {//登录失败
+        var str = data.msg || '会员系统登录异常';
+        showErrorInfo(str, "sysTip");
+        $("#loginlink").text('登录').data('isLoging', false);
+    }
+}
+function loginsuc(){
+	 // 同步登录官网和4008时，iframe超时的处理办法
+    setTimeout('memberSSO()', 15000);
+   /*phoneLogin.updateWltmember();// 处理万里通账号异常*/
+    // 登录成功后同步登录4008
+    var iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = '/customer/logon/loginTickets.jsp';
+    document.body.appendChild(iframe);
+}
+$(document).ready(function() {
+
+    // 密码框focus , blur事件
+    $('#userID,#v_password,#validCode').bind('focus',function(){
+        applyElClass($(this), 'focus');                 
+    }).bind('blur',function(){
+        applyElClass($(this));
+    });
+    $("input").focus(function() {
+        $("#sysTipText").text("");
+        $("#sysTipText").attr("style", "border: 0px");
+    });
+
+    getUserID("userID", "userID");
+    getUserID("optPhoneID", "J-phoneLogin-phone");
+});
+
+//记住用户名
+function setUserID(name, value){
+    var Days = 30; //此 cookie 将被保存 30 天
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name +" = "+ escape (value) + ";expires=" + exp.toGMTString();
+}
+//读取用户名
+function getUserID(name, el){
+    var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+    if(arr != null)
+    $('#'+ el).val(unescape(arr[2]));
+    return null;
+} 
+
+// 来源：生态圈
+if ($('#actionSource').val() == 'emall') {
+    $('body').addClass('emall-wrap');
+}
+function getRequest(param_name){
+	return (window.location.search.match(new RegExp('[&?]'+param_name + '=([^&]*)', 'i')) || [''])[0].split('=')[1];
+};
+// TAB切换
+$('#J-tabTitle > li').bind('click', function() {
+    /*var index = $('#J-tabTitle > li').index(this);*/
+    $(this).addClass('newcurrent').siblings().removeClass('newcurrent').css({fontSize : "14px"});
+    if(/\:\/\/(test-)?www.4008000000.com/.test(location.href)){
+		$(".newcurrent").css({
+			fontSize : "20px"
+		});
+	}else{
+		$(".newcurrent").css({
+			fontSize : "24px"
+		});
+	}
+    if ($(this).hasClass("jbTitle01")) {
+    	//扫吗登录在swipwerlogin.js里对应J-tabCont0登录框
+    	$(".disfdl_b").hide();
+        $('#J-tabCont1').hide();
+//        $('#J-tabCont2').hide();
+        // $('#J-tabCont2Old').hide();
+        $('#J-tabCont2New').hide();
+        $('#J-tabCont0').show();
+    	setTimeout(function(){
+    		tncode.scanLogin();
+    	},0)
+    }else if($(this).hasClass("jbTitle02")){
+    	//滑块登录在swipwerlogin.js对应J-tabCont1登录框
+    	$('#J-tabCont0').hide();
+    	$(".disfdl_b").hide();
+        $('#J-tabCont1').hide();
+        if(/\:\/\/(test-)?www.4008000000.com/.test(location.href)){
+            $('#J-tabCont2New').show();
+        }else{
+        	$('#J-tabCont2New').show();
+        }
+//        $('#J-tabCont2').show();  
+        //走住账户到一账通那套登录-对应J-tabCont3登录框
+        phoneLogin.init();
+    } else {
+    	//账密登录--对应J-tabCont2登录框
+    	$('#J-tabCont1').show();
+//        $('#J-tabCont2').hide();
+    	// $('#J-tabCont2Old').hide();
+        $('#J-tabCont2New').hide();
+        $('#J-tabCont0').hide();
+        $(".disfdl_b").show();
+    }
+});
+
+function setUserDomain(name, value,domainValue){
+    var Days = 30; //此 cookie 将被保存 30 天
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    document.cookie = name +" = "+ value + ";expires=" + exp.toGMTString()+";domain="+domainValue+";path=/";
+};
+
+// 手机登录
+var phoneLogin = {
+
+    // 是否已经初始化
+    isInit: false,
+
+    // 图形验证码ID
+    authCodeId: '',
+
+    // 短信动态密码ID
+    smsCodeId: '',
+
+    // 缓存手机号
+    tempPhoneNum: '',
+
+    // appId
+    appId: InterfaceLoginObj.appId || '10023',
+
+    isGray: false,
+    // 登录成功后，调转的目标页面
+    targetUrl: InterfaceLoginObj.targetUrl || '//' + location.hostname + '/member/index.shtml',
+
+    // 页面元素
+    elem: {
+
+        // 手机号输入框
+        input_phone: $('#J-phoneLogin-phone'),
+
+        // 图形验证码输入框
+        input_authCode: $('#J-phoneLogin-authCode'),
+
+        // 短信动态密码输入框
+        input_sms: $('#J-phoneLogin-sms'),
+
+        // 图形验证码父级DIV
+        wrap_authCode: $('#J-phoneLogin-authCode-wrap'),
+
+        // 图形验证码图片
+        img_authCode: $('#J-phoneLogin-authCode-img'),
+
+        // 切换图形验证码的按钮
+        btn_authCodeChange: $('#J-phoneLogin-authCode-change'),
+
+        // 发送短信动态密码的按钮
+        btn_sms: $('#J-phoneLogin-sms-btn'),
+
+        // 注册按钮
+        btn_register: $('.J-registerBtn'),
+
+        // 登录按钮
+        btn_submit: $('#J-phoneLogin-submit'),
+
+        // 开通登录
+        btn_loginUserInfo: $('#J-loginUserInfo')
+    },
+
+    // 手机号注册次数AJAX （2：注册次数2次 1：手机已经被注册 0：手机号未被注册 -1：系统异常 -2：手机号码为空）
+    getCountMobileNo: function(callback) {
+        var self = this,
+            elem = self.elem,
+            url = '/customer/getCountMobileNo.do',
+            data = {
+                mobileNo: elem.input_phone.val(),
+                flowID: InterfaceLoginObj.ptag
+            },
+            options = {
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                jsonp: 'callBack',
+                success: function(res) {
+                    callback && callback(res);
+                }
+            };
+        $.ajax(options);
+    },
+
+    // 根据手机号查询是否投保过的帐户
+    queryAccountByMobileNo: function(callback) {
+        var self = this,
+            elem = self.elem,
+            url = '/customer/queryAccountByMobileNo.do',
+            data = {
+                mobileNo: elem.input_phone.val()
+            },
+            options = {
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                jsonp: 'callBack',
+                success: function(res) {
+                    callback && callback(res);
+                }
+            };
+        $.ajax(options);
+    },
+
+    // 图形验证码AJAX
+    ajaxAuthCode: function(type, callback) {        
+        var self = this,
+            elem = self.elem,
+            url = InterfaceLoginObj.pinganoneUrl + '/pinganone/pa/paic/common/appvcode.do',
+            data = {
+                userId: type == 'otp' ? elem.input_phone.val() : $('#userID').val(),
+                appId: self.appId,
+                subsys: type
+            },
+           options = {
+                url: url,
+                type: 'GET',
+                dataType: 'jsonp',
+                data: data,
+                jsonp: 'callBack',
+                success: function(res) {
+                    callback && callback(res);
+                }
+            };
+
+        getGrayUser(data.userId,function(res){
+            if(res.isGray=='Y'){
+                url = '/customer/do/commonLoginPAPVCode.do';
+            }
+
+            options.url = url;
+            $.ajax(options);
+
+        });
+    },
+
+    // 短信动态密码AJAX
+    ajaxSmsCode: function(callback) {
+        
+        var self = this,
+            elem = self.elem,
+            url = InterfaceLoginObj.pinganoneUrl + '/pinganone/pa/sendShortMessageBfappvcode.do';
+        if (!self.authCodeId) {return;}
+        var data = {
+                mobileNo: elem.input_phone.val(),
+                validCodeId: self.authCodeId,
+                validCode: elem.input_authCode.val(),
+                appId: self.appId
+            },
+            options = {
+                url: url,
+                type: 'GET',
+                dataType: 'jsonp',
+                data: data,
+                jsonp: 'callBack',
+                success: function(res) {
+                    callback && callback(res);
+                }
+            };
+        
+        $.ajax(options);
+    },
+
+    // 登录AJAX
+    ajaxSubmit: function(callback) {
+        var self = this,
+            elem = self.elem,
+            url = '/customer/mobileLogin.do',
+            data = {
+                mobileNo: elem.input_phone.val(),
+                activeNo: elem.input_sms.val(),
+                activeId: self.smsCodeId,
+                optType: 'login',
+                ptag: InterfaceLoginObj.ptag
+            },
+            options = {
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                success: function(res) {
+                    callback && callback(res);
+                }
+            };
+        $.ajax(options);
+    },
+    //4008推送好车主预注册接口
+    pullToHCZ : function(data){
+    	/*$.ajax({
+    		url:"/customer/registerSyncHcz.do",
+    		data:data,
+    		type:"get",
+    		//async:false,
+    		success:function(res){console.log("scs=",res)},
+    		error:function(res){console.log("err=",res)}
+    	})*/
+    },
+    // 事件
+    bind: function() {
+        var self = this, elem = self.elem;
+
+        // 换一张图形验证码
+        elem.btn_authCodeChange.bind('click', function() {
+            getGrayUser(elem.input_phone.val(),function(res){
+                if(res.isGray=='Y'){
+                    phoneLoginGray.ajaxShowImageVcode(function(res){
+                        res = eval("(" + res+ ")");
+                        if ( res.returnCode=="0" ) {
+                        	phoneLoginGray.token = res.data['token'];                            
+                            if(res.data['isShowVcode']=="Y"){                        
+                                // 记录图形验证码ID
+                                phoneLoginGray.authCodeId = res.data['vcodeuuid'];
+                                // 图形验证码重新赋值          
+                                elem.img_authCode.attr('src', res.data['image']);
+                                $('#J-phoneLogin-authCode-wrap').show();             
+                                $('#J-phoneLogin-authCode-img').attr('src', res.data['image']);
+                                $('#J-phoneLogin-authCode').val('');                    
+                            } 
+                        } else {
+                             //获取图形验证码返回错误！                           
+                            showErrorInfo(res.returnMsg, "J-phoneLogin-prompt");                    
+                        }
+                    });
+
+                }else{
+                    // 验证码AJAX
+                    self.ajaxAuthCode('otp', function(data) {
+                        // 记录图形验证码ID
+                        self.authCodeId = data.id;
+                        // 图形验证码重新赋值
+                        elem.img_authCode.attr('src', data.img);
+                    }); 
+                }
+            });
+
+            
+        });
+
+        // 发送短信动态密码
+        elem.btn_sms.bind('click', function() {            
+            getGrayUser(elem.input_phone.val(),function(res){
+                if(res.isGray=='Y'){ 
+                    if(!phoneLoginGray.token){
+                        phoneLoginGray.sendAuthCode();
+                    }                                       
+                    phoneLoginGray.sendValidCode();
+                    phoneLogin.isGray = true;
+                }else{
+                    if(!phoneLogin.authCodeId){
+                        phoneLogin.sendAuthCode();//图形验证码输入或不输入
+                    }
+                    phoneLogin.sendValidCode();
+                }
+            });
+			
+        });
+
+        // 注册
+        elem.btn_register.bind('click', function() {            
+            location.href = '//' + location.hostname + '/customer/toRegisterUser.do?type=07&flowID=' + InterfaceLoginObj.ptag + '&target=' + phoneLogin.targetUrl;        
+        });
+
+        // 开通登录
+        elem.btn_loginUserInfo.bind('click', function() {            
+            location.href = '//' + location.hostname + '/member/user/userInfo.shtml';
+        });
+
+        // 登录
+        elem.btn_submit.bind('click',function(){
+        	getGrayUser(elem.input_phone.val(),function(res){
+        		if(res.isGray=='Y'){
+        			if(mobileLoginResult!=true){
+        				phoneLoginGray.submit();
+        			}else{
+        				elem.btn_submit.unbind('click', phoneLoginGray.submit);
+        			}
+        			//phoneLoginGray.submit();
+                    elem.btn_submit.unbind('click', phoneLogin.submit);
+                    phoneLogin.isGray = true;
+        		}else{
+        			
+        			phoneLogin.submit();
+                    phoneLogin.isGray = false;
+        		}
+        	});
+        	
+        });
+
+		elem.input_phone.keyup(function(){
+			if(elem.input_phone.val().length==11){
+				if (elem.input_phone.val() == self.tempPhoneNum){
+					return;
+				}else{
+					phoneLogin.resetUi();
+				}
+				
+
+				var validator = elem.input_phone.validator('check');
+				// 校验通过 则去查有没有注测
+				if (validator) {
+					getGrayUser(elem.input_phone.val(),function(res){
+						if(res.isGray == 'Y'){							
+							phoneLoginGray.sendAuthCode();//是否显示图形验证码并获取token
+                            phoneLogin.isGray = true;
+						}else{
+							phoneLogin.loginOrRegister();
+                            phoneLogin.isGray = false;
+						}
+					});
+					
+				}
+			}
+		});
+		// if(elem.input_phone.val().length==11){
+		// 	var validator = elem.input_phone.validator('check');
+		// 	if(validator){
+		// 		self.tempPhoneNum = elem.input_phone.val();
+		// 		getGrayUser(elem.input_phone.val(),function(res){
+		// 			if(res.isGray == 'Y'){
+		// 				//灰度用户的						
+		// 				phoneLoginGray.sendAuthCode();//是否显示图形验证码并获取token 
+        //                 phoneLogin.isGray = true;                       
+		// 			}else{
+		// 				// 手机号已被注册，可以继续走登录流程,发送短信动态密码
+		// 				if (elem.wrap_authCode.css("display") === 'none' ) {
+		// 					// 手机号没改变 且 不显示图形验证码的情况
+		// 					phoneLogin.sendAuthCode();
+        //                     phoneLogin.isGray = false;
+		// 				}
+		// 			}
+		// 		})
+		// 	}
+		// }
+	},
+
+    // 重置UI
+    resetUi: function() {
+        var elem = this.elem;
+        elem.wrap_authCode.hide();
+        phoneLogin.tempPhoneNum = elem.input_phone.val();
+    },
+
+
+  /*  // 处理万里通账号异常
+    updateWltmember: function() {
+        $.ajax({
+            type : "GET",
+            cache : false,
+            url : "/customer/updateWltmember.do"
+        });
+    },*/
+
+    // 提交
+    submit: function() {
+        var elem = phoneLogin.elem;       
+        	phoneLogin.ajaxSubmit(function(data) {
+        	            // Loading
+        	            elem.btn_submit.text('正在登录，请稍候...');
+        	            elem.btn_submit.unbind('click');
+
+        	            if (data.resultCode == 'Y') {
+        	            	        	            	
+        	                // 记住手机号
+        	                if($('#J-phoneLogin-remembertel').attr("checked")) {
+        	                    setUserID('optPhoneID', elem.input_phone.val());
+        	                }
+        	              //4008推送好车主预注册接口
+        	                try{
+        	                	phoneLogin.pullToHCZ({mobileNo:elem.input_phone.val(),sysComfrom:"4008_login"});
+        	                }catch(e){}finally{
+        	                	// 登录成功
+            	                var iframe = document.createElement('iframe');
+            	                iframe.style.display = 'none';
+            	                iframe.src = '/customer/logon/loginTickets.jsp';
+            	                document.body.appendChild(iframe);
+        	                }
+        	                
+        	             /* phoneLogin.updateWltmember(); // 处理万里通账号异常*/
+
+        	                
+        	            } else if (data.resultCode == 'N') {
+
+        	                //登录失败
+        	                var msg = {
+        	                        '0020': '短信动态密码无效，请重新输入',
+        	                        '0011': '抱歉，系统异常，请稍候再试',
+        	                        '0012': '该手机曾在多个账户内登记，暂不支持手机登录，请使用用户名加密码登录',
+        	                        '0013': '请传入参数',
+        	                        '0014': '用户不存在',
+        	                        '0015': '您的账户异常，暂不能使用一账通',
+        	                        '0017': '账户已被锁定',
+        	                        '0018': '短信动态密码已过期，请重新获取',
+        	                        '0019': '短信动态密码错误，请重新输入',
+        	                        '01'  : '手机号不能为空',
+        	                        '02'  : '短信动态密码不能为空',
+        	                        '0025': '该用户账号已禁用'
+        	                    },
+        	                    str = msg[data.messageCode] || '系统异常';
+
+        	                showErrorInfo(str, "J-phoneLogin-prompt");
+
+        	                elem.btn_submit.text('登录');
+        	                
+        	                	elem.btn_submit.bind('click', phoneLogin.submit);
+        	               
+        	                
+        	            }
+        	        });
+        	
+        
+       
+    },
+
+    /**
+     * 倒记时
+     * @param  {object} options         设置参数
+     * @param.fresh_text {string}       倒计时结束要显示的文字，默认使用按钮最初的文字
+     * @param.count {string}            倒计时的秒数
+     * @param.btn {string}              一个input button对像
+     * @param.ext_text {string}         在显示的秒数后面要附加的说明性文字
+     * @param.ext_class {string}        倒计时中给A标签添加的class
+     * @param.callback {string}         倒计时结束要执行的函数，也可以不设置
+     */
+    doTimeoutCount: function(options) {
+
+        var isA = options.btn[0].nodeName == 'A';
+
+        if (typeof(options.ext_class) === 'undefined'){
+            options.ext_class = 'disabled';
+        }
+
+        if (typeof(options.fresh_text) === 'undefined'){
+            options.fresh_text = isA ? options.btn.text() : options.btn.val();
+        }
+        if (isA) {
+            options.btn.addClass(options.ext_class).text(options.count + options.ext_text);
+        } else {
+            options.btn.attr('disabled', true).val(options.count + options.ext_text);
+        }
+
+        var handle = setInterval(count_down, 1000);
+
+        // 在每个周期中要执行的操作
+        function count_down() {
+            if (--options.count > 0) {
+                if (isA) {
+                    options.btn.text(options.count + options.ext_text);
+                } else{
+                    options.btn.val(options.count + options.ext_text);
+                }
+            } else {
+                clearInterval(handle);
+                if (isA) {
+                    options.btn.removeClass(options.ext_class).text(options.fresh_text);
+                } else {
+                    options.btn.attr('disabled', false).val(options.fresh_text);
+                }
+                if (typeof(options.callback) !== 'undefined'){
+                    options.callback();
+                }
+            }
+        }
+    },
+
+    // 根据手机号注册次数，判断是该进行登录流程，还是转到注册流程
+    loginOrRegister: function() {
+        // 判断走登录流程还是注册流程
+        phoneLogin.getCountMobileNo(function(data) {
+            if (data.resultCode == 'Y') {
+                if (data.res == '0') {
+                    // 手机号未被注册，查询是否投过保
+                    phoneLogin.whichRegister();
+                } else if (data.res == '-1') {
+                    // 系统异常
+                    showErrorInfo('系统异常！', "J-phoneLogin-prompt");
+                } else if (data.res == '-2') {
+                    // 手机号码为空
+                    showErrorInfo('手机号码为空！', "J-phoneLogin-prompt");
+                }else{
+					// 已注册用户多次异常登录 检查是否需要验证码
+					if (phoneLogin.elem.wrap_authCode.css("display") === 'none' ) {
+						// 手机号没改变 且 不显示图形验证码的情况
+						phoneLogin.sendAuthCode();
+
+					}
+				}
+            }
+        });
+    },
+
+    // 未被注册过的手机号，查询是否投过保
+    whichRegister: function() {
+        var elem = this.elem;
+        phoneLogin.queryAccountByMobileNo(function(data) {
+            if (data.resultCode == 'Y') {
+                if (data.account == '') {
+                 /*   // 该手机号没有投过保
+                    $('.J-register-mobileNo').text(elem.input_phone.val());
+                    $.pa_ui.dialog.open({
+                        title: '手机动态码注册',
+                        dialogClass: 'dialog_default',
+                        minimize: false,
+                        maximize: false,
+                        element: 'registerNoAccount',
+                        width: 700,
+                        height: 300
+                    });*/
+					// 手机号未被注册，去获取图形验证码,如果验证码已经出来了，就不再去请求了
+					if (elem.wrap_authCode.css("display") === 'none' ) {
+						// 手机号没改变 且 不显示图形验证码的情况
+						phoneLogin.sendAuthCode();
+					}
+                } else {
+                    // 该手机号有投过保
+                    $('.J-register-mobileNo').text(elem.input_phone.val());
+                    $('.J-register-username').text(data.account);
+                    $.pa_ui.dialog.open({
+                        title: '温馨提示',
+                        dialogClass: 'dialog_default',
+                        minimize: false,
+                        maximize: false,
+                        element: 'registerHasAccount',
+                        width: 700,
+                        height: 350,
+						close:function(){
+							phoneLogin.sendAuthCode();
+						}
+                    });
+                }
+            }
+        });
+    },
+    // 发送短信动态密码
+    sendValidCode: function() {
+        var self = this;
+        var elem = phoneLogin.elem;
+        var validator = elem.input_phone.validator('check');
+            // 校验通过 且 手机号改变
+            if (validator) {
+            	getGrayUser(elem.input_phone.val(),function(res){
+            		if(res.isGray == 'Y'){
+            			phoneLoginGray.sendCode();
+            		}else{
+            			// 手机号没改变 且 显示图形验证码的情况
+                        phoneLogin.sendCode();
+            		}
+            	});
+                  
+            }
+    },
+
+    // 未注册 要求 输入 验证码 或者不输入
+    sendAuthCode: function() {
+        var self = this;
+        var elem = self.elem;
+        // 验证码AJAX
+        phoneLogin.ajaxAuthCode('otp',function(data) {
+            // 记录图形验证码ID
+            phoneLogin.authCodeId = data.id;
+            // 显示图形验证码
+            if (data.type == '0') {
+                elem.wrap_authCode.show();
+                elem.img_authCode.attr('src', data.img);
+                elem.input_authCode.val('');
+            }           
+        });
+    },
+
+    // 获取短信动态密码
+    sendCode: function() {
+        var elem = phoneLogin.elem;
+        // 前端校验
+        if (elem.input_phone.val() == '') {
+            showErrorInfo('手机不能为空', "J-phoneLogin-prompt");
+        } else if (elem.wrap_authCode.css("display") !== 'none' && elem.input_authCode.val() == '') {
+            showErrorInfo('请先输入图形验证码后，再点击发送短信动态密码。', "J-phoneLogin-prompt");
+        } else {
+            // 发送短信动态码
+            phoneLogin.ajaxSmsCode(function(data) {
+                if (data.status == 'success') {
+
+                    // 短信发送成功的回调
+                    showCorrectInfo('短信发送成功', "J-phoneLogin-prompt");
+                    phoneLogin.smsCodeId = data.data.activeId;
+
+                    // 倒计时
+                    var options = {
+                        btn: elem.btn_sms,
+                        count: 60,
+                        fresh_text: '发送短信动态密码',
+                        ext_text: '秒后可重新发送',
+                        ext_class: 'telsend-disabled',
+                        callback: function(){
+                            elem.btn_sms.bind('click', phoneLogin.sendValidCode);
+                        }
+                    };
+                    elem.btn_sms.unbind('click');
+                    phoneLogin.doTimeoutCount(options);
+                } else if (data.status == 'fail') {
+                    $('#J-phoneLogin-authCode-change').trigger('click');
+                    // 短信发送失败
+                    showErrorInfo(data.data.errorMessage || '短信发送失败', "J-phoneLogin-prompt");
+                }
+            });
+        }
+    },
+
+    // 初始化
+    init: function() {
+        var self = this;
+        if (!self.isInit) {
+            self.isInit = true;
+            self.bind();
+        }
+    }
+};
+/*
+ * 灰度用户调用主账户接口进行OTP登陆。
+ * 采用新的登陆接口！2018-01-24版本
+ * */
+var phoneLoginGray = {       
+		tempPhoneNum:'',   
+	    // 图形验证码ID
+	    authCodeId: '',	  
+	    //token
+	    token: '',	    
+	    appIdNew : '12306',
+	    deviceType : 'pc',
+	    // 页面元素
+	    elem: phoneLogin.elem,
+
+	    //主账户是否显示图形验证码接口
+	    ajaxShowImageVcode : function(callback){
+	    	var self = this,
+	        elem = self.elem;	    	 
+             url = '/customer/isShowImage.do',
+	         data = {            	
+	    		appId : self.appIdNew,
+	            deviceType : self.deviceType,
+	            loginName : elem.input_phone.val()           
+	         },
+	         options = {
+	            url: url,
+	            type: 'post',	            
+	            data: data,
+	            jsonp: 'callBack',
+	            success: function(res) {
+	                callback && callback(res);
+
+	            }
+	         };
+	     $.ajax(options);
+	    	
+	    },
+
+	    // 短信动态密码AJAX
+	    ajaxSmsCode: function(callback) {        
+	        var self = this,
+	            elem = self.elem,
+	            url = '/customer/sendShortMessage.do';
+	            var showImg = "N";
+	            if(phoneLoginGray.authCodeId){
+	                showImg = "Y";
+	            } 
+	        var datas = {	        	
+	            appId : self.appIdNew,
+	            deviceType : self.deviceType,
+	            mobileNo : elem.input_phone.val(),
+	            ptag : InterfaceLoginObj.ptag,  //flowId值       
+	            vcodeuuid : phoneLoginGray.authCodeId || "", // data.imageId有此值就必须要传
+	            imageValue : elem.input_authCode.val() || "",//图形验证码输入, //图形验证码  输入框的值
+	            isShowVcode : showImg,     
+	            token : self.token
+	        };                        
+	        if (!self.token) {return;}       
+	            options = {
+	                url: url,
+	                type: 'post',	                              
+	                data: datas, 
+                    //contentType: 'text/html;charset=utf-8',               
+	                success: function(res) {
+                        callback(res);
+	                }
+	            };
+	        
+	        $.ajax(options);
+	    },
+	    //登陆ajax主账户
+	    ajaxMobileLogin: function(callback){        
+	        var self = this,
+	            elem = self.elem,
+	            url = '/customer/mobileLoginPAP.do',
+	            params = {	        		
+	                appId : self.appIdNew,
+	                deviceType : self.deviceType,
+	                mobileNo : elem.input_phone.val(),
+	                token : self.token,
+	                otp : elem.input_sms.val(),//短信验证码输入框的值
+	                ptag : InterfaceLoginObj.ptag//flowId值
+	            },
+	            options = {
+	                url: url,
+	                type: 'post',	                
+	                async : false,
+	                cache : false,
+	                data: params,
+	                success: function(res) {
+	                    callback(res);
+	                }
+	            };
+	        $.ajax(options);
+	    },	   
+	    // 提交
+	    submit: function() {
+	        var elem = phoneLoginGray.elem;
+	        if(/^1[3456789]{1}[0-9]{9}$/.test(elem.input_phone.val()) && elem.input_sms.val()!=""){
+	            elem.btn_submit.text('正在登录，请稍候...');
+	            elem.btn_submit.unbind('click', phoneLoginGray.submit);
+	        }        
+	        phoneLoginGray.ajaxMobileLogin(function(data) {
+                data = eval("(" + data + ")");
+	           
+	            // Loading
+	            elem.btn_submit.text('正在登录，请稍候...');
+	            elem.btn_submit.unbind('click', phoneLoginGray.submit);
+
+	            if (data.resultCode == 'Y') {
+	            	mobileLoginResult = true;
+	            	//隐藏提示框
+	            	$("#J-phoneLogin-prompt").hide();
+	            	
+	                // 记住手机号
+	                if($('#J-phoneLogin-remembertel').attr("checked")) {
+	                    setUserID('optPhoneID', elem.input_phone.val());
+	                }
+	                //4008推送好车主预注册接口
+	                try{
+	                	phoneLogin.pullToHCZ({mobileNo:phoneLogin.elem.input_phone.val(),sysComfrom:"4008_login"});
+	                }catch(e){
+	                	
+	                }finally{
+	                	// 登录成功
+		                 /* 判断是否新用户*/
+	                if (data.isNew == 'Y') {
+	                	setCookie('isNew','Y',1);
+						var iframe = document.createElement('iframe');
+		                iframe.style.display = 'none';
+		                iframe.src = '/customer/logon/loginTickets.jsp';
+		                document.body.appendChild(iframe);
+	                    
+	                }else{
+	        	        var iframe = document.createElement('iframe');
+		                iframe.style.display = 'none';
+		                iframe.src = '/customer/logon/loginTickets.jsp';
+		                document.body.appendChild(iframe);	
+	                }
+	                }
+	            } else if (data.resultCode == 'N') {
+	                //登录失败
+	                var msg = {
+	                        'COMMON_ERROR_001' : '短信动态密码已过期，请重新获取',//'验签失败',
+	                        'COMMON_ERROR_002' : '请求已超时,请重新提交！',
+	                        'OTP_ERROR_001' : '请正确输入您的手机号码',
+	                        'COMMON_ERROR_006' : '您的账户异常，暂不能使用一账通',
+	                        'COMMON_ERROR_007' : '账户已被锁定',
+	                        'COMMON_ERROR_008' : '该用户账号已禁用',//'该账户存在黑名单', 
+	                        'OTP_ERROR_004' : '短信动态密码已过期，请重新获取',
+	                        'OTP_ERROR_005' : '短信动态密码无效，请重新输入',
+	                        'OTP_ERROR_006' : '短信动态密码错误，请重新输入',
+	                        'BIZ_ERROR_011' : '您的账户异常，暂不能使用一账通',
+	                        'BIZ_ERROR_001' : '该手机号已注册,请使用用户名加密码登录',
+	                        'BIZ_ERROR_012' : '该手机号正在被注册使用，请勿恶意操作',
+	                        '01' : '手机号不能为空',
+	                        '02' : '短信动态密码不能为空'
+	                    },
+	                    str = msg[data.messageCode] || '系统异常';
+
+	                showErrorInfo(str, "J-phoneLogin-prompt");
+
+	                elem.btn_submit.text('登录');
+	                elem.btn_submit.bind('click', phoneLoginGray.submit);
+	            }
+	        });
+	    },
+
+	    // 发送短信动态密码
+	    sendValidCode: function() {
+	        var self = this;
+	        var elem = phoneLoginGray.elem;
+	        var validator = elem.input_phone.validator('check');
+	            // 校验通过 
+	            if (validator) {
+	               //获取短信动态密码
+					phoneLoginGray.sendCode();
+
+	            }
+	    },
+
+	    // 输入 验证码 或者不输入
+	    sendAuthCode: function() {
+	        var self = this;
+	        var elem = self.elem;        
+	        // 验证码AJAX
+	    	self.ajaxShowImageVcode(function(res){               
+                res = eval("(" + res+ ")");	             
+	            if(res.returnCode=="0"){
+	            	self.token = res.data['token'];	                
+	                if(res.data['isShowVcode']=="Y"){// 显示图形验证码                    
+	                // 记录图形验证码ID
+	                    phoneLoginGray.authCodeId = res.data['vcodeuuid'];
+	                    $('#J-phoneLogin-authCode-wrap').show();             
+	                    $('#J-phoneLogin-authCode-img').attr('src', res.data['image']);
+	                    $('#J-phoneLogin-authCode').val('');
+	                }  
+	            }else{	                
+	                //获取图形验证码返回错误！
+	                showErrorInfo(res.returnMsg, "J-phoneLogin-prompt");
+	            }
+	    	});    
+	    },
+
+	    // 获取短信动态密码
+	    sendCode: function() {
+	        var elem = phoneLoginGray.elem;
+	        if (elem.input_phone.val() == '') {// 前端校验
+	            showErrorInfo('手机不能为空', "J-phoneLogin-prompt");
+	        } else if (elem.wrap_authCode.css("display") !== 'none' && elem.input_authCode.val() == '') {
+	            showErrorInfo('请先输入图形验证码后，再点击发送短信动态密码。', "J-phoneLogin-prompt");
+	        } else {
+	            // 发送短信动态码
+	            phoneLoginGray.ajaxSmsCode(function(data) {
+                    data = eval("(" + data + ")"); 
+
+	                if (data.returnCode == '0') {
+	                    // 短信发送成功的回调
+	                    showCorrectInfo('短信发送成功', "J-phoneLogin-prompt");	                    
+	                    // 倒计时
+	                    var options = {
+	                        btn: elem.btn_sms,
+	                        count: 60,
+	                        fresh_text: '发送短信动态密码',
+	                        ext_text: '秒后可重新发送',
+	                        ext_class: 'telsend-disabled',
+	                        callback: function(){
+	                            elem.btn_sms.bind('click', phoneLoginGray.sendValidCode);
+	                        }
+	                    };
+	                    elem.btn_sms.unbind('click');
+	                    phoneLogin.doTimeoutCount(options);
+
+	                } else {
+	                    $('#J-phoneLogin-authCode-change').trigger('click');//重新获取图形码                       
+	                    // 短信发送失败   
+	                    switch(data.returnCode){
+	                    case 'OTP_ERROR_007'://您的手机接受动态码已超过规定次数，请隔日再试！
+	                    	showErrorInfo(data.returnMsg || '短信发送失败', "J-phoneLogin-prompt");
+	                    	break;
+	                    case 'OTP_ERROR_012'://帐户已被锁定
+	                    	showErrorInfo(data.returnMsg || '短信发送失败', "J-phoneLogin-prompt");
+	                    	break;	
+	                    case 'OTP_ERROR_008'://图形验证码错误
+	                    	showErrorInfo(data.returnMsg ||'短信发送失败', "J-phoneLogin-prompt");
+	                    	break;
+	                    case 'OTP_ERROR_009':
+	                    	showErrorInfo('短信发送失败', "J-phoneLogin-prompt");
+	                    	break;
+	                    case 'OTP_ERROR_015'://1分钟内不能重复发送OTP
+	                    	showErrorInfo('1分钟内不能重复发送短信验证码' ||'短信发送失败', "J-phoneLogin-prompt");
+	                    	break;
+	                    case 'OTP_ERROR_020'://图形验证码已失效
+	                    	showErrorInfo(data.returnMsg ||'短信发送失败', "J-phoneLogin-prompt");
+	                    	break;
+	                    default:
+	                    	showErrorInfo('请求超时', "J-phoneLogin-prompt");	
+	                    	break;
+	                    }
+                        
+	                    
+	                }
+	            });
+	        }
+	    }
+};
+
+// 登录跳转
+function memberSSO() {
+	window.location.href = phoneLogin.targetUrl;
+}
+/*设置cookie*/
+function setCookie(cname,cvalue,exdays){
+    var d = new Date();
+    d.setTime(d.getTime()+(exdays*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    var path_ = "path=/";
+    document.cookie = cname + "=" + cvalue + "; " + expires + "; " + path_;
+}
+// 嘉年华进来的，显示文案
+(function() {
+    if (InterfaceLoginObj.actionSource == 'carnival') {
+        $('#J-carnivalShow').show();
+        $('#J-thirdPartyLogin').hide();
+        $('#J-noThirdPartyLoginShow').show();
+    }else if(InterfaceLoginObj.actionSource == 'pagame'){
+		$('#J-qqLogin').hide();
+		$('#J-sinaLogin').hide();
+		$('#J-wltLogin').css('marginLeft','-16px');
+	}
+    //忘记用户名和忘记密码改为调主账户的。
+    //$('#retrieveVerify').attr('href','/customer/retrieveVerify.do');
+    //$("#paResetIndex").attr("href","/customer/paResetIndex.do");
+})()
+phoneLogin.init();
