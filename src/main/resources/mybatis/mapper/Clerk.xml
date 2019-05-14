@@ -15,12 +15,12 @@
  		#{cp,mode=IN,jdbcType=INTEGER},
  		#{ps,mode=IN,jdbcType=INTEGER},
  		#{totalpage,mode=OUT,jdbcType=INTEGER},
- 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkinfo},
+ 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkpp},
  		#{c_count,mode=OUT,jdbcType=INTEGER}
  	)}
    </select>
    
-   <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">
+   <resultMap type="cn.saonan.pojo.Clerk" id="clerkpp">
 	   <id property="magid" column="magid"/>
 	   <result property="roleid" column="roleid"/>
 	   <result property="username" column="username"/>
@@ -49,6 +49,7 @@
    	 emergency, join_date, area, phone, del_status from clerk where magid=#{magid}
    </select>
    
+  
    
    <!-- 添加员工 -->
    
@@ -94,5 +95,9 @@
 	</delete>
    
    
+    <!-- 根据角色查找员工 -->
+   <select id="findClerkByRole" resultType="cn.saonan.pojo.Clerk">
+   		select magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, emergency, join_date, area, phone, del_status from clerk where roleid=#{roleid}
+   </select>
    
 </mapper>

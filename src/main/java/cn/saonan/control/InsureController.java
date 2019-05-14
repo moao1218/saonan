@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +40,7 @@ public class InsureController {
 	@Autowired
 	private ClerkService clerkService;
 	
+	@Autowired
 	private PolicyVerifyService pvs;
 
 	//所有保单列表
@@ -177,8 +179,6 @@ public class InsureController {
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
 		
-		System.out.println(pvList.get(0).getPol_ver_id());
-		
 		model.addAttribute("insurance", insurance);
 		model.addAttribute("pvList", pvList);
 		return "server/insurance_Details";
@@ -215,23 +215,30 @@ public class InsureController {
 		insuranceMap.put("policyid", pid);
 		insuranceSlipService.updateInsuranceStatus(insuranceMap);
 		
-		Map<String,Object> clerkMap = new HashMap<String,Object>();
-		clerkMap.put("rol", 8);
-		clerkService.findClerkSplits(clerkMap);
-		List<Clerk> clerks = (List<Clerk>) clerkMap.get("clerks");
+		int roleid = 8;
+		List<Clerk> clerks = clerkService.findClerkByRole(roleid);
 		model.addAttribute("clerks", clerks);
-		System.out.println("jinrule");
 		return clerks;
 	}
 	
 	//分派现场勘察员
+	@ResponseBody
 	@PostMapping(value="/assignScout")
-	public String assignScout() {
-		return "";
+	public List<Clerk> assignScout(String pid,Model model) {
+		Map<String,Object> insuranceMap = new HashMap<String,Object>();
+		insuranceMap.put("newstatus", 3);
+		insuranceMap.put("policyid", pid);
+		insuranceSlipService.updateInsuranceStatus(insuranceMap);
+		
+		int roleid = 9;
+		List<Clerk> clerks = clerkService.findClerkByRole(roleid);
+		model.addAttribute("clerks", clerks);
+		return clerks;
 	}
 	
-	@RequestMapping(value="/checkIdCard")
+	
 	@ResponseBody
+	@RequestMapping(value="/checkIdCard")
 	public String checkIdCard(HttpServletRequest request) {
 		
 		String idCrad = request.getParameter("idCard");

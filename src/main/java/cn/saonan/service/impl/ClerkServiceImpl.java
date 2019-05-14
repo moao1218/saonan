@@ -27,7 +27,7 @@ public class ClerkServiceImpl implements ClerkService {
 	@Override
 	public void  findClerkSplits(Map<String,Object> map) {
 			
-		clerkmapper.findClerkSplits(map);
+		clerkmapper.findClerkSplit(map);
 	}
 
 	
@@ -72,6 +72,11 @@ public class ClerkServiceImpl implements ClerkService {
 	public boolean clerkdelete(Clerk ck) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<Clerk> findClerkByRole(Integer roleid) {
+		return clerkmapper.findClerkByRole(roleid);
 	}
 
 }

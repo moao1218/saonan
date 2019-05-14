@@ -32,26 +32,19 @@
   		$.post("/checkIdCard",{"idCrad":idCard},function(data){
   			console.log("熊蕃猛");
   		console.log(data);
-<<<<<<< HEAD
   		if(data.result.data.resp.code==0){
   			$("#idCardSpan").html("合理");
-=======
   		if(data.result.resp.code==0){
   			$("#idCardSpan").html("heli");
->>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git
   		}else{
-<<<<<<< HEAD
   			$("#idCardSpan").html("不合理");
-=======
   			$("#idCardSpan").html("buheli");
->>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git
   			
-  		}
+  		}}
   			
   		},"json");
   		
   	}
-  	
   </script>
 
   <!-- =======================================================

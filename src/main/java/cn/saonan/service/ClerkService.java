@@ -51,5 +51,8 @@ public interface ClerkService {
 	 */
 	 public boolean clerkdelete(Clerk ck);
 	
-	
+	 /*
+		 * 根据角色查找员工
+		 */
+	 public List<Clerk> findClerkByRole(Integer roleid);
 }

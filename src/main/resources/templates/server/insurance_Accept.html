@@ -26,16 +26,40 @@
   <script type="text/javascript">
   	function assignGuide(pid){
   		$.post("/assignGuide",{"pid":pid},function(data){
-  			var arr = eval("("+data+")");
-  			$.each(arr,function(i,n){
+  			$("#guide option:gt(0)").remove();
+  			$("#but1").remove();
+  			$.each(data,function(i,n){
 				$("#guide").append("<option value='"+n.magid+"'>"+n.realname+"</option>");
 			});
+  			$("#assign1").append("<button id='but1' type='button' class='btn btn-success' onclick='putin1()'>提交</button>");
+  			$("#guide").css("display","inline");
+  			$("#assign2").css("display","none");
   		},"json");
   	}
   	
-  	/* function assignScout(){
-  		$.post();
-  	}  */
+  	
+  	function assignScout(pid){
+  		$.post("/assignScout",{"pid":pid},function(data){
+  			$("#scout option:gt(0)").remove();
+  			$("#but2").remove();
+  			$.each(data,function(i,n){
+				$("#scout").append("<option value='"+n.magid+"'>"+n.realname+"</option>");
+			});
+  			$("#assign2").append("<button id='but2' type='button' class='btn btn-success' onclick='putin2()'>提交</button>");
+  			$("#scout").css("display","inline");  			
+  			$("#assign2").css("display","none");
+  		},"json");
+  	}  
+  	
+  	function putin1(){
+  		var guide = $("#guide").val();
+  		location.href="/jumpPending";
+  	}
+  	
+  	function putin2(){
+  		var scout = $("#scout").val();
+  		location.href="/jumpPending";
+  	}
   </script>
 
   <!-- =======================================================
@@ -181,16 +205,18 @@
 			      <td th:text="${insurance.pol_property}==0?'个人':'企业'">Larry</td>
 			    </tr>
 			  </tbody>
-			</table>	
-			<div style="margin-left: 350px">
+			</table>
+			<div style="margin-left: 200px" id="assign1">
 			   <button type="button" class="btn btn-danger" th:onclick="assignGuide([[${insurance.policyid}]])">分派专业指导人员</button>
-			   <button type="button" class="btn btn-success" th:onclick="assignScout()">分派现场勘察人员</button>
-			</div>
-			<div >
-				<select name="guide" id="guide" >
-					<option value="">--请选择--</option>
+			   <select name="guide" id="guide" style="display:none">
 				</select>
-			</div>	   
+			   
+			</div>
+			<div style="margin-left: 200px" id="assign2">
+			   <button type="button" class="btn btn-success" th:onclick="assignScout([[${insurance.policyid}]])">分派现场勘察人员</button>
+			   <select name="scout" id="scout" style="display:none">
+				</select>
+			</div>
         </div>
      </section>
 	  
