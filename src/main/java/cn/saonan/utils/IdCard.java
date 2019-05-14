@@ -17,8 +17,7 @@ public class IdCard {
 		
 		StringBuffer b=new StringBuffer();
 		try {
-
-			URL u=new URL("https://way.jd.com/yingyan/queryidcard?id=" + id + "&appkey=a70c18a3572454a1eadd63553edab236");
+			URL u=new URL("https://way.jd.com/yingyan/queryidcard?id=" + id + "&appkey=1f042f69fc9614b2c0904bbae60d77e0");
 			URLConnection openConnection = u.openConnection();
 			InputStream inputStream = openConnection.getInputStream();
 			InputStreamReader is = new InputStreamReader(inputStream);
@@ -41,7 +40,7 @@ public class IdCard {
 		e.printStackTrace();
 	}
 		
-		return "b";
+		return b.toString();
 		
 	}
 

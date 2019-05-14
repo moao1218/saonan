@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.InsuranceSlip;
+import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.InsuranceSlipService;
+import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.UsersService;
 import cn.saonan.utils.IdCard;
 
@@ -31,6 +33,9 @@ public class InsureController {
 	
 	@Autowired
 	private UsersService usersService ;
+	
+	@Autowired
+	private PolicyVerifyService pvs;
 
 	@GetMapping(value="/jumpInsuranceList")
 	public String goList(Model model) throws ParseException {
@@ -140,8 +145,15 @@ public class InsureController {
 	@RequestMapping(value="/jumpDetails")
 	public String details(String pid,Model model) {
 		
+		System.out.println(pid);
+		
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
+		
+		System.out.println(pvList.get(0).getPol_ver_id());
+		
 		model.addAttribute("insurance", insurance);
+		model.addAttribute("pvList", pvList);
 		return "server/insurance_Details";
 	}
 	
@@ -154,6 +166,7 @@ public class InsureController {
 	}
 	
 	@RequestMapping(value="/checkIdCard")
+	@ResponseBody
 	public String checkIdCard(HttpServletRequest request) {
 		
 		String idCrad = request.getParameter("idCard");
