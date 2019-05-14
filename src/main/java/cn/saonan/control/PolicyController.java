@@ -46,15 +46,16 @@ public class PolicyController {
 		model.addAttribute("policyList", policyList);
 		model.addAttribute("cp", cp);
 		
-		System.out.println("====================================================================");
-		//System.out.println(policyList.get(0).getCity());
-		System.out.println(policyList.size());
-		System.out.println(count);
-		System.out.println(totalPage);
-		
-		
-		
 		return "server/policy_list";
+	}
+	
+	@RequestMapping(value="/goPolicyDetails")
+	public String goPolicyDetails(String policyId, Model model) {
+		
+		Policy policy = policyService.findPolicyById(policyId);
+		model.addAttribute("policy", policy);
+		
+		return "server/policy_Detail";
 	}
 	
 }

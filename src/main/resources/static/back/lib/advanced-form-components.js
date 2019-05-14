@@ -6,13 +6,13 @@
     $(function(){
         window.prettyPrint && prettyPrint();
         $('.default-date-picker').datepicker({
-            format: 'mm-dd-yyyy'
+            format: 'yyyy-mm-dd'
         });
-        $('.dpYears').datepicker();
-        $('.dpMonths').datepicker();
+        /*$('.dpYears').datepicker();
+        $('.dpMonths').datepicker();*/
 
 
-        var startDate = new Date(2012,1,20);
+       /* var startDate = new Date(2012,1,20);
         var endDate = new Date(2012,1,25);
         $('.dp4').datepicker()
             .on('changeDate', function(ev){
@@ -61,14 +61,14 @@
         }).on('changeDate', function(ev) {
                 checkout.hide();
             }).data('datepicker');
-    });
+    */});
 
 //date picker end
 
 
 //datetime picker start
 
-$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+/*$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
 $(".form_datetime-component").datetimepicker({
     format: "dd MM yyyy - hh:ii"
@@ -80,27 +80,27 @@ $(".form_datetime-adv").datetimepicker({
     todayBtn: true,
     startDate: "2013-02-14 10:00",
     minuteStep: 10
-});
+});*/
 
-$(".form_datetime-meridian").datetimepicker({
+/*$(".form_datetime-meridian").datetimepicker({
     format: "dd MM yyyy - HH:ii P",
     showMeridian: true,
     autoclose: true,
     todayBtn: true
-});
+});*/
 
 //datetime picker end
 
 //timepicker start
-$('.timepicker-default').timepicker();
+/*$('.timepicker-default').timepicker();*/
 
 
-$('.timepicker-24').timepicker({
+/*$('.timepicker-24').timepicker({
     autoclose: true,
     minuteStep: 1,
     showSeconds: true,
     showMeridian: false
 });
-
+*/
 //timepicker end
 

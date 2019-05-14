@@ -36,17 +36,12 @@
 				sform.submit();
 		}
 	  }
-	  
-	  $(function () {
-		    $('#datetimepicker1').datetimepicker({
-		        format: 'YYYY-MM-DD',
-		        locale: moment.locale('zh-cn')
-		    });
-		    $('#datetimepicker2').datetimepicker({
-		        format: 'YYYY-MM-DD',
-		        locale: moment.locale('zh-cn')
-		    });
-		});
+	  	  
+	  function goDetails(policyId){
+		  
+		  location.href = "/goPolicyDetails?policyId="+policyId;
+		  
+	  }
 
   </script>
 
@@ -126,11 +121,11 @@
 				  <div class="form-row">
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(低)</label>
-				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="inputZip">
+				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="">
 				    </div>
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(高)</label>
-				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="inputZip">
+				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="">
 				    </div>
 				   <div class="form-group col-md-2">
 				      <label for="inputState">险种</label>
@@ -194,7 +189,7 @@
                   	<td th:text="${policy.city.region_name_c}" class="hidden-phone"><i class="fa fa-bookmark"></i>区域</td>
                   	<td th:text="${policy.premium}" class="hidden-phone"><i class="fa fa-bookmark"></i>保费</td>
                   	<td>
-                      <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
+                      <button type="button" class="btn btn-primary btn-xs" th:onclick="goDetails([[${policy.policyid}]])" ><i class="fa fa-pencil"></i></button>
                     </td>
                   	
                   </tr>

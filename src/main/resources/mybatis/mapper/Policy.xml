@@ -33,4 +33,15 @@
 		<association property="users" column="userid" select="cn.saonan.mapper.UsersMapper.findUserByUserId"></association>
 	</resultMap>
 	
+	<!-- 根据保单编号查询保单 -->
+	<select id="findPolicyById" parameterType="java.lang.String" resultMap="resource_list">
+		select 
+			policyid, insured_name, insured_card, area, address, 
+			relation, holder_name, holder_card, holder_sex, holder_phone,
+			holder_email, insured_date, license, industry_code, acreage, 
+			firm_name, premium, pol_property, del_status, start_date, end_date, 
+			yuliu1, yuliu2, userid 
+		from policy where policyid = #{policyId}
+	</select>
+	
 </mapper>
