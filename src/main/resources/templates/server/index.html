@@ -58,7 +58,7 @@
      <section class="wrapper">
         <div class="row">
         
-          <h1>5月10号中午吃什么??</h1>
+          <h1>5月12号中午吃什么??</h1>
         
         </div>
      </section>
@@ -84,7 +84,25 @@
   <!--script for this page-->
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
+  <script type="text/javascript" src=" https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
   <script type="text/javascript">
+  
+  		
+	  $(function(){
+			$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+				console.log(data);
+				$("#tianqi_city").html(data.result.result.city);
+				$("#tianqi_date").html(data.result.result.updatetime);
+				$("#tianqi_week").html(data.result.result.week);
+				$("#tianqi_weather").html(data.result.result.weather);
+				$("#tianqi_humidity").html(data.result.result.humidity);
+				$("#tianqi_temp").html(data.result.result.temp);
+				$("#tianqi_templow").html(data.result.result.templow);
+				$("#tianqi_temphigh").html(data.result.result.temphigh);
+				$("#tianqi_detail").html(data.result.result.index[0].detail);
+			},"json");
+		});
+  
     $(document).ready(function() {
       var unique_id = $.gritter.add({
         // (string | mandatory) the heading of the notification
@@ -146,6 +164,33 @@
       console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
     }
   </script>
+  <!-- <script type="text/javascript">
+	var geolocation = new qq.maps.Geolocation("OVEBZ-EBCWI-KWYG4-5AGMH-UU22K-Q3FB4", "myapp"); 
+	var options = {timeout: 100000};//设置定位超时
+　　　var positionNum = 0;
+　　//开启定位
+　　geolocation.getLocation(showPosition, showErr, options);
+	// 定位成功后执行函数
+	function showPosition(position){
+		// 定位成功之后ajax从后台查询该城市的天气信息
+		   /*初始化经纬度*/
+		   var curLongitude = position.lng;
+		   var curLatitude = position.lat;
+		   provinceName = position.province;
+		   cityName = position.city;
+		   alert("cityName=="+cityName);
+		   districtName = position.district;
+		   $("#defaultGps").html(
+		      "定位地址：" + provinceName + " " + cityName + " "
+		      + districtName);
+	}
+	// 定位失败后执行函数
+	function showErr(){
+		   //定位失败处理方法
+		   alert("定位失败!!网络异常");
+		  }
+</script> -->
+  
 </body>
 
 </html>

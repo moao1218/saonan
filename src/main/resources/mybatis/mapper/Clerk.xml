@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.ClerkMapper">
+
+	<!--分页  -->
+	<select id="findClerkSplit"  resultType="java.util.Map" statementType="CALLABLE">
+ 	{call clerkfindSpilt
+ 	(
+ 		#{kw,mode=IN,jdbcType=VARCHAR},
+ 		#{are,mode=IN,jdbcType=VARCHAR},
+ 		#{rol,mode=IN,jdbcType=INTEGER},
+ 		#{card,mode=IN,jdbcType=VARCHAR},
+ 		#{cp,mode=IN,jdbcType=INTEGER},
+ 		#{ps,mode=IN,jdbcType=INTEGER},
+ 		#{totalpage,mode=OUT,jdbcType=INTEGER},
+ 		#{clerks,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=clerkinfo},
+ 		#{c_count,mode=OUT,jdbcType=INTEGER}
+ 	)}
+   </select>
+   
+   <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">
+	   <id property="magid" column="magid"/>
+	   <result property="roleid" column="roleid"/>
+	   <result property="username" column="username"/>
+	   <result property="userpwd" column="userpwd"/>
+	   <result property="job" column="job"/>
+	   <result property="realname" column="realname"/>
+	   <result property="email" column="email"/>
+	   <result property="sex" column="sex"/>
+	   <result property="nation" column="nation"/>
+	   <result property="address" column="address"/>
+	   <result property="linkman" column="linkman"/>
+	   <result property="emergency" column="emergency"/>
+	   <result property="join_date" column="join_date"/>
+	   <result property="phone" column="phone"/>
+	   <result property="del_status" column="del_status"/>
+	   <association property="city" column="area" select="cn.saonan.mapper.UsersMapper.findCityById"></association>
+   </resultMap> 
+   
+   <!--登录  -->
+   
+   
+   
+   <!--查找员工  -->
+	 <select id="findaclerk" parameterType="cn.saonan.pojo.Clerk" resultType="java.lang.Integer">
+   	select magid, roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, 
+   	 emergency, join_date, area, phone, del_status from clerk where magid=#{magid}
+   </select>
+   
+   
+   <!-- 添加员工 -->
+   
+   <insert id="docreate" parameterType="cn.saonan.pojo.Clerk">
+   	insert into clerk( roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, 
+   	 emergency, join_date, area, phone, del_status) values 
+  	( #{roleid}, #{username}, #{userpwd}, #{job}, #{realname}, #{user_card}, #{email}, #{sex}, #{nation}, #{address}, #{linkman}, #{emergency}, #{join_date}, #{area}, #{phone}, #{del_status});
+   </insert>
+   
+   <!--用户名验证  -->
+   <select id="checkname" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(magid) from users where username=#{username}
+	</select>
+	
+	<!--员工修改  -->
+	<update id="clerkupdate" parameterType="cn.saonan.pojo.Clerk" >
+		update clerk
+		    set 
+		        roleid = #{roleid},
+		        username = #{username},
+		        userpwd = #{userpwd},
+		        job = #{job},
+		        realname = #{realname},
+		        email = #{email},
+		        address = #{address},
+		        linkman = #{linkman},
+		        emergency = #{emergency},
+		        area = #{area},
+		        phone = #{phone},
+		  where magid = v_magid;
+  </update>
+  
+  
+  <!--员工删除  -->
+	  
+	 <update id="clerkupddele" parameterType="java.lang.Integer">
+	  	update clerk set del_status = 1 where magid = #{magid};
+	 </update>
+  
+	<!--员工注销  -->
+	<delete id="clerkdelete" parameterType="java.lang.Integer">
+		delete clerk where magid = #{magid};
+	</delete>
+   
+   
+   
+</mapper>

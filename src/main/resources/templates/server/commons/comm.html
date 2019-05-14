@@ -4,14 +4,9 @@
 <meta charset="UTF-8"/>
 <title>喵喵核保系统</title>
 
-
+<script src="back/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript">
-	$(function(){
-		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
-			//console.log(data);
-			$("#tianqi").html(data.weather);
-		},"json");
-	});
+	
 </script>
 </head>
 <body>
@@ -28,8 +23,23 @@
   
   
   <div class="top-menu">
-    <ul class="nav pull-right top-menu">
+  		<!-- 天气显示位置 -->
+    	<span style="margin-left: 120px;color:white" >您所在的城市 : <span id="tianqi_city" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >日期 : <span id="tianqi_date" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >星期 :<span id="tianqi_week" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >天气 : <span id="tianqi_weather" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >湿度 : <span id="tianqi_humidity" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >气温: <span id="tianqi_temp" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >最低气温 : <span id="tianqi_templow" style="color:#4ECDC4" ></span></span>
+    	<span style="color:white" >最高气温 : <span id="tianqi_temphigh" style="color:#4ECDC4" ></span></span>
+
+	
+	
+    <ul class="nav pull-right top-menu" style="folat:right;">
       <li><a class="logout" href="login.html" th:href="@{/logout}" >Logout</a></li>
+    </ul>
+    <ul style="folat:right; ">
+    	<span style="margin-left: 120px;color:white" >温馨提示 : <span id="tianqi_detail" style="color:#4ECDC4" ></span></span>
     </ul>
   </div>
 </header>
@@ -40,9 +50,8 @@
         <ul class="sidebar-menu" id="nav-accordion">
           <p class="centered"><a href="profile.html"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
           <h5 class="centered" th:text="${session.user.realname}" >熊蕃猛是个傻子</h5>
-          
-          <li ><span id="tianqi" ></span></li>
-          
+          <p style="color:white;margin-left:60px" >所属区域:<span th:text="${session.user.city.region_name_c}" style="color:#4ECDC4" ></span></p>
+          <p style="color:white;margin-left:60px" >职位:<span th:text="${session.user.job}" style="color:#4ECDC4" ></span></p>
           <li class="mt">
             <a class="active" href="index.html" 
             th:class="${activeUri=='index.html'?'active':''}">
@@ -56,8 +65,8 @@
               <span>投保单</span>
               </a>
             <ul class="sub" th:style="${activeUri=='guaranteeList.html'?'display: block':'display: none'}">
-              <li><a href="guaranteeList.html">投保单列表</a></li>
-              <li><a href="buttons.html">待处理投保单</a></li>
+              <li><a href="/jumpInsuranceList">投保单列表</a></li>
+              <li><a href="/jumpPending">待处理投保单</a></li>
               <li><a href="panels.html">正在处理中投保单</a></li>
               <li><a href="panels.html">已完成投保单</a></li>
          
@@ -69,7 +78,7 @@
               <span>保单</span>
               </a>
             <ul class="sub" th:style="${activeUri=='basicTable.html'?'display: block':'display: none'}" >
-              <li><a href="basicTable.html">保单列表</a></li>
+              <li><a href="/goPolicyList">保单列表</a></li>
               <li><a href="daiban.html" >待处理保单</a></li>
               <li><a href="gallery.html">正在处理中保单</a></li>
               <li><a href="panels.html">已完成保单</a></li>
@@ -79,11 +88,11 @@
           <li class="sub-menu">
             <a href="javascript:;">
               <i class="fa fa-book"></i>
-              <span>财务模块</span>
+              <span>现场勘查</span>
               </a>
             <ul class="sub">
-              <li><a href="blank.html">查看已完成理赔单</a></li>
-              <li><a href="login.html">查看未完成理赔单</a></li>
+              <li><a href="blank.html">待勘查保单</a></li>
+              <li><a href="login.html">已勘查保单</a></li>
               
             </ul>
           </li>
@@ -92,14 +101,14 @@
               <i class="fa fa-tasks"></i>
               <span>超级管理员</span>
               </a>
-            <ul class="sub">
+            <ul class="sub" >
               <li><a href="form_component.html">查看保单</a></li>
               <li><a href="form_component.html">查看理赔单</a></li>
-              <li><a href="form_component.html">查看所有用户</a></li>
-              <li><a href="advanced_form_components.html">增加用户</a></li>
-              <li><a href="form_validation.html">删除用户</a></li>
+              <li><a href="/findClerkSplit">查看所有员工</a></li>
+              <li><a href="findAllClerk.html">增加员工</a></li>
+              <li><a href="server/form_validation.html">删除员工</a></li>
               <li><a href="contactform.html">注销用户</a></li>
-              <li><a href="contactform.html">修改用户</a></li>
+              <li><a href="contactform.html">修改员工</a></li>
             </ul>
           </li>
         
