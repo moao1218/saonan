@@ -74,4 +74,9 @@
 	<select id="findOneInsurance" resultMap="insureinfo">
 		select <include refid="showAllInsurance"/> from insurance_slip where policyid=#{pid}
 	</select>
+	
+	<!-- 展示所有险种 -->
+	<select id="findAllCoverage" resultType="cn.saonan.pojo.Coverage">
+		select coverageid, coverage_name, coverage_rate, upper_limit, lower_limit, del_status from coverage 
+	</select>
 </mapper>

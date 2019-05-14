@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.saonan.pojo.City;
+import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 
 
@@ -25,4 +26,9 @@ public interface InsuranceSlipService {
 	 * @return
 	 */
 	public InsuranceSlip findOneInsurance(String pid);
+	
+	/**展示所有险种
+	 * @return
+	 */
+	public List<Coverage> findAllCoverage();
 }
