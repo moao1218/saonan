@@ -360,7 +360,6 @@ public class InsureController {
 	}
 	
 	//已完成的投保单
-	@RequestMapping(value="/underway")
 	public String hadDone(Model model,HttpServletRequest request,HttpServletResponse response) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
