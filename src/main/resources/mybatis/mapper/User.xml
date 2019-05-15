@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sao.mapper.UsersMapper">
+
+	<!-- 账号密码登录 -->
+	<select id="isLogin" parameterType="cn.sao.pojo.Users" resultType="cn.sao.pojo.Users">
+		select userid,username,userpwd,realname,phone,join_date,bank_card,del_status,yuliu from Users 
+		where username=#{username} and userpwd=#{userpwd}
+	</select>   
+	
+	<!-- 短信验证码登录 -->
+	<select id="Login" parameterType="cn.sao.pojo.Users" resultType="cn.sao.pojo.Users">
+		select userid,username,userpwd,realname,phone,join_date,bank_card,del_status,yuliu from Users 
+		where phone=#{phone}
+	</select>
+</mapper>
