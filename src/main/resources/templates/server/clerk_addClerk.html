@@ -24,11 +24,100 @@
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
   <script type="text/javascript">
+/*   	$(function(){
+  		$("#tijiao").onclick(function(){
+  			$.ajax({
+  				type:"post",
+  				url:"/addclerkses",
+  				success:function(data){
+  					if(data=="1"){
+  						alert('注册成功') 
+  					}else if(data=="2"){
+  						alert('注册失败') 
+  						
+  					}
+  				}
+  			});
+  		}); */
+  		
+  	/* 	
   	function acceptPro(){
-  		location.href="/acceptPro";
+  		myform.submit();
+  	}
+  
+  		
+  	function checkname(){
+  		var name = $("#username").val();
+  		var reg = /^[a-zA-Z][a-zA-Z0-9_]*$/;
+  		//以英文字母开头，只能包含英文字母、数字、下划线
+  		if(reg.test(name)){
+  			$("#namespan").html(/"<font color='green' >合法</font>"/);
+  			return true;
+  		}else{
+  			$("#namespan").html("<font color='red' >输入非法</font>");
+  			return false;
+  		}
+  	}
+
+  	function checkpwd(){
+  		var pwd = $("#userpwd").val();
+  		var reg = /^((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))^.{8,16}$/;
+  		//只有数字和字母
+  		if(reg.test(pwd)){
+  			$("#pwdspan").html("<font color='green' >合法</font>");
+  			return true;
+  		}else{
+  			$("#pwdspan").html("<font color='red' >数字、字母、字符至少包含两种 密码长度为8~16位</font>");
+  			return false;
+  		}
+  	}
+
+  	function reppwd(){
+  		var repwd = $("#reppw").val();
+  		var pwd = $("#userpwd").val();
+  		if(repwd==pwd){
+  			$("#reppwdspan").html("<font color='green' size='2' ><b>合法</b></font>");
+  			return true;
+  		}else{
+  			$("#reppwdspan").html("<font color='red' size='2' ><b>输入密码须一致</b></font>");
+  			return false;
+  		}
+  	}
+
+  	function checkphone(){
+  		var phone = $("#phone").val();
+  		var reg = /^1\d{10}$/;
+  		if(reg.test(phone)){
+  			$("#phonespan").html("<font color='green' size='2' ><b>合法</b></font>");
+  			return true;
+  		}else{
+  			$("#phonespan").html("<font color='red' size='2' ><b>手机号格式不正确</b></font>");
+  			return false;
+  		}
   	}
   	
-  
+  	function isCardNo()  {  
+  		
+  		var card = $("#user_card").val();  	
+  	   // 身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X  
+  	   var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
+  	   if(reg.test(card) ) {  
+  		 $("#ucard").html("<font color='green' size='2' ><b>身份验证正确</b></font>");
+  	       return  true;  
+  	   }  else{
+  		   $("#ucard").html("<font color='red' size='2' ><b>身份验证不正确</b></font>");
+  		   }
+  	   }
+  	}  
+  	 */
+
+  	/* function succ(){
+  		return checkname()&&checkpwd()&&reppwd()&&checkphone();
+  	}
+ */
+  		
+  		
+  		
   	
   </script>
 
@@ -65,94 +154,136 @@
     <section id="main-content">
      <section class="wrapper">
         <div class="row">
-			
+		<form action="/addclerkses" method="post" name="myform" id="myform" >	
 			<table class="table table-striped">
 			  <thead>
 			    <tr>
 			      <th scope="col">名称</th>
-			      <th scope="col">详情</th>
+			      <th scope="col">填写</th>
 			    </tr>
 			  </thead>
 			  <tbody>
-			    <tr>
-			      <th scope="row">员工编号</th>
-			      <td th:text="${findaclerk.magid}"></td>
-			      <td></td>
-			    </tr>
+			    
 			    <tr>
 			      <th scope="row">员工账号</th>
-			      <td th:text="${findaclerk.username}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">职位</th>
-			      <td th:text="${findaclerk.job}"></td>
-			      <td>
+			      <td><input type="text" name="username" id="username" onchange="checkname()"/>
+			      <span id="namespan"></span>
 			      </td>
 			    </tr>
+			    
+			    <tr>
+			      <th scope="row">员工密码</th>
+			      
+			      <td><input type="text" name="userpwd" id="userpwd" onchange="checkpwd()"/>
+			      <span id="pwdspan"></span>
+			      </td>
+			    </tr>
+			    
+			    <tr>
+			      <th scope="row">确认密码</th>
+			      <td><input type="text"  id="reppw"  onchange="reppwd()"/>
+			       <span id="reppwdspan"></span>
+			      </td>
+			    </tr>
+			    
+			    
+			    <tr>
+			      <th scope="row">职位</th>
+			      <td> <select id="roleid" name="roleid" >
+				      	<option value="">--请选择--</option>
+		              	<option th:value="1">保单一审</option>
+		              	<option th:value="2">保单二审</option>
+		              	<option th:value="3">保单三审</option>
+		              	<option th:value="4">理赔一审</option>
+		              	<option th:value="5">理赔二审</option>
+		              	<option th:value="6">理赔三审</option>
+		              	<option th:value="7">会计</option>
+		              	<option th:value="8">指导人员</option>
+		              	<option th:value="9">保单勘察人员</option>
+		              	<option th:value="10">理赔勘察人员</option>
+		              	<option th:value="11">超级管理员</option>
+				      </select>
+					</td>
+			    </tr>
+			    
 			    <tr>
 			      <th scope="row">姓名</th>
-			      <td th:text="${findaclerk.realname}"></td>
-			      <td></td>
+			      <td> <input type="text" name="realname" id="realname" /></td>
 			    </tr>
+			    
+			    
 			    <tr>
 			      <th scope="row">身份证号码</th>
-			      <td th:text="${findaclerk.user_card}"></td>
-			      <td></td>
+			      <td><input type="text" name="user_card"  id="user_card"  onchange="isCardNo()"/>
+			      <span id="ucard"></span>
+			      </td>
 			    </tr>
+			    
+			    
 			    <tr>
 			      <th scope="row">邮箱</th>
-			      <td th:text="${findaclerk.email}"></td>
-			      <td></td>
+			      <td><input type="text" name="email"  id="email"/>
+			      <span id="checkemail"></span>
+			      </td>
 			    </tr>
+			    
 			    <tr>
 			      <th scope="row">性别</th>
-			      <td th:text="${findaclerk.sex}==1?'男':'女'"></td>
-			      <td></td>
-			    </tr>
+			      <td><input type="radio" name="sex" value="1"/>男
+			      <input type="radio" name="sex" value="0"/>女
+			    </td>
+					
 			    <tr>
-			      <th scope="row">名族</th>
-			      <td th:text="${findaclerk.nation}"></td>
-			      <td></td>
+			      <th scope="row">民族</th>
+			      <td><input type="text" name="nation"  id="nation" /></td>
 			    </tr>
+			    
 			    <tr>
 			      <th scope="row">家庭地址</th>
-			      <td th:text="${findaclerk.address}" ></td>
-			      <td></td>
+			      <td><input type="text" name="address"  id="address" /></td>
 			    </tr>
+			    
 			    <tr>
 			      <th scope="row">紧急联系人</th>
-			      <td th:text="${findaclerk.linkman}"></td>
-			      <td></td>
+			      <td>  <input type="text" name="linkman"  id="linkman" /></td>
 			    </tr>
+			    
 			    <tr>
 			      <th scope="row">紧急联系人电话</th>
-			      <td th:text="${findaclerk.emergency}"></td>
-			      <td></td>
+			      <td><input type="text" name="emergency"  id="emergency" /></td>
 			    </tr>
 			    <tr>
 			      <th scope="row">入职日期</th>
-			      <td th:text="${findaclerk.join_date}"></td>
-			      <td></td>
+			      <td>
+			      <!-- <label for="meeting"></label><input id="meeting" type="date" name="join_date"/> -->
+			      	<input type="text" class="default-date-picker" data-date-format="yyyy-mm-dd" id="join_date" name="join_date">
+			      
+			      </td>
 			    </tr>
 			    <tr>
 			      <th scope="row">负责地区</th>
-			      <td th:text="${findaclerk.city.region_name_c}"></td>
-			      <td></td>
+			      <th> <select id="area"  name="area">
+				      	<option value="">--请选择--</option>
+				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}">Choose...</option>
+				      </select>
+			      </th>
 			    </tr>
 			    <tr>
 			      <th scope="row">手机号</th>
-			      <td th:text="${findaclerk.phone}"></td>
-			      <td></td>
+			      <td><input type="text" name="phone"  id="phone"  onchange="checkphone()"/>
+			      <span id="phonespan"></span>
+			      </td>
 			    </tr>
-			    <tr>
-			      <th scope="row">删除状态</th>
-			      <td th:text="${findaclerk.del_status}==0?'未删除':'已删除'"></td>
-			      <td></td>
-			    </tr>
+			    
 			   
 			  </tbody>
 			</table>
+			
+		
+			</table>
+			   
+			   <button type="submit" id="tijiao"  class="btn btn-primary" style="margin-left: 400px" th:onclick="acceptPro()" >注册</button>
+      	</form>
         </div>
      </section>
 	  
@@ -177,8 +308,18 @@
   <!--script for this page-->
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
+  <script src="back/lib/jquery-ui-1.9.2.custom.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/date.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/moment.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+  <script src="back/lib/advanced-form-components.js"></script>
+  
   <script type="text/javascript">
-    $(document).ready(function() {
+    /* $(document).ready(function() {
       var unique_id = $.gritter.add({
         // (string | mandatory) the heading of the notification
         title: 'Welcome to Dashio!',
@@ -195,7 +336,7 @@
       });
 
       return false;
-    });
+    }); */
   </script>
   <script type="application/javascript">
     $(document).ready(function() {

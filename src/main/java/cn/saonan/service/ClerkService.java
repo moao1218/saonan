@@ -15,7 +15,7 @@ public interface ClerkService {
 	/*
 	 * 分页查询员工表
 	 */
-	public void  findClerkSplits(Map<String,Object> map);
+	public void  findClerkSplit(Map<String,Object> map);
 	
 	
 	/*

@@ -6,9 +6,9 @@
     $(function(){
         window.prettyPrint && prettyPrint();
         $('.default-date-picker').datepicker({
-            format: 'mm-dd-yyyy'
+            format: 'yyyy-mm-dd'
         });
-        $('.dpYears').datepicker();
+        /*$('.dpYears').datepicker();
         $('.dpMonths').datepicker();
 
 
@@ -60,7 +60,7 @@
             }
         }).on('changeDate', function(ev) {
                 checkout.hide();
-            }).data('datepicker');
+            }).data('datepicker');*/
     });
 
 //date picker end
@@ -68,7 +68,7 @@
 
 //datetime picker start
 
-$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+/*$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
 $(".form_datetime-component").datetimepicker({
     format: "dd MM yyyy - hh:ii"
@@ -87,12 +87,12 @@ $(".form_datetime-meridian").datetimepicker({
     showMeridian: true,
     autoclose: true,
     todayBtn: true
-});
+});*/
 
 //datetime picker end
 
 //timepicker start
-$('.timepicker-default').timepicker();
+/*$('.timepicker-default').timepicker();
 
 
 $('.timepicker-24').timepicker({
@@ -100,7 +100,7 @@ $('.timepicker-24').timepicker({
     minuteStep: 1,
     showSeconds: true,
     showMeridian: false
-});
+});*/
 
 //timepicker end
 

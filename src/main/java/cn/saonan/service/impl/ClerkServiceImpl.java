@@ -25,7 +25,7 @@ public class ClerkServiceImpl implements ClerkService {
 
 	//员工查询分页
 	@Override
-	public void  findClerkSplits(Map<String,Object> map) {
+	public void  findClerkSplit(Map<String,Object> map) {
 			
 		clerkmapper.findClerkSplit(map);
 	}
@@ -43,7 +43,7 @@ public class ClerkServiceImpl implements ClerkService {
 	@Override
 	public boolean docreate(Clerk ck) {
 		// TODO Auto-generated method stub
-		return false;
+		return clerkmapper.docreate(ck);
 	}
 
 	//员工注册名验证

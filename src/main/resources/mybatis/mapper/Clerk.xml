@@ -5,7 +5,7 @@
 <mapper namespace="cn.saonan.mapper.ClerkMapper">
 
 	<!--分页  -->
-	<select id="findClerkSplits"  resultType="java.util.Map" statementType="CALLABLE">
+	<select id="findClerkSplit"  resultType="java.util.Map" statementType="CALLABLE">
  	{call clerkfindSpilt
  	(
  		#{kw,mode=IN,jdbcType=VARCHAR},
@@ -55,8 +55,8 @@
    
    <insert id="docreate" parameterType="cn.saonan.pojo.Clerk">
    	insert into clerk( roleid, username, userpwd, job, realname, user_card, email, sex, nation, address, linkman, 
-   	 emergency, join_date, area, phone, del_status) values 
-  	( #{roleid}, #{username}, #{userpwd}, #{job}, #{realname}, #{user_card}, #{email}, #{sex}, #{nation}, #{address}, #{linkman}, #{emergency}, #{join_date}, #{area}, #{phone}, #{del_status})
+   	 emergency, join_date, area, phone) values 
+  	( #{roleid}, #{username}, #{userpwd}, #{job}, #{realname}, #{user_card}, #{email}, #{sex}, #{nation}, #{address}, #{linkman}, #{emergency}, #{join_date}, #{city.code}, #{phone})
    </insert>
    
    <!--用户名验证  -->
