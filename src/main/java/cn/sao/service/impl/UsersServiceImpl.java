@@ -30,6 +30,7 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public boolean addUser(Users users) {
+		System.out.println(users);
 		if (users==null||users.equals("")) {
 			return false;
 		}

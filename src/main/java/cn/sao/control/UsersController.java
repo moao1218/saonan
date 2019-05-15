@@ -26,7 +26,7 @@ public class UsersController {
 		Users u = userServiceImpl.isLogin(users);
 		if (u!=null) {
 			request.getSession().setAttribute("users",u);
-			return "client/reg";
+			return "client/shouye";
 		}else {
 			return "client/login";
 		}
@@ -48,11 +48,14 @@ public class UsersController {
 		return "client/reg";
 	}
 	
-	@PostMapping(value = "/reg")
+	@PostMapping("/reg")
 	public String reg(Users users,HttpServletRequest request) {
-		boolean addUser = userServiceImpl.addUser(users);
-		
-		return "";
+		System.out.println("users:"+users);
+		boolean flag = userServiceImpl.addUser(users);
+		if (flag) {
+			return "client/login";
+		}
+		return "client/reg";
 	}
 	
 	@GetMapping(value="/claim")
@@ -62,7 +65,7 @@ public class UsersController {
 	
 	@GetMapping(value = "/myorder")
 	public String myorder() {
-		return "client/myorder";
+		return "client/toRegisterUser";
 	}
 }
 

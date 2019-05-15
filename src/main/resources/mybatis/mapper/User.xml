@@ -18,8 +18,8 @@
 	
 	<!-- 注册 -->
 	<insert id="addUser" parameterType="cn.sao.pojo.Users">
-		insert into Users (username,userpwd,phone,realname)
-		values(#{username},#{userpwd},#{phone},#{realname})
+		insert into Users (username,userpwd)
+		values(#{username},#{userpwd})
 	</insert>
 	
 	
