@@ -1,0 +1,55 @@
+@charset "utf-8";
+ .tbsm-pop{position:absolute;top:0;left: -100%;margin-bottom: 50px;margin-left: -450px;width:900px;background-color: #fff;z-index:10000;}
+.tbsm-pop .tbsm-top{height: 30px;background-color: #ff7a66}
+.tbsm-pop .tbsm-nav{height: 50px;line-height: 50px;background-color: #fff;padding-left: 20px;overflow: hidden}
+.tbsm-pop .tbsm-nav li{float:left;margin-right: 10px}
+.tbsm-pop .tbsm-nav li.current a{color: #ff4e33;font-weight: bold}
+.tbsm-pop .tbsm-con{position:relative;height:400px;overflow-y:auto;background-color: #f3f3f3;padding: 0 20px;}
+.tbsm-pop .tbsm-tips{position:absolute;right: 20px;top:60px;z-index: 3;}
+.tbsm-pop .tbsm-con .tbsm-title{height:70px;line-height:70px;font-size: 14px;text-align: center;font-weight: bold}
+.tbsm-pop .tbsm-con .tbsm-title-sub{border-left: 3px solid #ff4e33;padding-left: 5px;font-weight: bold;margin: 10px 0;font-size: 14px;}
+.tbsm-pop .tbsm-con p{font-size: 12px;line-height: 22px;}
+.tbsm-pop .tbsm-con .productClause{color: #2196cc;margin: 0 5px;cursor: pointer}
+.tbsm-pop .tbsm-con .tbsm-list,.tbsm-pop .tbsm-con .tbsm-list-ul{font-size: 12px;line-height: 22px;}
+.tbsm-pop .tbsm-con .tbsm-list dt{font-weight: bold}
+.tbsm-pop .tbsm-con .tbsm-list dd{text-indent: 8px}
+.tbsm-pop .tbsm-con .tbsm-list-ul{width:600px;margin: 0 auto 30px}
+.tbsm-pop .tbsm-con .tbsm-list-ul li{position: relative}
+.tbsm-pop .tbsm-con .tbsm-list-ul span{position: relative;z-index: 1;background-color: #f3f3f3;}
+.tbsm-pop .tbsm-con .tbsm-list-ul p{position: absolute;width: 100%;top: 11px;left: 0;height: 1px;border-top: 1px dashed;}
+.tbsm-pop .tbsm-con table{width: 600px;margin:20px auto;border-left: 1px solid #000;border-bottom: 1px solid #000;}
+.tbsm-pop .tbsm-con table td{height:20px;border-top: 1px solid #000;border-right: 1px solid #000;text-align: center}
+.tbsm-pop .tbsm-con table td p{text-align: left}
+.tbsm-pop .tbsm-close{float: right;width: 24px;height: 21px;background: url("../image/tbsm-close.png") no-repeat;margin: 6px 10px 0;cursor: pointer;}
+.tbsm-pop .tbsm-close-btn{position: absolute;right: 70px;bottom: 15px;text-decoration: underline;color:#2196cc;cursor: pointer;}
+.tbsm-pop .tbsm-bottom{padding:15px 0;background-color: #fff;text-align:center}
+.tbsm-pop .tbsm-bottom input{width: 170px;height: 40px;line-height:40px;border:none;border-radius: 4px;background-color: #ababab;color: #fff;font-size: 18px;outline: none}
+.tbsm-pop .tbsm-bottom input.active{background-color: #ff7a66;cursor: pointer}
+.tbsm-pop .tbsm-nav-sub{display:none;overflow: hidden;padding: 8px 20px;background-color:#f3f3f3}
+.tbsm-pop .tbsm-nav-sub li{float: left;margin-right: 10px;line-height: 18px}
+.tbsm-pop .tbsm-nav-sub li:hover a{color: #2196cc}
+.tbsm-pop .tbsm-nav-sub li.current a{color: #2196cc;text-decoration: underline}
+#f1-a dd,#f2-a p{font-weight: bold}
+.tbsm-pop .tbsm-close-btn{position: absolute;right: 70px;bottom: 15px;text-decoration: underline;color:#2196cc;cursor: pointer;}
+
+
+<!-- 优惠券 -->
+.insure-coupon{border: 1px solid #d9d9d9;border-radius: 2px;background-color: #fff;padding:15px 30px 30px;font-size: 12px;}
+.insure-coupon .coupon-yhq-tip{color: #666;font-size: 14px;margin-bottom: 20px}
+.insure-coupon .coupon-yhq-tip i{display:inline-block;width: 6px;height: 6px;color:#ff4e33;margin-right: 8px;}
+.insure-coupon dl{overflow: hidden;margin-right: -30px;line-height: 1;}
+.insure-coupon h2{font-size: 16px;color: #333;margin-top:20px;}
+.insure-coupon dl dd{float: left;padding: 0;line-height: 1;width: 222px;height: 86px;margin-top: 10px;background: url("/eproperty/image/coupon-yhq/coupon-panel-icons.png") no-repeat 0 0;margin-right: 14px;text-align: center;cursor: pointer}
+.insure-coupon dl dd.active{background: url("/eproperty/image/coupon-yhq/coupon-panel-icons.png") no-repeat -232px 0;}
+.insure-coupon dl dd.active .unit,.insure-coupon dl dd.active .num{color: #ff5b5e;}
+.insure-coupon dl dd.active .txt{color: #ff8082;}
+.insure-coupon .unit,.insure-coupon .num{color: #ff8a5b}
+.insure-coupon .coupon-list.mj .unit{font-size: 24px;}
+.insure-coupon .coupon-list.mj .num{font-size: 34px;margin-right: 12px;vertical-align: -2px;}
+.insure-coupon .coupon-list.mj .txt{font-size: 14px;color: #999}
+.insure-coupon .coupon-list.mj .txt b{font-weight: normal;}
+.insure-coupon .top{margin:12px 0 8px}
+.insure-coupon .bottom{height:30px;line-height:30px;border-top: 1px dashed #ddd;margin: 0 15px;color: #999}
+.insure-coupon .coupon-list.zk .unit{font-size: 18px;font-weight: bold}
+.insure-coupon .coupon-list.zk .num{font-size: 34px;margin-right: 3px;vertical-align: -3px;}
+.insure-coupon .coupon-yhq-surrender{color: #666;margin-top:34px;}

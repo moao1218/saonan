@@ -28,4 +28,13 @@ public class UsersServiceImpl implements UsersService {
 		return usersMapper.Login(users);
 	}
 
+	@Override
+	public boolean addUser(Users users) {
+		System.out.println(users);
+		if (users==null||users.equals("")) {
+			return false;
+		}
+		return usersMapper.addUser(users);
+	}
+
 }
