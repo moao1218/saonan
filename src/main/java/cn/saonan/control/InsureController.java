@@ -271,5 +271,11 @@ public class InsureController {
 		}
 
 	}
+	
+	@RequestMapping(value="/goAdd")
+	public String goAdd() {
+		
+		return "server/add_verify";
+	}
 }
 

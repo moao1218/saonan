@@ -24,27 +24,18 @@
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
   <script type="text/javascript">
-  	function acceptPro(){
-  		myform.submit();
-  	}
-  	
-  	function checkIdCard(idCard){
-  		$.post("/checkIdCard",{"idCrad":idCard},function(data){
-  			console.log("熊蕃猛");
-  		console.log(data);
-  		if(data.result.data.resp.code==0){
-  			$("#idCardSpan").html("合理");
-  		if(data.result.resp.code==0){
-  			$("#idCardSpan").html("heli");
-  		}else{
-  			$("#idCardSpan").html("不合理");
-  			$("#idCardSpan").html("buheli");
+  
+  		function addRow(){
   			
-  		}}
+  			$.("#tbody1").append("<tr><td class='col-md-1'><select id='inputState' class='form-control'><option value=''>--请选择--</option>"+
+				        "<option >Choose...</option></select></td><td class='col-md-1'><input type='file' style='width:120px'  />"+
+			    		"</td><td class='col-md-1'><input type='file' class='default' style='width:120px' /></td><td class='col-md-1'>"+
+		  			"<input type='text' class='form-control' ></td><td class='col-md-1'><input type='file' class='default' style='width:120px'  /></td>"+
+			    "<td class='col-md-1'><input type='text' class='form-control' > </td><td class='col-md-1'><input type='text' class='form-control' ></td>"+
+			    "<td class='col-md-1'><input type='text' class='form-control' ></td></tr>");
   			
-  		},"json");
-  		
-  	}
+  		}	
+  
   </script>
 
   <!-- =======================================================
@@ -89,183 +80,144 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			    <tr>
-			      <th scope="row">投保单编号</th>
-			      <td th:text="${insurance.policyid}">Mark</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">被保人姓名</th>
-			      <td th:text="${insurance.insure_name}">Jacob</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">被保人证件号码</th>
-			      <td th:text="${insurance.insure_card}">Larry</td>
-			      <td>
-			      	<button type="button" class="btn btn-primary" th:onclick="checkIdCard(440182199110102159);"  >检测是否真实</button>
-			      	<span id="idCardSpan"></span>
+			  	<tr>
+			      <th scope="row">房产证号码</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
 			      </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">区域</th>
-			      <td th:text="${insurance.city.region_name_c}">Larry</td>
-			      <td></td>
+			      <th scope="row">房产证照片</th>
+			      <td >
+			      	<div class="form-group">
+	                  <div class="col-md-4">
+	                    <input type="file" class="default" />
+	                  </div>
+	                </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">财产标的地址</th>
-			      <td th:text="${insurance.address}">Larry</td>
-			      <td></td>
+			      <th scope="row">房屋地址</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">与被保人关系</th>
-			      <td th:text="${insurance.relation}">Larry</td>
-			      <td></td>
+			      <th scope="row">房屋照片</th>
+			      <td >
+			      	<div class="form-group">
+	                  <div class="col-md-4">
+	                    <input type="file" class="default" />
+	                  </div>
+	                </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">投保人姓名</th>
-			      <td th:text="${insurance.holder_name}">Larry</td>
-			      <td></td>
+			      <th scope="row">房屋面积</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">投保人证件号码</th>
-			      <td th:text="${insurance.holder_card}">Larry</td>
-			      <td><button type="button" class="btn btn-primary"  >检测是否真实</button></td>
+			      <th scope="row">房屋市值</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">投保人性别</th>
-			      <td th:text="${insurance.holder_sex}==1?'男':'女'" >Larry</td>
-			      <td></td>
+			      <th scope="row">房屋使用年限</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">投保人手机号码</th>
-			      <td th:text="${insurance.holder_phone}">Larry</td>
-			      <td></td>
+			      <th scope="row">房屋竣工时间</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
-			      <th scope="row">投保人电子邮箱</th>
-			      <td th:text="${insurance.holder_email}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保日期</th>
-			      <td th:text="${insurance.insure_date}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保单一审人</th>
-			      <td th:text="${insurance.first_auditor}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保单二审人</th>
-			      <td th:text="${insurance.second_auditor}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保单三审人</th>
-			      <td th:text="${insurance.third_auditor}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保单审核状态</th>
-			      <td th:text="${insurance.status.status_name}">Larry</td>
-			      <td></td>
+			      <th scope="row">勘察时间</th>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
 			    <tr>
 			      <th scope="row">勘察员</th>
-			      <td th:text="${insurance.scout}">Larry</td>
-			      <td></td>
+			      <td >
+			      	<div class="form-group col-md-3">
+				      <input type="text" class="form-control" >
+				    </div>
+				  </td>
 			    </tr>
-			    <tr>
-			      <th scope="row">营业执照(企业)</th>
-			      <td th:text="${insurance.license}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">行业编号(企业)</th>
-			      <td th:text="${insurance.industry_code}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">营业面积(企业)</th>
-			      <td th:text="${insurance.acreage}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">企业名称(企业)</th>
-			      <td th:text="${insurance.firm_name}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">会员编号</th>
-			      <td th:text="${insurance.userid}">Larry</td>
-			      <td><button type="button" class="btn btn-primary"  >检测是否黑名单</button></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">支付状态</th>
-			      <td th:text="${insurance.pay_status}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">保费</th>
-			      <td th:text="${insurance.premium}">Larry</td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">投保性质</th>
-			      <td th:text="${insurance.pol_property}==0?'个人':'企业'">Larry</td>
-			      <td></td>
-			    </tr>
+			  
 			  </tbody>
 			</table>
 			
-			<h2>保单物品清单表</h2>	
+			<h3>添加物品清单表</h3>
 			
 			<table class="table table-striped">
 				<thead>
 			    <tr>
-			      <th scope="col">勘察编号</th>
 			      <th scope="col">物品名称</th>
 			      <th scope="col">现场拍摄照片</th>
 			      <th scope="col">第三方证明</th>
 			      <th scope="col">物品使用年限</th>
 			      <th scope="col">发票图片</th>
-			      <th scope="col">房产证号码</th>
-			      <th scope="col">房产证照片</th>
-			      <th scope="col">房屋地址</th>
-			      <th scope="col">房屋照片</th>
-			      <th scope="col">房屋面积</th>
-			      <th scope="col">房屋市值</th>
-			      <th scope="col">房屋使用年限</th>
-			      <th scope="col">房屋竣工时间</th>
-			      <th scope="col">险种</th>
+			      <th scope="col">发票金额</th>
+			      <th scope="col">品牌</th>
+			      <th scope="col">型号</th>
+			      
 			    </tr>
 			  	</thead>
-			  	<tbody>
-				<tr th:each="pv:${pvList}">
-			      <td th:text="${pv.pol_ver_id}" >勘察编号</td>
-			      <td th:text="${pv.item_name}">物品名称</td>
-			      <td th:text="${pv.site_photo}">现场拍摄照片</td>
-			      <td th:text="${pv.third_pic}">第三方证明</td>
-			      <td th:text="${pv.item_age}">物品使用年限</td>
-			      <td th:text="${pv.invoice_pic}">发票图片</td>
-			      <td th:text="${pv.house_no}">房产证号码</td>
-			      <td th:text="${pv.house_pic}">房产证照片</td>
-			      <td th:text="${pv.address}">房屋地址</td>
-			      <td th:text="${pv.building_pic}">房屋照片</td>
-			      <td th:text="${pv.acreage}">房屋面积</td>
-			      <td th:text="${pv.house_market}">房屋市值</td>
-			      <td th:text="${pv.house_age}">房屋使用年限</td>
-			      <td th:text="${pv.completed_date}">房屋竣工时间</td>
-			      <td th:text="${pv.coverage.coverage_name}">险种</td>
-			    </tr>
-			    </tbody>
-			</table>
-			<form action="/firstHandle" method="post" name="myform" id="myform" >
-			<input type="hidden" th:value="${insurance.policyid}" name="pid">
-			</form>
-			   <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="acceptPro()">受理</button>
+			  	<tbody id="tbody1">
+			  		<tr>
+				  		<td class="col-md-1">
+						     <select id="inputState" class="form-control">
+						      	<option value="">--请选择--</option>
+						        <option >Choose...</option>
+						     </select>
+					    </td>
+					    <td class="col-md-1">
+			                 <input type="file" style="width:120px"  />
+					    </td>
+					    <td class="col-md-1">
+			                 <input type="file" class="default" style="width:120px" />
+					    </td>
+					    <td class="col-md-1">
+				  			<input type="text" class="form-control" >
+					    </td>
+					    <td class="col-md-1">
+			                 <input type="file" class="default" style="width:120px"  />
+					    </td>
+					    <td class="col-md-1">
+				  			<input type="text" class="form-control" >
+					    </td>
+					    <td class="col-md-1">
+				  			<input type="text" class="form-control" >
+					    </td>
+					    <td class="col-md-1">
+				  			<input type="text" class="form-control" >
+					    </td>
+			  		</tr>
+			  	</tbody>
+			  </table>
+			  <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="|addRow()|" >添加一行</button>
+			
         </div>
      </section>
 	  
@@ -290,6 +242,16 @@
   <!--script for this page-->
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
+  <script src="back/lib/jquery-ui-1.9.2.custom.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/date.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/moment.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+  <script src="back/lib/advanced-form-components.js"></script>
+  
   <script type="text/javascript">
 	  $(function(){
 		  	
