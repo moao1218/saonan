@@ -1,8 +1,8 @@
-package cn.sao.mapper;
+package cn.sao.service;
 
 import cn.sao.pojo.Users;
 
-public interface UsersMapper {
+public interface UsersService {
 
 	/**
 	 * 用户账号密码登录

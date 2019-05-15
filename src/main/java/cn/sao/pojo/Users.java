@@ -12,6 +12,13 @@ public class Users implements Serializable {
 	private String bank_card; //银行卡
 	private String del_status; //逻辑删除
 	private String yuliu; //预留字段
+	
+	@Override
+	public String toString() {
+		return "Users [userid=" + userid + ", username=" + username + ", userpwd=" + userpwd + ", realname=" + realname
+				+ ", phone=" + phone + ", join_date=" + join_date + ", bank_card=" + bank_card + ", del_status="
+				+ del_status + ", yuliu=" + yuliu + "]";
+	}
 	public Integer getUserid() {
 		return userid;
 	}
