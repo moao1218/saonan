@@ -10,8 +10,10 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import cn.saonan.utils.ClientSocketInterface;
+import org.springframework.stereotype.Component;
 
+import cn.saonan.utils.ClientSocketInterface;
+@Component
 public class ClientSocketImpl implements ClientSocketInterface {
 	
 	@Override

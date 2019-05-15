@@ -20,10 +20,11 @@ import javax.crypto.Cipher;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.stereotype.Component;
 
 import cn.saonan.utils.RSAInterface;
 
-
+@Component
 public class RSAImpl implements RSAInterface{
 	
 	

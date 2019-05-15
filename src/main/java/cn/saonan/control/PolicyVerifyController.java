@@ -30,6 +30,7 @@ import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.PvService;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.RedisUtil;
 import cn.saonan.utils.Upload;
 
 @Controller
@@ -46,6 +47,9 @@ public class PolicyVerifyController {
 	
 	@Autowired
 	private PvService pvService;
+	
+	@Autowired
+	private RedisUtil redisUtil;
 	
 	//跳转待处理勘察页面
 	@GetMapping(value="/jumpScout")
@@ -111,8 +115,6 @@ public class PolicyVerifyController {
 	@PostMapping(value="/insertPv")
 	public String insertPv(Pv pv,HttpServletRequest request) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		Coverage c = new Coverage();
-		c.setCoverageid(null);
 		
 		Items items = new Items();
 		Coverage coverage = new Coverage();

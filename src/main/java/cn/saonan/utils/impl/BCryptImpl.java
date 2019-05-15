@@ -1,9 +1,10 @@
 package cn.saonan.utils.impl;
 
 import org.mindrot.bcrypt.BCrypt;
+import org.springframework.stereotype.Component;
 
 import cn.saonan.utils.BCryptInterface;
-
+@Component
 public class BCryptImpl implements BCryptInterface {
 	/**����
 	 * original:ԭ����

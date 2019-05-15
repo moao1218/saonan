@@ -10,10 +10,29 @@
 		<link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.css}" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="asserts/css/signin.css" th:href="@{/asserts/css/signin.css}" rel="stylesheet">
+		<script src="back/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" th:src="@{/js/jsencrypt.js}"></script>
+		<script type="text/javascript">
+			function login(){
+				var encrypt=new JSEncrypt();
+				var pwd=$("#userpwd").val();
+				var publicKey="";
+				//获取公钥
+				$.post("/getKeys",{},function(data){
+					publicKey=data;
+					alert(publicKey);
+					encrypt.setPublicKey(publicKey);
+					var encryptPwd=encrypt.encryptLong(pwd);
+					alert(encryptPwd);
+					sform.userpwd.value=encryptPwd;
+					sform.submit();
+				},"json");
+			}
+		</script>
 	</head>
 
 	<body class="text-center">
-		<form class="form-signin" action="/login" method="post">
+		<form class="form-signin" action="/login" method="post" name="sform">
 			<img class="mb-4" src="asserts/img/bootstrap-solid.svg" th:src="@{/asserts/img/bootstrap-solid.svg}" alt="" width="72" height="72">
 			<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}" >Please sign in</h1>
 			
@@ -21,13 +40,13 @@
 			<label class="sr-only" th:text="#{login.username}" >Username</label>
 			<input value="zhangsan" type="text" name="username" class="form-control" placeholder="Username" th:placeholder="#{login.username}" required="" autofocus="">
 			<label class="sr-only" th:text="#{login.password}" >Password</label>
-			<input value="123" type="password" name="userpwd" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
+			<input value="123" id="userpwd" type="password" name="userpwd" class="form-control" placeholder="Password" th:placeholder="#{login.password}" required="">
 			<div class="checkbox mb-3">
 				<label>
           <input type="checkbox" value="remember-me">[[#{login.remember}]]
         </label>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.btn}" >Sign in</button>
+			<span class="btn btn-lg btn-primary btn-block" th:text="#{login.btn}" th:onclick="login()">Sign in</span>
 			<p class="mt-5 mb-3 text-muted">© 2017-2018</p>
 			<a class="btn btn-sm" th:href="@{/(l='zh_CN')}" >中文</a>
 			<a class="btn btn-sm" th:href="@{/(l='en_US')}" >English</a>
