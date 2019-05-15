@@ -21,7 +21,7 @@
 			#{v_hijoindate,mode=IN,jdbcType=VARCHAR},
 			#{v_coverageid,mode=IN,jdbcType=INTEGER},
 			#{v_property,mode=IN,jdbcType=VARCHAR},
-			#{v_status,mode=IN,jdbcType=VARCHAR},
+			#{v_status,mode=IN,jdbcType=INTEGER},
 			#{v_order,mode=IN,jdbcType=VARCHAR},
 			#{v_city,mode=IN,jdbcType=VARCHAR},
 			#{v_role,mode=IN,jdbcType=INTEGER},
