@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sao.mapper.InsuranceSlipMapper">
+
+	<select id="findAllInsuranceSlip" resultType="cn.sao.pojo.InsuranceSlip">
+		select policyid, insure_name, insure_card, area, address, relation, holder_name, holder_card, holder_sex, holder_phone, holder_email, insure_date, first_auditor, second_auditor, third_auditor, insure_status, scout, scount_status, license, industry_code, acreage, firm_name, userid, premium, pol_property, del_status, paystatus, yuliu2 from insurance_slip
+	</select>	
+</mapper>

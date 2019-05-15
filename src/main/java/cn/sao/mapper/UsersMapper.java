@@ -17,4 +17,15 @@ public interface UsersMapper {
 	 * @return
 	 */
 	public Users Login(Users users);
+
+	/**
+	 * 注册方法
+	 * @param users
+	 * @return
+	 */
+	public boolean addUser(Users users);
+	
+	
+	
 }
+

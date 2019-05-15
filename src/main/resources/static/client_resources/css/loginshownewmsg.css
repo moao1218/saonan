@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+
+/*--------------保存报价弹层改为最近样式 0728------------*/
+.pop_promptlogin{ display:none; z-index:99999; width:540px; position:fixed ; _position:absolute; _top:expression(documentElement.scrollTop + 200 + "px"); top:200px; left:50%; margin-left:-270px; overflow:hidden;}
+.pop_promptlogin .title{ height:30px; background:url(../images/pop_prompt_title.png) no-repeat; position:relative;}
+.pop_promptlogin .title a.close{ position:absolute; right:15px; top:8px; display:block; width:18px; height:15px; text-indent:-99999px; background:url(../images/hover.png) no-repeat 0px -532px; overflow:hidden;}
+.pop_promptlogin .con{ padding:46px 0 30px; background:#fff; overflow:hidden;}
+.pop_promptlogin .con .p_1{ width:380px; padding-left:168px; height:32px; line-height:32px;  font-size:16px; color:#222; background:url(../images/pop_jg.jpg) no-repeat 125px center;}
+.pop_promptlogin .con .p_2{ width:440px; margin-left:44px; padding-top:5px; line-height:25px; padding-left:43px; font-size:16px; color:#222; background:url(../images/pop_jg.jpg) no-repeat left top;}
+.pop_promptlogin .con .p_3{ width:440px; margin-left:44px; padding-top:25px; line-height:25px; padding-left:43px; font-size:16px; color:#666;}
+.pop_promptlogin .con .button_div{ height:40px; width:260px; margin:43px auto 0;}
+.pop_promptlogin .con .button_div input{ width:120px; height:40px; display:block; float:left; border:none;}
+.pop_promptlogin .con .button_div .inp_confirm{ margin-right:20px; background:url(../images/pop_an1.jpg) no-repeat; font-size:0px; line-height:0px;}
+.pop_promptlogin .con .button_div .inp_cancel{ background:url(../images/pop_an2.jpg) no-repeat; font-size:0px; line-height:0px;}
+.pop_promptlogin .bottom{ height:5px; overflow:hidden; background:url(../images/pop_prompt_bottom.png) no-repeat;}
+.pop_promptlogin .con .p_4{ width:300px; padding-left:28px; height:32px; line-height:32px;  font-size:16px; color:#222;background: url("../images/picc_register_rt.jpg") no-repeat scroll 0 0 rgba(0, 0, 0, 0); }
+.pop_promptlogin .con div.but_one{ width:120px;}
+.pop_promptlogin .con div.but_one .inp_confirm{ margin:0;}
+/*-----------------------保存报价弹层改为最近样式 0728 end---------------------*/
