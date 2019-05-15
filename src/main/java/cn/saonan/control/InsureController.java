@@ -472,11 +472,8 @@ public class InsureController {
 
 	}
 	
-	@RequestMapping(value="/goAdd")
-	public String goAdd(Model model) {
-//		List<Items> items = pvService.findAllItems();
-//		model.addAttribute("items", items);
-		return "server/add_verify";
-	}
+	
+	
+	
 }
 

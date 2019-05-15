@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
@@ -46,6 +47,7 @@ public class PolicyVerifyController {
 	@Autowired
 	private PvService pvService;
 	
+	//跳转待处理勘察页面
 	@GetMapping(value="/jumpScout")
 	public String scoutSplit(HttpServletRequest request,Model model) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -113,11 +115,19 @@ public class PolicyVerifyController {
 		c.setCoverageid(null);
 		
 		Items items = new Items();
+		Coverage coverage = new Coverage();
 		
-		pv.setScout("");
-		pv.setInsureid("");
-		pv.setCoverage(c);
-		pv.setDel_status("");
+		String cid = request.getParameter("coverageid");
+		System.out.println(cid);
+		if(cid!=null&&!"".equals(cid)) {
+			coverage.setCoverageid(Integer.parseInt(cid));
+			pv.setCoverage(coverage);
+		}else {
+			coverage.setCoverageid(null);
+			pv.setCoverage(coverage);
+		}
+		
+		pv.setDel_status("0");
 		
 		MultipartRequest req = (MultipartRequest) request;	
 		MultipartFile h_pic = req.getFile("h_pic");
@@ -133,7 +143,6 @@ public class PolicyVerifyController {
 		
 		
 		String num = request.getParameter("num");
-		System.out.println("num:"+num);
 		for (int i = 1; i < Integer.parseInt(num); i++) {
 			long currentTimeMillis = System.currentTimeMillis();
 			int r = new Random().nextInt(8999)+1000;
@@ -167,11 +176,151 @@ public class PolicyVerifyController {
 			map.put("pv", pv);
 			map.put("items", items);
 			
-			boolean insertPv = pvService.insertPv(map);
-			System.out.println("存入:"+insertPv);
+			pvService.insertPv(map);
 		}
 //		List<Items> items = pvService.findAllItems();
 //		model.addAttribute("items", items);
 		return "redirect:/jumpScout";
+	}
+	
+	//跳转正在处理页面
+	@GetMapping(value="/jumpDoing")
+	public String jumpDoing(HttpServletRequest request,Model model) throws ParseException {
+		Map<String,Object> map = new HashMap<String,Object>();
+		int cp = 1;
+		int ps = 5;
+		
+		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		
+		String cpp = request.getParameter("cp");
+		
+		if(cpp!=null&&!"".equals(cpp)){
+			cp = Integer.parseInt(cpp);
+		}
+		
+		String pss = request.getParameter("ps");
+		if(pss!=null&&!"".equals(pss)){
+			ps = Integer.parseInt(pss);
+		}
+		
+		
+		map.put("cp", cp);
+		map.put("ps", ps);
+		map.put("v_scout", clerk.getMagid()+"");
+		map.put("v_status",3);
+		insuranceSlipService.findInsuranceSlipList(map);
+		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		for (InsuranceSlip insuranceSlip : insureList) {
+			Date parse = date.parse(insuranceSlip.getInsure_date());
+			if(d.getTime()<parse.getTime()+12*60*60*1000) {
+				insuranceSlip.setUrg("正常");
+			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+				insuranceSlip.setUrg("预警");
+			}else {
+				insuranceSlip.setUrg("报警");
+			}
+//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+		}
+		Integer v_count = (Integer) map.get("v_count");
+		int totalpage = (v_count-1)/ps + 1;
+		
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+		model.addAttribute("cp", cp);
+		model.addAttribute("ps", ps);
+		
+		List<City> cityList = usersService.findAllCity();
+		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
+		return "server/doing_verify_list";
+	}
+	
+	@RequestMapping(value="/goAdd")
+	public String goAdd(String pid,String cid,Model model) {
+		Coverage vo = insuranceSlipService.findCoverageid(cid);
+		Integer coverageid = vo.getCoverageid();
+		System.out.println("coverageid:"+coverageid);
+		model.addAttribute("pid", pid);
+		model.addAttribute("cid", coverageid);
+		return "server/add_verify";
+	}
+	
+	//正在进行中的投保单,在投保单所有险种都勘察完的情况下,可以点击勘察完毕
+	@RequestMapping(value="/doingAdd")
+	public String doingAdd(String pid,String cid,Model model) {
+		Coverage vo = insuranceSlipService.findCoverageid(cid);
+		Integer coverageid = vo.getCoverageid();
+		model.addAttribute("pid", pid);
+		model.addAttribute("cid", coverageid);
+		model.addAttribute("abc", 1);
+		return "server/add_verify";
+	}
+	
+	@GetMapping(value="/succ")
+	public String succ(String pid) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("newstatus", 4);
+		map.put("policyid", pid);
+		insuranceSlipService.updateInsuranceStatus(map);
+		return "forward:/jumpDoing";
+	}
+	
+	@GetMapping(value="/done")
+	public String done(HttpServletRequest request,Model model) throws ParseException {
+		Map<String,Object> map = new HashMap<String,Object>();
+		int cp = 1;
+		int ps = 5;
+		
+		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		
+		String cpp = request.getParameter("cp");
+		
+		if(cpp!=null&&!"".equals(cpp)){
+			cp = Integer.parseInt(cpp);
+		}
+		
+		String pss = request.getParameter("ps");
+		if(pss!=null&&!"".equals(pss)){
+			ps = Integer.parseInt(pss);
+		}
+		
+		
+		map.put("cp", cp);
+		map.put("ps", ps);
+		map.put("v_scout", clerk.getMagid()+"");
+		map.put("v_status",4);
+		insuranceSlipService.findInsuranceSlipList(map);
+		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		for (InsuranceSlip insuranceSlip : insureList) {
+			Date parse = date.parse(insuranceSlip.getInsure_date());
+			if(d.getTime()<parse.getTime()+12*60*60*1000) {
+				insuranceSlip.setUrg("正常");
+			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+				insuranceSlip.setUrg("预警");
+			}else {
+				insuranceSlip.setUrg("报警");
+			}
+//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+		}
+		Integer v_count = (Integer) map.get("v_count");
+		int totalpage = (v_count-1)/ps + 1;
+		
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+		model.addAttribute("cp", cp);
+		model.addAttribute("ps", ps);
+		
+		List<City> cityList = usersService.findAllCity();
+		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
+		return "server/succ_verify_list";
 	}
 }

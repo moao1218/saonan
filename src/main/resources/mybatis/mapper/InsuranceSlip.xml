@@ -91,4 +91,9 @@
 			 where policyid=#{policyid}
 	</update>
 	
+	<!-- 通过保险名字找到保险内容 -->
+	<select id="findCoverageid" resultType="cn.saonan.pojo.Coverage">
+		select coverageid, coverage_name, coverage_rate, upper_limit, lower_limit, del_status from coverage where coverage_name=#{coverage_name}
+	</select>
+	
 </mapper>
