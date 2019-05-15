@@ -108,7 +108,10 @@
 			});
   })();
 </script>
- 
+ <script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+</script>
 <link href="client_resources/css/loginshownewmsg.css" type="text/css" rel="stylesheet">
 
 
@@ -319,14 +322,11 @@
     		
 			
 					<span >
-						<select>
-								<option>---省---</option>
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
+						<select name="pro" th:each="province:${findProvince}">
+								<option >---省---</option>
+								<option th:text="${province.city.father}">[[${province.province}]]</option>
 						</select>
-						<select>
+						<select name="city">
 								<option>---市---</option>
 								<option>1</option>
 								<option>2</option>
