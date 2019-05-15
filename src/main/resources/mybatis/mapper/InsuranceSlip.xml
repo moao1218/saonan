@@ -24,7 +24,7 @@
 			#{v_status,mode=IN,jdbcType=INTEGER},
 			#{v_order,mode=IN,jdbcType=VARCHAR},
 			#{v_city,mode=IN,jdbcType=VARCHAR},
-			#{v_role,mode=IN,jdbcType=INTEGER},
+			#{v_role,mode=IN,jdbcType=VARCHAR},
 			#{v_scout,mode=IN,jdbcType=VARCHAR},
 			
 			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},

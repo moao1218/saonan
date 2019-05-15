@@ -568,5 +568,95 @@ public class InsureController {
 //		model.addAttribute("items", items);
 		return "server/add_verify";
 	}
+	
+	//对应审核员已完成投保单查询并列出
+	@RequestMapping(value="/completed")
+	public String completed(HttpServletResponse response, HttpServletRequest request, Model model) throws ParseException {
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		int cp = 1;
+		int ps = 5;
+		
+		String cpp = request.getParameter("cp");
+		
+		if(cpp!=null&&!"".equals(cpp)){
+			cp = Integer.parseInt(cpp);
+		}
+		
+		String pss = request.getParameter("ps");
+		if(pss!=null&&!"".equals(pss)){
+			ps = Integer.parseInt(pss);
+		}
+		
+		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		//获得该审核员编号
+		Integer magid = clerk.getMagid();
+		
+		String v_city = clerk.getCity().getCode();
+		//我是从登陆信息从拿到的角色ID
+		Integer roleid = clerk.getRoleid();
+		String v_role = "";
+		String rList = "";
+		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+		if(roleid==1) {
+			//v_role => 只能看1状态的
+			v_role = "5,6";
+			map.put("v_role", v_role);
+			map.put("v_scout", magid + "");
+		}else if(roleid==2) {
+			v_role = "9,10";
+			map.put("v_role", v_role);
+			map.put("v_scout", magid + "");
+		}else if(roleid==3) {
+			v_role = "13,14";
+			map.put("v_role", v_role);
+			map.put("v_scout", magid + "");
+		}else {
+			try {
+				
+				response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write( "<script>alert('您没有访问的权限！');"
+						+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+				response.getWriter().flush();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		insuranceSlipService.findInsuranceSlipList(map);
+		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		for (InsuranceSlip insuranceSlip : insureList) {
+			Date parse = date.parse(insuranceSlip.getInsure_date());
+			if(d.getTime()<parse.getTime()+12*60*60*1000) {
+				insuranceSlip.setUrg("正常");
+			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+				insuranceSlip.setUrg("预警");
+			}else {
+				insuranceSlip.setUrg("报警");
+			}
+//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+		}
+		Integer v_count = (Integer) map.get("v_count");
+		int totalpage = (v_count-1)/ps + 1;
+		model.addAttribute("cp", cp);
+		model.addAttribute("ps", ps);
+		
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+		
+		List<City> cityList = usersService.findAllCity();
+		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
+
+		return "server/insurance_completed_list";
+	}
+	
+	
 }
 
