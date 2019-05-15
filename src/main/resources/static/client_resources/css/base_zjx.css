@@ -22,7 +22,7 @@ body.ovxhide{ overflow-x:hidden;}
 . { width:65px; height:19px; background:url(../images/btnBg.png) no-repeat; cursor:pointer; border:0; color:#fff;}
 /*** header ***/
 /* 顶部栏 */
-.haedTopBg{ background:#e5e5e5; height:30px; min-width:1000px;}
+.haedTopBg{ background:#e5e5e5; border-top:2px solid #ef4023; height:30px; min-width:1000px;}
 .haedTop{ width:1000px; margin:0 auto; line-height:30px;}
 @media screen and (min-width:0\0) {.haedTop{ line-height:28px;}} /* ie9 10 一像素偏差处理*/
 .headTop div{ display:inline-block;}
@@ -59,12 +59,13 @@ body.ovxhide{ overflow-x:hidden;}
 /* 主导航 */
 .mainNavBod{ border-bottom:3px solid #ef4024; height:35px; min-width:1000px;}
 .mainNav{ width:1000px; margin:0 auto;}
-.mainNav h2{ background:#ef4024 url(../images/h2TopBg.png) left top no-repeat; width:149px; float:left; font-size:14px; color:#fff; text-align:center; height:35px; line-height:35px; letter-spacing:2px; cursor:pointer;}
+.mainNav h2{ background:#ef4024 url(../images/h2TopBg.png) left top no-repeat; width:149px; float:left; font-size:14px; color:#fff; text-align:center; height:35px; line-height:35px; letter-spacing:2px;cursor:pointer}
 .mainNav ul,.mainNav li{ float:left;}
-.mainNav li{ line-height:35px; padding:0 36px; font-size:16px; }
+/*.mainNav li{ line-height:35px; padding:0 40px; font-size:16px; font-weight:bold;}*/
+.mainNav li{ line-height:35px; padding:0 36px; font-size:16px;}
 .mainNav li a:hover{ color:#e23520;}
 .mainNav form{ border:1px solid #b3b3b3; width:160px;_width:159px; height:20px; float:right; padding:0 5px; margin-top:7px;}
-.mainNav form .sText{ border:0; background:none; height:20px; width:140px;_width:139px; vertical-align:top; color:#666;}
+.mainNav form .sText{ border:0; background:none; height:20px; width:140px;_width:130px; vertical-align:top; color:#666;}
 .mainNav form .sSubmit{ background:url(../images/mainNavIco.png) no-repeat; width:16px; height:17px; display:inline-block;*display:inline;*zoom:1; vertical-align:top; margin-top:2px; cursor:pointer; border:0;}
 .mainNav h2.pull_down{ background:url(../images/h2TopBg2.png) no-repeat; width:140px; padding-right:15px; float:left; font-size:14px; color:#fff; text-align:center; height:35px; line-height:35px; letter-spacing:2px;}
 /*流程*/
@@ -91,7 +92,7 @@ body.ovxhide{ overflow-x:hidden;}
 .tianMao span.leftSpan{ display:inline-block; height:20px; background:url(../images/tianMaoPhone.gif) left center no-repeat; padding-left:30px; font-size:14px; line-height:20px; color:#666; float:left;}
 .tianMao span.leftSpan strong{ color:#333;}
 .tianMao span.rightSpan{ display:inline-block; height:20px; line-height:20px; background:url(../images/tianMaoLogo.gif) left center no-repeat; float:right; padding-left:35px;}
-.footbj{ padding-top:41px; margin-top:0;background-color: #fafafa;}
+.footbj{ padding-top:41px; margin-top:0;}
 .footbj .footUpdate{ height:99px; background:none; background-color:#e6e6e6;}
 .footbj .foot_bottom .corpy p{color:#666; line-height:30px;}
 /*右侧浮动*/
@@ -99,9 +100,9 @@ body.ovxhide{ overflow-x:hidden;}
 _bottom:auto;  
 _top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop,10)||0)-(parseInt(this.currentStyle.marginBottom,10)||0)));   z-index:2;}
 .rightFloat li span{ cursor:pointer; font-size:14px; line-height:17px;}
-.rightFloat li a{ display:inline-block; background:url(../images/hover.png) 0px -615px no-repeat; _background:url(../images/hover.gif) 0px -615px no-repeat; width:30px; height:160px;}
+.rightFloat li a{ display:inline-block; background:url(../images/hover.png) 0px -615px no-repeat; _background:url(../images/hover.gif) 0px -615px no-repeat; width:30px; height:160px;} 
 .rightFloat li .a_title{display:inline-block; background:url(../images/hover.png) -90px -238px no-repeat; _background:url(../images/hover.gif) -90px -238px no-repeat; width:30px; height:113px;}
-.rightFloat li a:hover{ background:url(../images/hover.png) -40px -615px no-repeat;  color:#fff;}
+.rightFloat li a:hover{ background:url(../images/hover.png) -40px -615px no-repeat; color:#fff;} 
 .rightFloat li .a_title:hover{background:url(../images/hover.png) -30px -238px no-repeat;  color:#fff;}
 .rightFloat li .ques{ display:inline-block; width:14px;  margin-top:10px;text-align:center; float:left; padding:19px 8px 0 8px; }
 
@@ -112,19 +113,16 @@ _top:expression(eval(document.documentElement.scrollTop+document.documentElement
 .rightFloat_pro li a{ display:inline-block; background:url(../images/hover.png) -60px -238px no-repeat; _background:url(../images/hover.gif) -60px -238px no-repeat; width:30px; height:113px;}
 .rightFloat_pro li a:hover{ background:url(../images/hover.png) 0px -238px no-repeat;  color:#fff;}
 .rightFloat_pro li .ques{ display:inline-block; width:14px;  margin-top:10px;text-align:center; float:left; padding:19px 8px 0 8px; }
-/* 2014-5-13 update start */
-.top145{top:145px;}
-/* 2014-5-13 update end */
-
 /*弹出层 2014-5-20 从layout.css中拷贝过来*/
 
 .dialog{display:none; z-index:99999;  position:fixed; left:50%; top:50%; width:422px;}
-.dialog .dialog_title{height: 30px;overflow: hidden; width: 422px;}
+
 .dialog .dialog_title ul li{float:left; line-height:32px; height:32px; font-size:14px;}
 
+/*.dialog .dialog_title ul li.dia_middle{background:url(/eproperty/css/theme/images/title_bg.png) repeat-x; height:30px; border-top:#757575 1px solid; border-bottom:#757575 1px solid;  text-indent:10px; width:422px; overflow:hidden;}*/
 .dialog .dialog_title ul li.dia_middle{background:url(/eproperty/css/theme/images/title_bg.png) repeat-x; height:30px; border-top:#757575 1px solid; border-bottom:#757575 1px solid;  text-indent:10px; width:422px; overflow:hidden;}
 
-.dialog .dialog_title ul li.dia_middleNew{background:url(../images/title_bg.png) repeat-x; height:30px; border-top:#757575 1px solid; border-bottom:#757575 1px solid;  width:422px; overflow:hidden;}
+.dialog .dialog_title ul li.dia_middleNew{background:url(../images/title_bg.png) repeat-x; height:30px; border-bottom:#757575 1px solid;  width:422px; overflow:hidden;}
 
 .dialog .dialog_title ul li.dia_middleNew a.close{background:url(../images/ico_close.png) no-repeat; width:13px; height:13px; display:block; float:right; margin-top:10px; margin-right:9px;}
 
@@ -164,54 +162,4 @@ _top:expression(eval(document.documentElement.scrollTop+document.documentElement
 
 .dialog .dialog_content div.msgsuc{margin:30px 30px 20px 30px;font-size:14px;color:#000;}
 .mask{ position:fixed; width:100%; height:100%; background:#000;top:0; left:0; z-index:1009;opacity: 0.5; _position:absolute; filter:Alpha(opacity=50);}
-
-
-/*从穷游拷来的错误提示*/
-.plan li.hasUnit .errorTip{margin-left:27px;}
-.errorTip{display:none; vertical-align:middle; height:32px;padding-left:19px;font-size:12px;color:#ff644c; background:url(../images/errorTip.png) no-repeat;_background-image:url(../images/errorTip.gif); 
-_background-position:0px 0px;_background-repeat:no-repeat;}
-.active{display:inline-block;*display:inline;*zoom:1;}
-.errorTip .inner{display:inline-block;*display:inline;*zoom:1;height:32px;line-height:32px;padding-right:13px;background:url(../images/errorTip.png) right bottom no-repeat;_background:url(../images/errorTip.gif) right bottom no-repeat;}
-
-/*弹出框，修改联系人 form layout.css*/
-.dialog .dialog_person{border-left:#757575 1px solid;border-right:#757575 1px solid; padding:10px; background:#fff; width:400px;}
-.dialog .dialog_person label{font-size:12px; width:130px; text-align:right; display:inline-block;}
-.dialog .dialog_person .sd_input{background:url(../images/input_tosnTimesearch.png) repeat-x; height:20px; line-height:20px; border:#d6d6d6 1px solid; width:120px; color:#000;}
-.dialog .dialog_person p{margin-bottom:10px;}
-.dialog .dialog_person .type_select{border:#e5e5e5 1px solid;}
-.dialog .dialog_person .sd_input_date{background:url(../images/date_bg.png) no-repeat; height:20px; line-height:20px; border:#d6d6d6 1px solid; width:121px; color:#000;}
-.dialog .dialog_person ul li{height:26px; line-height:26px;padding-left:80px;}
-.dialog .dialog_person h2{font-size:14px;}
-.dialog .dialog_person_modified{padding-top:20px;padding-left:20px; width:390px;}
-.dialog .dialog_person p.childmsg{ text-align:center; padding:5px 0;}
-.dialog .dialog_person p.childmsg a{ background:url(/eproperty/image/childmsgbtn.png) no-repeat; width:110px; height:32px; color:#000; line-height:32px; font-size:14px;text-decoration: none; display:inline-block; margin:0 10px; cursor:pointer;}
-.dialog .dialog_person p a#changePlancode_btn{ background-position:right top;width:146px;}
-
-
-
-/*弹出框，修改联系人 form layout.css*/
-.dialog .dialog_engage{border-left:#757575 1px solid;border-right:#757575 1px solid; padding:10px; background:#fff; width:422px;}
-.dialog .dialog_engage label{font-size:12px; width:130px; text-align:right; display:inline-block;}
-.dialog .dialog_engage .sd_input{background:url(../images/input_tosnTimesearch.png) repeat-x; height:20px; line-height:20px; border:#d6d6d6 1px solid; width:120px; color:#000;}
-.dialog .dialog_engage p{margin-bottom:10px;}
-.dialog .dialog_engage .type_select{border:#e5e5e5 1px solid;}
-.dialog .dialog_engage .sd_input_date{background:url(../images/date_bg.png) no-repeat; height:20px; line-height:20px; border:#d6d6d6 1px solid; width:121px; color:#000;}
-.dialog .dialog_engage ul li{height:26px; line-height:26px;padding-left:80px;}
-.dialog .dialog_engage h2{font-size:14px;}
-.dialog .dialog_engage_modified{padding-top:20px;padding-left:20px; width:390px;}
-.dialog .dialog_engage p.childmsg{ text-align:center; padding:5px 0;}
-.dialog .dialog_engage p.childmsg a{ background:url(/eproperty/image/childmsgbtn.png) no-repeat; width:110px; height:32px; color:#000; line-height:32px; font-size:14px;text-decoration: none; display:inline-block; margin:0 10px; cursor:pointer;}
-.dialog .dialog_engage p a#changePlancode_btn{ background-position:right top;width:146px;}
-
-.dialog .dialog_title_engage{height: 30px;overflow: hidden; width: 444px;}
-.dialog .dialog_title_engage ul li{float:left; line-height:32px; height:32px; font-size:14px;}
-.dialog .dialog_title_engage ul li.dia_middleEngage{background:url(../images/title_bg_new.png) repeat-x; height:30px; border-top:#757575 1px solid; border-bottom:#757575 1px solid;  width:444px; overflow:hidden;}
-.dialog .dialog_title_engage ul li.dia_middleEngage a.close{background:url(../images/ico_close.png) no-repeat; width:13px; height:13px; display:block; float:right; margin-top:10px; margin-right:9px;}
-.dialog .dialog_title_engage ul li.dia_middleEngage a.close{background:url(../images/ico_close.png) no-repeat; width:13px; height:13px; display:block; float:right; margin-top:10px; margin-right:9px;}
-.dialog .dialog_title_engage ul li.dia_left{}
-.dialog .dialog_title_engage ul li.dia_right{}
-
-/**字体样式**/
-.hotline{ float:left; width:166px;color:#a4a4a4;font-size:16px;font-weight:normal;padding-top:28px;}
-.hotline_a{ float:left; width:166px;color:#a4a4a4;font-size:17px;font-weight:normal;padding:30px 0 0 30px;;}
 
