@@ -24,13 +24,65 @@
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
   <script type="text/javascript">
-/*   	function acceptPro(){
-  		location.href="/acceptPro";
-  	} */
-  	
-  
-  	
+  $(function(){
+		console.log($("#totalpage").val());
+		console.log($("#cp").val());
+		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+			console.log(data);
+			$("#tianqi_city").html(data.result.result.city);
+			$("#tianqi_date").html(data.result.result.updatetime);
+			$("#tianqi_week").html(data.result.result.week);
+			$("#tianqi_weather").html(data.result.result.weather);
+			$("#tianqi_humidity").html(data.result.result.humidity);
+			$("#tianqi_temp").html(data.result.result.temp);
+			$("#tianqi_templow").html(data.result.result.templow);
+			$("#tianqi_temphigh").html(data.result.result.temphigh);
+			$("#tianqi_detail").html(data.result.result.index[0].detail);
+		},"json");
+	});
   </script>
+  <script type="application/javascript">
+      $(document).ready(function() {
+      $("#date-popover").popover({
+        html: true,
+        trigger: "manual"
+      });
+      $("#date-popover").hide();
+      $("#date-popover").click(function(e) {
+        $(this).hide();
+      });
+
+      $("#my-calendar").zabuto_calendar({
+        action: function() {
+          return myDateFunction(this.id, false);
+        },
+        action_nav: function() {
+          return myNavFunction(this.id);
+        },
+        ajax: {
+          url: "show_data.php?action=1",
+          modal: true
+        },
+        legend: [{
+            type: "text",
+            label: "Special event",
+            badge: "00"
+          },
+          {
+            type: "block",
+            label: "Regular event",
+          }
+        ]
+      });
+    }); 
+
+     function myNavFunction(id) {
+      $("#date-popover").hide();
+      var nav = $("#" + id).data("navigation");
+      var to = $("#" + id).data("to");
+      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    } 
+     </script>
 
   <!-- =======================================================
     Template Name: Dashio
@@ -97,17 +149,17 @@
 			      <th scope="row">职位</th>
 			      <td> <select id="roleid" name="roleid" >
 				      	<option value="">--请选择--</option>
-		              	<option th:value="1">保单一审</option>
-		              	<option th:value="2">保单二审</option>
-		              	<option th:value="3">保单三审</option>
-		              	<option th:value="4">理赔一审</option>
-		              	<option th:value="5">理赔二审</option>
-		              	<option th:value="6">理赔三审</option>
-		              	<option th:value="7">会计</option>
-		              	<option th:value="8">指导人员</option>
-		              	<option th:value="9">保单勘察人员</option>
-		              	<option th:value="10">理赔勘察人员</option>
-		              	<option th:value="11">超级管理员</option>
+		              	<option th:value="1" th:selected="${findaclerk.roleid}==1">保单一审</option>
+		              	<option th:value="2" th:selected="${findaclerk.roleid}==2">保单二审</option>
+		              	<option th:value="3" th:selected="${findaclerk.roleid}==3">保单三审</option>
+		              	<option th:value="4" th:selected="${findaclerk.roleid}==4">理赔一审</option>
+		              	<option th:value="5" th:selected="${findaclerk.roleid}==5">理赔二审</option>
+		              	<option th:value="6" th:selected="${findaclerk.roleid}==6">理赔三审</option>
+		              	<option th:value="7" th:selected="${findaclerk.roleid}==7">会计</option>
+		              	<option th:value="8" th:selected="${findaclerk.roleid}==8">指导人员</option>
+		              	<option th:value="9" th:selected="${findaclerk.roleid}==9">保单勘察人员</option>
+		              	<option th:value="10" th:selected="${findaclerk.roleid}==10">理赔勘察人员</option>
+		              	<option th:value="11" th:selected="${findaclerk.roleid}==11">超级管理员</option>
 				      </select>
 					</td>
 			    </tr>
@@ -168,7 +220,7 @@
 			      <th scope="row">负责地区</th>
 			      <th> <select id="area"  name="area">
 				      	<option value="">--请选择--</option>
-				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}" th:select="${city.code}==${findaclerk.city.code}">Choose...</option>
+				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}" th:selected="${city.code==findaclerk.city.code}">Choose...</option>
 				      </select>
 			      </th>
 			    </tr>

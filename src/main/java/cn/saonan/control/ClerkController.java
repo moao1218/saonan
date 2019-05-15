@@ -2,6 +2,9 @@ package cn.saonan.control;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,14 +20,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
+import cn.saonan.pojo.Coverage;
+import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.service.ClerkService;
+import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.RolessService;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.IdCard;
 
 
 
 @Controller
 public class ClerkController {
+	@Autowired
+	private InsuranceSlipService insuranceSlipService ;
 
 	@Autowired
 	private ClerkService clerkservice;
@@ -163,16 +172,17 @@ public class ClerkController {
 	@RequestMapping(value="/deleteClerk")
 	public void deleteClerk(HttpServletRequest request,HttpServletResponse response) throws IOException {
 		String magidd = request.getParameter("magid");
-		System.out.println("删除得到"+magidd);
-		Integer magid = Integer.parseInt(magidd);
-		System.out.println("得到int"+magid);
-		boolean dd = clerkservice.clerkupddele(magid);
-		System.out.println("删除"+dd);
+		String [] split = magidd.split(",");
+		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
-		if(dd==true) {
-			out.write("<script>alert('删除成功');location='login.jsp';</script>");
-		}else {
-			out.write("<script>alert('删除失败');location='ids?stat=guanli';</script>");
+		for (int i = 0; i < split.length; i++) {
+			boolean dd = clerkservice.clerkupddele(Integer.parseInt(split[i]));
+			
+			if(dd==true) {
+				out.write("<script>alert('删除成功');location='/findClerkSplits';</script>");
+			}else {
+				out.write("<script>alert('删除失败');location='/findClerkSplits';</script>");
+			}
 		}
 		out.flush();
 		out.close();
@@ -192,16 +202,30 @@ public class ClerkController {
 	//注销
 	@RequestMapping(value="/fulldeleteclerk")
 	public void deleteClek(HttpServletRequest request,HttpServletResponse response) throws IOException {
-		String magidd = request.getParameter("magid");
-		Integer magid = Integer.parseInt(magidd);
-		System.out.println("注销得到"+magid);
-		boolean dd = clerkservice.clerkdelete(magid);
 		
+		String magidd = request.getParameter("magid");
+		String [] split = magidd.split(",");
+		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("注销"+dd);
-		out.write(dd+"");
+		for (int i = 0; i < split.length; i++) {
+			boolean dd = clerkservice.clerkdelete(Integer.parseInt(split[i]));
+			
+			if(dd==true) {
+				out.write("<script>alert('删除成功');location='/findClerkSplits';</script>");
+			}else {
+				out.write("<script>alert('删除失败');location='/findClerkSplits';</script>");
+			}
+		}
 		out.flush();
 		out.close();
+		/*
+		 * String magidd = request.getParameter("magid"); Integer magid =
+		 * Integer.parseInt(magidd); System.out.println("注销得到"+magid); boolean dd =
+		 * clerkservice.clerkdelete(magid);
+		 * 
+		 * PrintWriter out = response.getWriter(); System.out.println("注销"+dd);
+		 * out.write(dd+""); out.flush(); out.close();
+		 */
 	}
 	
 	//修改页面
@@ -211,6 +235,7 @@ public class ClerkController {
 		String pid = request.getParameter("pid");
 		Integer magid = Integer.parseInt(pid);
 		Clerk findaclerk = clerkservice.findaclerk(magid);
+		String code = findaclerk.getCity().getCode();
 		List<City> cityList = usersService.findAllCity();
 		model.addAttribute("cityList", cityList);
 		model.addAttribute("findaclerk", findaclerk);
@@ -219,7 +244,7 @@ public class ClerkController {
 	
 	//修改
 	@RequestMapping(value="/xiugai")
-	public String xiugai( Clerk clerk,Model model,HttpServletRequest request) {
+	public void xiugai( Clerk clerk,Model model,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		String magidd = request.getParameter("magid");
 		Integer magid = Integer.parseInt(magidd);
 		clerk.setMagid(magid);
@@ -232,13 +257,81 @@ public class ClerkController {
 		city.setCode(area);
 		clerk.setCity(city);
 		boolean clerkupdate = clerkservice.clerkupdate(clerk);
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
 		if(clerkupdate==true) {
-			return "forward:/findClerkSplits";
+			out.write("<script>alert('修改成功'); location.href = \"/update?pid=\"+pid;</script>");
 		}else {
-			return "server/clerk_addClerk";
+			out.write("<script>alert('修改失败');location='/xiugai';</script>");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	//投保单查询
+	@RequestMapping(value="/jumpIscList")
+	public String goList(Model model,HttpServletRequest request) throws ParseException {
+		Map<String,Object> map = new HashMap<String,Object>();
+		int cp = 1;
+		int ps = 5;
+		
+		String cpp = request.getParameter("cp");
+		
+		if(cpp!=null&&!"".equals(cpp)){
+			cp = Integer.parseInt(cpp);
 		}
 		
+		String pss = request.getParameter("ps");
+		if(pss!=null&&!"".equals(pss)){
+			ps = Integer.parseInt(pss);
+		}
+		map.put("cp", cp);
+		map.put("ps", ps);
+		insuranceSlipService.findInsuranceSlipList(map);
+		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		Date d = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		for (InsuranceSlip insuranceSlip : insureList) {
+			Date parse = date.parse(insuranceSlip.getInsure_date());
+			if(d.getTime()<parse.getTime()+12*60*60*1000) {
+				insuranceSlip.setUrg("正常");
+			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+				insuranceSlip.setUrg("预警");
+			}else {
+				insuranceSlip.setUrg("报警");
+			}
+//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+		}
+		Integer v_count = (Integer) map.get("v_count");
+		int totalpage = (v_count-1)/ps + 1;
+		
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+		model.addAttribute("cp", cp);
+		model.addAttribute("ps", ps);
+		
+		List<City> cityList = usersService.findAllCity();
+		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
+		return "server/clerk_insurance_slip_list";
 	}
+	
+	//身份验证
+	/*
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping(value="/checkinIdCard") public String
+	 * checkIdCard(HttpServletRequest request) {
+	 * 
+	 * String idCrad = request.getParameter("idCard"); String resource =
+	 * IdCard.checkIdCard(idCrad);
+	 * 
+	 * return resource; }
+	 */
+	
+
 	
 	
 	

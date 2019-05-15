@@ -47,7 +47,66 @@
   <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/moment.min.js"></script>
   <script type="text/javascript" src="back/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
   <script src="back/lib/advanced-form-components.js"></script>
-  
+    <script type="text/javascript">
+  $(function(){
+		console.log($("#totalpage").val());
+		console.log($("#cp").val());
+		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+			console.log(data);
+			$("#tianqi_city").html(data.result.result.city);
+			$("#tianqi_date").html(data.result.result.updatetime);
+			$("#tianqi_week").html(data.result.result.week);
+			$("#tianqi_weather").html(data.result.result.weather);
+			$("#tianqi_humidity").html(data.result.result.humidity);
+			$("#tianqi_temp").html(data.result.result.temp);
+			$("#tianqi_templow").html(data.result.result.templow);
+			$("#tianqi_temphigh").html(data.result.result.temphigh);
+			$("#tianqi_detail").html(data.result.result.index[0].detail);
+		},"json");
+	});
+  </script>
+  <script type="application/javascript">
+      $(document).ready(function() {
+      $("#date-popover").popover({
+        html: true,
+        trigger: "manual"
+      });
+      $("#date-popover").hide();
+      $("#date-popover").click(function(e) {
+        $(this).hide();
+      });
+
+      $("#my-calendar").zabuto_calendar({
+        action: function() {
+          return myDateFunction(this.id, false);
+        },
+        action_nav: function() {
+          return myNavFunction(this.id);
+        },
+        ajax: {
+          url: "show_data.php?action=1",
+          modal: true
+        },
+        legend: [{
+            type: "text",
+            label: "Special event",
+            badge: "00"
+          },
+          {
+            type: "block",
+            label: "Regular event",
+          }
+        ]
+      });
+    }); 
+
+     function myNavFunction(id) {
+      $("#date-popover").hide();
+      var nav = $("#" + id).data("navigation");
+      var to = $("#" + id).data("to");
+      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    } 
+     </script>
   <script type="text/javascript">
   var flag =false;
   var flag2 = false;

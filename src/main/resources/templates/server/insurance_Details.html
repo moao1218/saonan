@@ -118,8 +118,8 @@
 			      <th scope="row">被保人证件号码</th>
 			      <td th:text="${insurance.insure_card}">Larry</td>
 			      <td>
-			      	<button th:if="${session.user.roleid==2}" type="button" class="btn btn-primary" th:onclick="checkIdCard([[${insurance.insure_card}]]);"  >检测是否真实</button>
-			      	<span id="idCardSpan"></span>
+			      	<button  type="button" class="btn btn-primary" th:onclick="checkIdCard([[${insurance.insure_card}]]);"  >检测是否真实</button>
+			      	<span id="idCardSpan">123</span>
 			      </td>
 			    </tr>
 			    <tr>

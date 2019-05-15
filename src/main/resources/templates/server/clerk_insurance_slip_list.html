@@ -23,10 +23,40 @@
   <link href="back/css/style.css" rel="stylesheet"/>
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
-    <script type="text/javascript">
+  <script src="back/lib/jquery/jquery.min.js"></script>
+
+  <script src="back/lib/bootstrap/js/bootstrap.min.js"></script>
+  <script class="include" type="text/javascript" src="back/lib/jquery.dcjqaccordion.2.7.js"></script>
+  <script src="back/lib/jquery.scrollTo.min.js"></script>
+  <script src="back/lib/jquery.nicescroll.js" type="text/javascript"></script>
+  <script src="back/lib/jquery.sparkline.js"></script>
+  <!--common script for all pages-->
+  <script src="back/lib/common-scripts.js"></script>
+  <script type="text/javascript" src="back/lib/gritter/js/jquery.gritter.js"></script>
+  <script type="text/javascript" src="back/lib/gritter-conf.js"></script>
+  <!--script for this page-->
+  <script src="back/lib/sparkline-chart.js"></script>
+  <script src="back/lib/zabuto_calendar.js"></script>
+  <script type="text/javascript">
+	  function goToPage(num){
+			var total = $("#totalpage").val();
+			
+			if(parseInt(num)<1){
+				alert("已经是第一页了!");
+			}else if(parseInt(num)>total){
+				alert("已经是最后一页了!");
+			}else{
+				sform.cp.value=num;
+				sform.submit();
+		}
+	  }
+
+  </script>
+  <script type="text/javascript">
   $(function(){
-		console.log($("#totalpage").val());
-		console.log($("#cp").val());
+	  	
+  		console.log($("#totalpage").val());
+  		console.log($("#cp").val());
 		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
 			console.log(data);
 			$("#tianqi_city").html(data.result.result.city);
@@ -39,7 +69,24 @@
 			$("#tianqi_temphigh").html(data.result.result.temphigh);
 			$("#tianqi_detail").html(data.result.result.index[0].detail);
 		},"json");
+		
+		
+		
+		 /* $("#splitPage li").click(function(){
+				var total = $("#totalpage").val();
+				console.log(num);
+				if(parseInt(num)<1){
+					alert("已经是第一页了!");
+				}else if(parseInt(num)>total){
+					alert("已经是最后一页了!")
+				}else{
+					sform.cp.value=num;
+					sform.submit();}		
+			}
+		)  */
 	});
+  
+   
   </script>
   <script type="application/javascript">
       $(document).ready(function() {
@@ -81,39 +128,11 @@
       var nav = $("#" + id).data("navigation");
       var to = $("#" + id).data("to");
       console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+      
+     
     } 
-     </script>
-  <script type="text/javascript">
-  	function acceptPro(){
-  		location.href="/acceptPro";
-  	}
-  	
-  	function checkIdCard(idCard){
-  		$.post("/checkIdCard",{"idCrad":idCard},function(data){
-  			console.log("熊蕃猛");
-  		console.log(data);
-  		if(data.result.data.resp.code==0){
-  			$("#idCardSpan").html("合理");
-  		if(data.result.resp.code==0){
-  			$("#idCardSpan").html("heli");
-  		}else{
-  			$("#idCardSpan").html("不合理");
-  			$("#idCardSpan").html("buheli");
-  			
-  		}}
-  			
-  		},"json");
-  		
-  	}
-  	
   </script>
 
-  <!-- =======================================================
-    Template Name: Dashio
-    Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
-    Author: TemplateMag.com
-    License: https://templatemag.com/license/
-  ======================================================= -->
 </head>
 
 <body>
@@ -123,7 +142,7 @@
         *********************************************************************************************************************************************************** -->
     <!--header start-->
     
-    <div th:replace="server/commons/comm::#topbar(activeUri='guaranteeList.html')"></div>
+    <div th:replace="server/commons/comm::#topbar(activeUri='insurance_slip_list.html')"></div>
     
     <!--header end-->
     <!-- **********************************************************************************************************************************************************
@@ -131,7 +150,7 @@
         *********************************************************************************************************************************************************** -->
     <!--sidebar start-->
     
-    <div th:replace="server/commons/comm::#sidebar(activeUri='guaranteeList.html')"></div>
+    <div th:replace="server/commons/comm::#sidebar(activeUri='insurance_slip_list.html')"></div>
     
     <!--sidebar end-->
     <!-- **********************************************************************************************************************************************************
@@ -141,102 +160,150 @@
     <section id="main-content">
      <section class="wrapper">
         <div class="row">
+       
+		<div class="col-md-12">
+            <div class="content-panel">
+              <form action="/jumpIscList" method="post" id="sform" name="sform">
+              <input type="hidden"  name="cp"  id="cp" th:value="${cp}"/>
+              <input type="hidden"  name="ps"  id="ps" th:value="${ps}"/>
+				<input type="hidden" name="totalpage"  id="totalpage" th:value="${totalpage}" />
+              <table class="table table-striped table-advance table-hover">
+                <div class="alert alert-success" role="alert">
+				  <h4 class="alert-heading">投保单列表</h4>
+				</div>
+                <thead>
+                
+				  <div class="form-row">
+				    <div class="form-group col-md-4">
+				      <label for="inputCity">保单号</label>
+				      <input type="text" class="form-control" id="inputCity" name="v_id">
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputZip">被保人姓名</label>
+				      <input type="text" class="form-control" id="inputZip" name="v_name">
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputZip">保费(低)</label>
+				      <input type="text" class="form-control" id="inputZip" name="v_lopremium">
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputZip">保费(高)</label>
+				      <input type="text" class="form-control" id="inputZip" name="v_hipremium">
+				    </div>
+				    
+				    <div class="form-group col-md-2">
+				      <label for="inputState">区域</label>
+				      <select id="inputState" class="form-control" name="v_area">
+				      	<option value="">--请选择--</option>
+				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}">Choose...</option>
+				      </select>
+				    </div>
+				  </div>
+				  <div class="form-row">
+				    <div class="form-group col-md-2">
+				      <label for="inputState">申请时间(低)</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option selected>Choose...</option>
+				        <option>...</option>
+				      </select>
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputState">申请时间(高)</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option selected>Choose...</option>
+				        <option>...</option>
+				      </select>
+				    </div>
+				   <div class="form-group col-md-2">
+				      <label for="inputState">财险险种</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option value="">--请选择--</option>
+				        <option th:each="coverage:${coverageList}" th:value="${coverage.coverageid}" th:text="${coverage.coverage_name}">Choose...</option>
+				      </select>
+				    </div>
+				    <div class="form-group col-md-2">
+				      <label for="inputZip">保单状态</label>
+				      <input type="text" class="form-control" id="inputZip" name="" >
+				    </div>
+				  </div>
+				  <div class="form-row">
+				  	<div class="form-group col-md-2">
+				      <label for="inputState">保单性质</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option selected>个人</option>
+				        <option selected>企业</option>
+				        <option>...</option>
+				      </select>
+				    </div>
+				    
+				    <div class="form-group col-md-2">
+				      <label for="inputState">排序</label>
+				      <select id="inputState" class="form-control" name="" >
+				        <option selected>正序</option>
+				        <option>...</option>
+				      </select>
+				    </div>
+				  </div>
+				  
+				  <button type="submit" class="btn btn-primary" style="margin-left: 45%">查询</button>
+				
+			    
+			    <hr/>
+                  <tr>
+                    <th><i class="fa fa-bullhorn"></i></th>
+                    <th class="hidden-phone"></i>保单号</th>
+                    <th>险种</th>
+                    <th>投保人姓名</th>
+                    <th>初审状态</th>
+                    <th>复审状态</th>
+                    <th>终审状态</th>
+                    <th>投保时间</th>
+                    <th>区域</th>
+                    <th>保费</th>
+                    <th>操作人</th>
+                    <th><i class=" fa fa-question-circle"></i>紧急状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                
+                  
+                  <tr  th:each="alist,indexlist:${insureList}" >
+                    <td th:text="${indexlist.index+1}"><i class="fa fa-bullhorn"></i>#</td>
+                    <td th:text="${alist.policyid}" class="hidden-phone"><i class="fa fa-bookmark"></i>保单号</td>
+                    <td th:text="${alist.coverage.coverage_name}"><i class="fa fa-bookmark"></i> 险种</td>
+                    <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>投保人姓名</td>
+                    <td th:text="${alist.status.statusid}<=5?${alist.status.status_name}:'初审已通过'" ><i class=" fa fa-bookmark"></i>初审状态</td>
+                    <td th:text="${alist.status.statusid}>5 and ${alist.status.statusid}<=10?${alist.status.status_name}:(${alist.status.statusid}>10?'复审已通过':'未复审')" ><i class=" fa fa-bookmark"></i>复审状态</td>
+                    <td th:text="${alist.status.statusid}>10 and ${alist.status.statusid}<=14?${alist.status.status_name}:(${alist.status.statusid}>14?'复审已通过':'未终审')"><i class=" fa fa-bookmark"></i>终审状态</td>
+                    <td th:text="${alist.insure_date}"><i class=" fa fa-bookmark"></i>投保时间</td>
+                    <td th:text="${alist.city.region_name_c}"><i class=" fa fa-bookmark"></i>区域</td>
+                    <td th:text="${alist.premium}"><i class=" fa fa-bookmark"></i>保费</td>
+                    <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>操作人</td>
+                    <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="margin-left: 35%">
+             	 <ul class="pagination" >
+				    <li><a href="javascript:void(0);" th:onclick="goToPage(1);">&laquo;</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp-1}');|">&lt;</a></li>
+				    <li th:if="${cp-3}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-3}');|">...</a></li>
+				    <li th:if="${cp-2}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-2}');|" th:text="${cp-2}"></a>1</li>
+				    <li th:if="${cp-1}>0"><a href="javascript:void(0)" th:onclick="|goToPage('${cp-1}');|" th:text="${cp-1}">2</a></li>
+				    <li class="active"><a href="javascript:void(0)" th:text="${cp}">3</a></li>
+				    <li th:if="${cp+1}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+1}');|" th:text="${cp+1}">4</a></li>
+				    <li th:if="${cp+2}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+2}');|" th:text="${cp+2}">5</a></li>
+				    <li th:if="${cp+3}<${totalpage}"><a href="javascript:void(0)" th:onclick="|goToPage('${cp+3}');|" >...</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${cp+1}');|">&gt;</a></li>
+				    <li><a href="javascript:void(0);" th:onclick="|goToPage('${totalpage}');|">&raquo;</a></li>
+				 </ul>
+			   </div>
+			   </form>
+            </div>
+            <!-- /content-panel -->
+          </div>
 			
-			<table class="table table-striped">
-			  <thead>
-			    <tr>
-			      <th scope="col">名称</th>
-			      <th scope="col">详情</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			    <tr>
-			      <th scope="row">员工编号</th>
-			      <td th:text="${findaclerk.magid}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">员工账号</th>
-			      <td th:text="${findaclerk.username}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">职位</th>
-			      <td th:text="${findaclerk.job}"></td>
-			      <td>
-			      </td>
-			    </tr>
-			    <tr>
-			      <th scope="row">姓名</th>
-			      <td th:text="${findaclerk.realname}"></td>
-			       
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">身份证号码</th>
-			      <td th:text="${findaclerk.user_card}">
-			      </td>
-			      <td>
-			      <button  type="button" class="btn btn-primary" th:onclick="checkIdCard([[${findaclerk.realname}]]);">检测是否真实</button>
-			       <span id="idCardSpan"></span>
-			      </td>
-			      <td></td>
-			      
-			     
-			    </tr>
-			    <tr>
-			      <th scope="row">邮箱</th>
-			      <td th:text="${findaclerk.email}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">性别</th>
-			      <td th:text="${findaclerk.sex}==1?'男':'女'"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">名族</th>
-			      <td th:text="${findaclerk.nation}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">家庭地址</th>
-			      <td th:text="${findaclerk.address}" ></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">紧急联系人</th>
-			      <td th:text="${findaclerk.linkman}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">紧急联系人电话</th>
-			      <td th:text="${findaclerk.emergency}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">入职日期</th>
-			      <td th:text="${findaclerk.join_date}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">负责地区</th>
-			      <td th:text="${findaclerk.city.region_name_c}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">手机号</th>
-			      <td th:text="${findaclerk.phone}"></td>
-			      <td></td>
-			    </tr>
-			    <tr>
-			      <th scope="row">删除状态</th>
-			      <td th:text="${findaclerk.del_status}==0?'未删除':'已删除'"></td>
-			      <td></td>
-			    </tr>
-			   
-			  </tbody>
-			</table>
+        
         </div>
      </section>
 	  
@@ -247,82 +314,7 @@
     
   </section>
   <!-- js placed at the end of the document so the pages load faster -->
-  <script src="back/lib/jquery/jquery.min.js"></script>
-
-  <script src="back/lib/bootstrap/js/bootstrap.min.js"></script>
-  <script class="include" type="text/javascript" src="back/lib/jquery.dcjqaccordion.2.7.js"></script>
-  <script src="back/lib/jquery.scrollTo.min.js"></script>
-  <script src="back/lib/jquery.nicescroll.js" type="text/javascript"></script>
-  <script src="back/lib/jquery.sparkline.js"></script>
-  <!--common script for all pages-->
-  <script src="back/lib/common-scripts.js"></script>
-  <script type="text/javascript" src="back/lib/gritter/js/jquery.gritter.js"></script>
-  <script type="text/javascript" src="back/lib/gritter-conf.js"></script>
-  <!--script for this page-->
-  <script src="back/lib/sparkline-chart.js"></script>
-  <script src="back/lib/zabuto_calendar.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      var unique_id = $.gritter.add({
-        // (string | mandatory) the heading of the notification
-        title: 'Welcome to Dashio!',
-        // (string | mandatory) the text inside the notification
-        text: 'Hover me to enable the Close Button. You can hide the left sidebar clicking on the button next to the logo.',
-        // (string | optional) the image to display on the left
-        image: 'back/img/ui-sam.jpg',
-        // (bool | optional) if you want it to fade out on its own or just sit there
-        sticky: false,
-        // (int | optional) the time you want it to be alive for before fading out
-        time: 8000,
-        // (string | optional) the class name you want to apply to that specific message
-        class_name: 'my-sticky-class'
-      });
-
-      return false;
-    });
-  </script>
-  <script type="application/javascript">
-    $(document).ready(function() {
-      $("#date-popover").popover({
-        html: true,
-        trigger: "manual"
-      });
-      $("#date-popover").hide();
-      $("#date-popover").click(function(e) {
-        $(this).hide();
-      });
-
-      $("#my-calendar").zabuto_calendar({
-        action: function() {
-          return myDateFunction(this.id, false);
-        },
-        action_nav: function() {
-          return myNavFunction(this.id);
-        },
-        ajax: {
-          url: "show_data.php?action=1",
-          modal: true
-        },
-        legend: [{
-            type: "text",
-            label: "Special event",
-            badge: "00"
-          },
-          {
-            type: "block",
-            label: "Regular event",
-          }
-        ]
-      });
-    });
-
-    function myNavFunction(id) {
-      $("#date-popover").hide();
-      var nav = $("#" + id).data("navigation");
-      var to = $("#" + id).data("to");
-      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
-    }
-  </script>
+  
 </body>
 
 </html>
