@@ -24,16 +24,44 @@
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
   <script type="text/javascript">
+ 		 var n = 2;
+  		function change(object){
+  			$.post("/findAllItems",{},function(data){
+					 $.each(data,function(i,n){
+						$(object).append("<option value='"+n.itemid+"'>"+n.item_name+"</option>");
+		        });
+		},"json");
+  		}
   
   		function addRow(){
+  			$("#tbody1").append("<tr><td class='col-md-1'><select id='inputState' class='form-control' onclick='change(this)' name='a"+n+"'><option value='1'>--请选择--</option>"+
+			        "</select></td><td class='col-md-1'><input type='file' style='width:120px' name='a_pic"+n+"' />"+
+		    		"</td><td class='col-md-1'><input type='file' class='default' style='width:120px' name='b_pic"+n+"'/></td><td class='col-md-1'>"+
+	  			"<input type='text' class='form-control' name='b"+n+"'></td><td class='col-md-1'><input type='file' class='default' style='width:120px' name='c_pic"+n+"' /></td>"+
+		    "<td class='col-md-1'><input type='text' class='form-control' name='c"+n+"'> </td><td class='col-md-1'><input type='text' class='form-control' name='d"+n+"'></td>"+
+		    "<td class='col-md-1'><input type='text' class='form-control' name='e"+n+"' ></td></tr>"); 
   			
-  			$.("#tbody1").append("<tr><td class='col-md-1'><select id='inputState' class='form-control'><option value=''>--请选择--</option>"+
-				        "<option >Choose...</option></select></td><td class='col-md-1'><input type='file' style='width:120px'  />"+
+  			/* $.post("/findAllItems",{},function(data){
+  				$("#tbody1").append("<tr><td class='col-md-1'><select id='inputState1' class='form-control'><option value=''>--请选择--</option>"+
+  						 $.each(data,function(i,n){
+ 				        	"<option value='"+n.itemid+"'>"+n.item_name+"</option>"
+ 				        })+
+				        "</select></td><td class='col-md-1'><input type='file' style='width:120px'  />"+
 			    		"</td><td class='col-md-1'><input type='file' class='default' style='width:120px' /></td><td class='col-md-1'>"+
 		  			"<input type='text' class='form-control' ></td><td class='col-md-1'><input type='file' class='default' style='width:120px'  /></td>"+
 			    "<td class='col-md-1'><input type='text' class='form-control' > </td><td class='col-md-1'><input type='text' class='form-control' ></td>"+
 			    "<td class='col-md-1'><input type='text' class='form-control' ></td></tr>");
+  			},"json"); */
   			
+  			
+  				/* $("#tbody1").append("<tr><td class='col-md-1'><select id='inputState' class='form-control'><option value=''>--请选择--</option>"+
+				        "<option >Choose...</option></select></td><td class='col-md-1'><input type='file' style='width:120px'  />"+
+			    		"</td><td class='col-md-1'><input type='file' class='default' style='width:120px' /></td><td class='col-md-1'>"+
+		  			"<input type='text' class='form-control' ></td><td class='col-md-1'><input type='file' class='default' style='width:120px'  /></td>"+
+			    "<td class='col-md-1'><input type='text' class='form-control' > </td><td class='col-md-1'><input type='text' class='form-control' ></td>"+
+			    "<td class='col-md-1'><input type='text' class='form-control' ></td></tr>");  */
+  			n++;
+  			myform.num.value=n;
   		}	
   
   </script>
@@ -71,7 +99,8 @@
     <section id="main-content">
      <section class="wrapper">
         <div class="row">
-			
+			<form action="/insertPv" method="post" enctype="multipart/form-data" id="myform" name="myform">
+			<input type="hidden" value="2"  id="num" name="num">
 			<table class="table table-striped">
 			  <thead>
 			    <tr>
@@ -84,7 +113,7 @@
 			      <th scope="row">房产证号码</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="house_no" >
 				    </div>
 			      </td>
 			    </tr>
@@ -93,7 +122,7 @@
 			      <td >
 			      	<div class="form-group">
 	                  <div class="col-md-4">
-	                    <input type="file" class="default" />
+	                    <input type="file" class="default" name="h_pic" />
 	                  </div>
 	                </div>
 				  </td>
@@ -102,7 +131,7 @@
 			      <th scope="row">房屋地址</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="address">
 				    </div>
 				  </td>
 			    </tr>
@@ -111,7 +140,7 @@
 			      <td >
 			      	<div class="form-group">
 	                  <div class="col-md-4">
-	                    <input type="file" class="default" />
+	                    <input type="file" class="default" name="bud_pic"/>
 	                  </div>
 	                </div>
 				  </td>
@@ -120,7 +149,7 @@
 			      <th scope="row">房屋面积</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="acreage">
 				    </div>
 				  </td>
 			    </tr>
@@ -128,7 +157,7 @@
 			      <th scope="row">房屋市值</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="house_market">
 				    </div>
 				  </td>
 			    </tr>
@@ -136,7 +165,7 @@
 			      <th scope="row">房屋使用年限</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="house_age">
 				    </div>
 				  </td>
 			    </tr>
@@ -144,7 +173,7 @@
 			      <th scope="row">房屋竣工时间</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="completed_date">
 				    </div>
 				  </td>
 			    </tr>
@@ -152,15 +181,7 @@
 			      <th scope="row">勘察时间</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
-				    </div>
-				  </td>
-			    </tr>
-			    <tr>
-			      <th scope="row">勘察员</th>
-			      <td >
-			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" >
+				      <input type="text" class="form-control" name="verify_date">
 				    </div>
 				  </td>
 			    </tr>
@@ -168,7 +189,7 @@
 			  </tbody>
 			</table>
 			
-			<h3>添加物品清单表</h3>
+			<h3>添加物品清单表<button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="|addRow()|" >添加一行</button></h3>
 			
 			<table class="table table-striped">
 				<thead>
@@ -185,38 +206,40 @@
 			    </tr>
 			  	</thead>
 			  	<tbody id="tbody1">
-			  		<tr>
+			  		<tr >
 				  		<td class="col-md-1">
-						     <select id="inputState" class="form-control">
-						      	<option value="">--请选择--</option>
-						        <option >Choose...</option>
+						     <select id="inputState" class="form-control" onclick="change(this)" name="a1" >
+						      	<option value="1" selected>--请选择--</option>
+						        <option th:each="item:${items}" th:value="${item.itemid}" th:text="${item.item_name}">Choose...</option>
 						     </select>
 					    </td>
 					    <td class="col-md-1">
-			                 <input type="file" style="width:120px"  />
+			                 <input type="file" style="width:120px"  name="a_pic1"/>
 					    </td>
 					    <td class="col-md-1">
-			                 <input type="file" class="default" style="width:120px" />
+			                 <input type="file" class="default" style="width:120px" name="b_pic1"/>
 					    </td>
 					    <td class="col-md-1">
-				  			<input type="text" class="form-control" >
+				  			<input type="text" class="form-control" name="b1" >
 					    </td>
 					    <td class="col-md-1">
-			                 <input type="file" class="default" style="width:120px"  />
+			                 <input type="file" class="default" style="width:120px" name="c_pic1" />
 					    </td>
 					    <td class="col-md-1">
-				  			<input type="text" class="form-control" >
+				  			<input type="text" class="form-control" name="c1" >
 					    </td>
 					    <td class="col-md-1">
-				  			<input type="text" class="form-control" >
+				  			<input type="text" class="form-control" name="d1" >
 					    </td>
 					    <td class="col-md-1">
-				  			<input type="text" class="form-control" >
+				  			<input type="text" class="form-control" name="e1" >
 					    </td>
 			  		</tr>
 			  	</tbody>
 			  </table>
-			  <button type="button" class="btn btn-primary" style="margin-left: 400px" th:onclick="|addRow()|" >添加一行</button>
+			  <input type="submit" value="提交" class="btn btn-primary" style="margin-left: 400px">
+			  </form>
+			  
 			
         </div>
      </section>
