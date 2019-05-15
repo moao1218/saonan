@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.saonan.mapper.PolicyVerifyMapper">
 
+	<!-- 通过保单ID查询勘察表 -->
 	<select id="findPolicyVerifyByPolicyId" parameterType="java.lang.String" resultMap="pvInfo">
 		select pol_ver_id, itemid, item_name, site_photo, 
 			third_pic, item_age, invoice_pic, invoice, mark, 
@@ -20,6 +21,11 @@
 	<!-- 根据清单编号查询清单 -->
 	<select id="findItemsById" parameterType="java.lang.Integer" resultType="cn.saonan.pojo.ItemsList">
 		select itemid, item_name, deductible, excess, dep_rate, industry, del_status, yuliu from items_list where itemid = #{itemid}
+	</select>
+	
+	<!-- 根据勘察员ID查询属于自己范围的投保单 -->
+	<select id="findInsuranceByScout" resultType="cn.saonan.pojo.InsuranceSlip">
+		select policyid, insure_name, insure_card, area, address, relation, holder_name, holder_card, holder_sex, holder_phone, holder_email, insure_date, first_auditor, second_auditor, third_auditor, insure_status, scout, scount_status, license, industry_code, acreage, firm_name, userid, premium, pol_property, del_status, paystatus from insurance_slip where scout=#{scout}
 	</select>
 	
 </mapper>

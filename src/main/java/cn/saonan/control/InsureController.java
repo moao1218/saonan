@@ -177,8 +177,6 @@ public class InsureController {
 	@RequestMapping(value="/jumpDetails")
 	public String details(String pid,Model model) {
 		
-		System.out.println(pid);
-		
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
 		model.addAttribute("insurance", insurance);
@@ -227,15 +225,25 @@ public class InsureController {
 	@ResponseBody
 	@PostMapping(value="/assignScout")
 	public List<Clerk> assignScout(String pid,Model model) {
-		Map<String,Object> insuranceMap = new HashMap<String,Object>();
-		insuranceMap.put("newstatus", 3);
-		insuranceMap.put("policyid", pid);
-		insuranceSlipService.updateInsuranceStatus(insuranceMap);
+		
 		
 		int roleid = 9;
 		List<Clerk> clerks = clerkService.findClerkByRole(roleid);
 		model.addAttribute("clerks", clerks);
 		return clerks;
+	}
+	
+	//分派给勘察员
+	@GetMapping(value="/toScout")
+	public String toScout(String scout,String pid) {
+		Map<String,Object> insuranceMap = new HashMap<String,Object>();
+		insuranceMap.put("newstatus", 3);
+		insuranceMap.put("policyid", pid);
+		insuranceMap.put("scout", scout);
+		boolean updateInsuranceStatus = insuranceSlipService.updateInsuranceStatus(insuranceMap);
+		System.out.println(pid);
+		System.out.println(updateInsuranceStatus);
+		return "forward:/jumpPending";
 	}
 	
 	
@@ -262,6 +270,12 @@ public class InsureController {
 			return "\""+"false"+"\"";
 		}
 
+	}
+	
+	@RequestMapping(value="/goAdd")
+	public String goAdd() {
+		
+		return "server/add_verify";
 	}
 }
 

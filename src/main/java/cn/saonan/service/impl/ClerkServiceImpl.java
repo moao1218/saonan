@@ -57,21 +57,21 @@ public class ClerkServiceImpl implements ClerkService {
 	@Override
 	public boolean clerkupdate(Clerk ck) {
 		// TODO Auto-generated method stub
-		return false;
+		return clerkmapper.clerkupdate(ck);
 	}
 
 	//员工删除
 	@Override
-	public boolean clerkupddele(Clerk ck) {
+	public boolean clerkupddele(Integer magid) {
 		// TODO Auto-generated method stub
-		return false;
+		return clerkmapper.clerkupddele(magid);
 	}
 
 	//员工注销
 	@Override
-	public boolean clerkdelete(Clerk ck) {
+	public boolean clerkdelete(Integer magid) {
 		// TODO Auto-generated method stub
-		return false;
+		return clerkmapper.clerkdelete(magid);
 	}
 
 	@Override

@@ -1,19 +1,22 @@
 package cn.saonan.control;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
-import cn.saonan.pojo.Roless;
 import cn.saonan.service.ClerkService;
 import cn.saonan.service.RolessService;
 import cn.saonan.service.UsersService;
@@ -99,10 +102,6 @@ public class ClerkController {
 			if(area!=null&&!area.equals("")){
 				map.put("are", area);
 			}
-			
-			System.out.println(area);
-			
-		  
 		  map.put("cp", cp); 
 		  map.put("ps", ps); 
 		  clerkservice.findClerkSplit(map);	
@@ -110,8 +109,6 @@ public class ClerkController {
 		  List<Clerk> clerklist =(List<Clerk>) map.get("clerks"); 
 		  int count = (Integer)map.get("c_count"); 
 		  int totalpage = (Integer) map.get("totalpage"); 
-		  
-
 		  List<City> cityList = usersService.findAllCity();
 		  model.addAttribute("cityList", cityList);
 		  model.addAttribute("cp", cp);
@@ -143,7 +140,7 @@ public class ClerkController {
 	
 	//注册
 	@RequestMapping(value="/addclerkses")
-	public String addclerkses(Model model,Clerk clerk ,HttpServletRequest request) {
+	public String addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		String rolei = request.getParameter("roleid");
 		int roleid = Integer.parseInt(rolei);
 		String job = rolessservice.findjob(roleid);
@@ -159,6 +156,90 @@ public class ClerkController {
 			return "server/clerk_addClerk";
 		}
 	}
+	
+	
+	
+	//删除
+	@RequestMapping(value="/deleteClerk")
+	public void deleteClerk(HttpServletRequest request,HttpServletResponse response) throws IOException {
+		String magidd = request.getParameter("magid");
+		System.out.println("删除得到"+magidd);
+		Integer magid = Integer.parseInt(magidd);
+		System.out.println("得到int"+magid);
+		boolean dd = clerkservice.clerkupddele(magid);
+		System.out.println("删除"+dd);
+		PrintWriter out = response.getWriter();
+		if(dd==true) {
+			out.write("<script>alert('删除成功');location='login.jsp';</script>");
+		}else {
+			out.write("<script>alert('删除失败');location='ids?stat=guanli';</script>");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	
+	//用户名是否重复
+	@RequestMapping(value="/checkname")
+	@ResponseBody
+	public Integer checkname(Model model,HttpServletRequest request,HttpServletResponse response) throws IOException {
+		String username = request.getParameter("username");
+		Integer flag = clerkservice.checkname(username);
+		return flag;
+	}
+	
+	
+	//注销
+	@RequestMapping(value="/fulldeleteclerk")
+	public void deleteClek(HttpServletRequest request,HttpServletResponse response) throws IOException {
+		String magidd = request.getParameter("magid");
+		Integer magid = Integer.parseInt(magidd);
+		System.out.println("注销得到"+magid);
+		boolean dd = clerkservice.clerkdelete(magid);
+		
+		PrintWriter out = response.getWriter();
+		System.out.println("注销"+dd);
+		out.write(dd+"");
+		out.flush();
+		out.close();
+	}
+	
+	//修改页面
+	
+	@RequestMapping(value="/update")
+	public String update(Model model,HttpServletRequest request) {
+		String pid = request.getParameter("pid");
+		Integer magid = Integer.parseInt(pid);
+		Clerk findaclerk = clerkservice.findaclerk(magid);
+		List<City> cityList = usersService.findAllCity();
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("findaclerk", findaclerk);
+		return "server/clerk_update.html";
+	}
+	
+	//修改
+	@RequestMapping(value="/xiugai")
+	public String xiugai( Clerk clerk,Model model,HttpServletRequest request) {
+		String magidd = request.getParameter("magid");
+		Integer magid = Integer.parseInt(magidd);
+		clerk.setMagid(magid);
+		String rolei = request.getParameter("roleid");
+		int roleid = Integer.parseInt(rolei);
+		String job = rolessservice.findjob(roleid);
+		clerk.setJob(job);
+		String area = request.getParameter("area");
+		City city = new City() ;
+		city.setCode(area);
+		clerk.setCity(city);
+		boolean clerkupdate = clerkservice.clerkupdate(clerk);
+		if(clerkupdate==true) {
+			return "forward:/findClerkSplits";
+		}else {
+			return "server/clerk_addClerk";
+		}
+		
+	}
+	
 	
 	
 }

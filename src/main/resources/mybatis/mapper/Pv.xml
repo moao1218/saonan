@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saonan.mapper.PvMapper">
+	
+	<insert id="insertPv" parameterType="cn.saonan.pojo.Pv">
+		insert into policy_verify
+		  (pol_ver_id, itemid, item_name, site_photo, third_pic, item_age, invoice_pic, invoice, mark, pmodel, house_no, house_pic, address, building_pic, acreage, house_market, house_age, completed_date, verify_date, scout, insureid, coverageid, del_status)
+		values
+		  (#{pol_ver_id}, #{itemid}, #{item_name}, #{site_photo}, #{third_pic}, #{item_age}, #{invoice_pic}, #{invoice}, #{mark}, #{pmodel}, #{house_no}, #{house_pic}, #{address}, #{building_pic}, #{acreage}, #{house_market}, #{house_age}, #{completed_date}, #{verify_date}, #{scout}, #{insureid}, #{coverageid}, #{del_status})
+				
+	</insert>
+	
+</mapper>
