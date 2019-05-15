@@ -313,6 +313,15 @@
                   </tr>
                 </tbody>
               </table>
+              <div style="float:left">
+					<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="background-color:#D4EDDA;">
+					    <li class="breadcrumb-item active" aria-current="page">第 [[${cp}]]页</li>
+					    <li class="breadcrumb-item active" aria-current="page">总 [[${totalpage}]]页</li>
+					  </ol>
+					</nav>
+				</div>
+           
               <div style="margin-left: 35%">
              	 <ul class="pagination" >
 				    <li><a href="javascript:void(0);" th:onclick="goToPage(1);">&laquo;</a></li>

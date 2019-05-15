@@ -172,11 +172,11 @@
 				<input type="hidden" name="totalpage"  id="totalpage" th:value="${totalpage}" />
               <table class="table table-striped table-advance table-hover">
                 <div class="alert alert-success" role="alert">
-				  <h4 class="alert-heading">投保单列表</h4>
+				  <h4 class="alert-heading">待处理的投保单列表</h4>
 				</div>
                 <thead>
                 
-				  <div class="form-row">
+				   <div class="form-row">
 				    <div class="form-group col-md-4">
 				      <label for="inputCity">保单号</label>
 				      <input type="text" class="form-control" th:value="${v_id}" id="inputCity" name="v_id">
@@ -303,6 +303,14 @@
                   </tr>
                 </tbody>
               </table>
+               <div style="float:left">
+					<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="background-color:#D4EDDA;">
+					    <li class="breadcrumb-item active" aria-current="page">第 [[${cp}]]页</li>
+					    <li class="breadcrumb-item active" aria-current="page">总 [[${totalpage}]]页</li>
+					  </ol>
+					</nav>
+				</div>
               <div style="margin-left: 35%">
              	 <ul class="pagination" >
 				    <li><a href="javascript:void(0);" th:onclick="goToPage(1);">&laquo;</a></li>

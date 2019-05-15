@@ -239,11 +239,10 @@ public class PolicyVerifyController {
 		return "server/doing_verify_list";
 	}
 	
-	@RequestMapping(value="/goAdd")
+	@RequestMapping(value="/goAdd_verify")
 	public String goAdd(String pid,String cid,Model model) {
 		Coverage vo = insuranceSlipService.findCoverageid(cid);
 		Integer coverageid = vo.getCoverageid();
-		System.out.println("coverageid:"+coverageid);
 		model.addAttribute("pid", pid);
 		model.addAttribute("cid", coverageid);
 		return "server/add_verify";
