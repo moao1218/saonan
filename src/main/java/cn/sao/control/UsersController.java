@@ -42,11 +42,17 @@ public class UsersController {
 		return "client/login";
 	}
 	
-	
-	
-	@GetMapping(value="/reg")
-	public String reg() {
+	//预注册
+	@GetMapping(value="/prereg")
+	public String prereg() {
 		return "client/reg";
+	}
+	
+	@PostMapping(value = "/reg")
+	public String reg(Users users,HttpServletRequest request) {
+		boolean addUser = userServiceImpl.addUser(users);
+		
+		return "";
 	}
 	
 	@GetMapping(value="/claim")

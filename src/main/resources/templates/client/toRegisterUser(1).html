@@ -90,9 +90,9 @@
 								<span class="phone_front_img all_front_img"></span>
 							</th>
 							<td valign="top" width="230" height="34">
-							<input pa_ui_name="validator" name="mobileNo" otitle="手机号码" title="手机号码" maxlength="11"
+							<input name="username" otitle="手机号码" title="手机号码" maxlength="11"
 								class="input_text  newsetbottomboder pa_ui_element_normal"
-								type="text" id="mobileNo" value=""
+								type="text" id="username" value=""
 								pa_ui_valid_rules="{required:{error:&#39;请您输入您的手机号码。&#39;},exFunction:{name:&#39;validate_mobile&#39;}}"
 								pa_ui_valid_tipbox="phoneNoTip"
 								pa_ui_valid_error="您输入的手机号码格式错误，请您重新输入。"
@@ -112,13 +112,13 @@
 							<td valign="top" height="34">
 								<div id="pwdArea" class="inputline password dib por  setnewcss_bottom">
 									<input type="password" style="width: 160px; border: 0;" class="phonePassword pa_ui_element_normal" maxlength="16"
-										pa_ui_name="validator,keyboard" id="phonePassword"
+										id="userpwd" name="userpwd"
 										title="登录密码" otitle="登录密码"
 										pa_ui_valid_rules="{required:{error:&#39;请您设置登录密码。&#39;},exFunction:{name:&#39;validate_password_local&#39;}}"
 										pa_ui_valid_tipbox="phonePwdTip" pa_ui_keyboard_position="k1"
 										pa_ui_valid_csselerror="valid_csselerror"
 										pa_ui_valid_endvalid="endValidCallback"
-										pa_ui_keyboard_trigger="2" placeholder="登录密码">
+										pa_ui_keyboard_trigger="2" placeholder="登录密码"/>
 									<button type="button" class="pa_ui_keyboard_click"></button>
 								</div> <br>
 								<div style="display: inline; clear: both; postion: absolute;">
@@ -216,11 +216,11 @@
 						</tr>
 						<tr>
 							<th></th>
-							<td style="position: relative; overflow: hidden;"><i
-								id="get_k_frames" class="get_k_frames"></i> <a
-								href="javascript:;" class="btn_submit mt30"
-								style="margin-top: 5px;" title="立即注册" otitle="立即注册"
-								otype="button" id="loginlink" onclick="return submitForm();">立即注册</a></td>
+							<td style="position: relative; overflow: hidden;">
+							<i id="get_k_frames" class="get_k_frames"></i> 
+								<button class="btn_submit mt30" style="margin-top: 5px;" title="立即注册" otitle="立即注册"
+								otype="button" id="loginlink" onclick="return submitForm();">立即注册</button>
+							</td>
 							<td></td>
 						</tr>
 						<tr>

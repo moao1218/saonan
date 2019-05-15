@@ -15,4 +15,12 @@
 		select userid,username,userpwd,realname,phone,join_date,bank_card,del_status,yuliu from Users 
 		where phone=#{phone}
 	</select>
+	
+	<!-- 注册 -->
+	<insert id="addUser" parameterType="cn.sao.pojo.Users">
+		insert into Users (username,userpwd,phone,realname)
+		values(#{username},#{userpwd},#{phone},#{realname})
+	</insert>
+	
+	
 </mapper>
