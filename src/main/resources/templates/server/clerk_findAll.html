@@ -37,6 +37,66 @@
   <!--script for this page-->
   <script src="back/lib/sparkline-chart.js"></script>
   <script src="back/lib/zabuto_calendar.js"></script>
+    <script type="text/javascript">
+  $(function(){
+		console.log($("#totalpage").val());
+		console.log($("#cp").val());
+		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
+			console.log(data);
+			$("#tianqi_city").html(data.result.result.city);
+			$("#tianqi_date").html(data.result.result.updatetime);
+			$("#tianqi_week").html(data.result.result.week);
+			$("#tianqi_weather").html(data.result.result.weather);
+			$("#tianqi_humidity").html(data.result.result.humidity);
+			$("#tianqi_temp").html(data.result.result.temp);
+			$("#tianqi_templow").html(data.result.result.templow);
+			$("#tianqi_temphigh").html(data.result.result.temphigh);
+			$("#tianqi_detail").html(data.result.result.index[0].detail);
+		},"json");
+	});
+  </script>
+  <script type="application/javascript">
+      $(document).ready(function() {
+      $("#date-popover").popover({
+        html: true,
+        trigger: "manual"
+      });
+      $("#date-popover").hide();
+      $("#date-popover").click(function(e) {
+        $(this).hide();
+      });
+
+      $("#my-calendar").zabuto_calendar({
+        action: function() {
+          return myDateFunction(this.id, false);
+        },
+        action_nav: function() {
+          return myNavFunction(this.id);
+        },
+        ajax: {
+          url: "show_data.php?action=1",
+          modal: true
+        },
+        legend: [{
+            type: "text",
+            label: "Special event",
+            badge: "00"
+          },
+          {
+            type: "block",
+            label: "Regular event",
+          }
+        ]
+      });
+    }); 
+
+     function myNavFunction(id) {
+      $("#date-popover").hide();
+      var nav = $("#" + id).data("navigation");
+      var to = $("#" + id).data("to");
+      console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+    } 
+     </script>
   <script type="text/javascript">
 	  function goToPage(num){
 			var total = $("#totalpage").val();
@@ -53,7 +113,6 @@
   </script>
   <script type="text/javascript">
   $(function(){
-	  	
   		console.log($("#totalpage").val());
   		console.log($("#cp").val());
 		$.post("/weather",{"city":"深圳","appkey":"3aa9dfcfc136e1953edb18c45d1835f6"},function(data){
@@ -68,21 +127,6 @@
 			$("#tianqi_temphigh").html(data.result.result.temphigh);
 			$("#tianqi_detail").html(data.result.result.index[0].detail);
 		},"json");
-		
-		
-		
-		 /* $("#splitPage li").click(function(){
-				var total = $("#totalpage").val();
-				console.log(num);
-				if(parseInt(num)<1){
-					alert("已经是第一页了!");
-				}else if(parseInt(num)>total){
-					alert("已经是最后一页了!")
-				}else{
-					sform.cp.value=num;
-					sform.submit();}		
-			}
-		)  */
 	});
   
    
@@ -127,14 +171,72 @@
       var nav = $("#" + id).data("navigation");
       var to = $("#" + id).data("to");
       console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
-      
-     
     } 
      
-     
+     //跳转详情
      function jumpDetails(pid){
 		  location.href = "/clerkdetail?pid="+pid;
  		}
+     //修改
+     function jumpupdate(pid){
+    	 location.href = "/update?pid="+pid;
+     }
+     
+     
+     //全选/反选
+ 	function unselectAll(){
+ 		var obj = document.sform.elements;
+ 		for (var i=0;i<obj.length;i++){
+ 			if (obj[i].name == "delid"){
+ 				if (obj[i].checked==true) obj[i].checked = false;
+ 				else obj[i].checked = true;
+ 			}
+ 		}
+ 	}
+     
+     //删除
+  	 function deletemore(){
+    	 var f = false;
+    	 var arr = [];
+		 var delid = document.getElementsByName("delid");
+				for(var i=0;i<delid.length;i++){
+					if(delid[i].checked==true){//代表选中
+						arr.push(delid[i].value);
+						f=true;
+					}
+				}
+				if(f==true){
+					if(confirm("您确认要删除吗？"))
+						window.location.href="/deleteClerk?magid="+arr;
+				}else{
+					alert("请至少选中一条进行批量删除");
+				}
+		
+							
+	}  
+     
+     //注销
+ 	function fulldelete(){
+ 		 var f = false;
+ 		var arr = [];
+		var delid = document.getElementsByName("delid");
+			for(var i=0;i<delid.length;i++){
+				if(delid[i].checked==true){//代表选中
+					arr.push(delid[i].value);
+					f=true;
+				}
+			}
+			if(f==true){
+				if(confirm("您确认要注销吗？"))
+					window.location.href="/fulldeleteclerk?magid="+arr;
+			}else{
+				alert("请至少选中一条进行注销");
+			}
+	}
+     
+     
+     
+     
      
   </script>
 
@@ -216,21 +318,24 @@
 				      </select>
 				    </div>
 				    
-				    <div class="form-group col-md-2">
-				      <label for="inputState">排序</label>
-				      <select id="inputState" class="form-control">
-				        <option selected>正序</option>
-				        <option>倒叙</option>
-				      </select>
-				    </div>
+				    
 				    
 				  </div>
 				  
 				  <button type="submit" class="btn btn-primary" style="margin-left: 45%">查询</button>
 				
 			    
-			    <hr/>
+			    <hr/> 
+			    <tb>     
+			   	   <a class="btn btn-success btn-sm pull-left"  onclick="deletemore()">删除</a>
+			       <a class="btn btn-primary btn-sm pull-left" onclick="fulldelete()">注销</a>
+			    </tb>
+			
+
                   <tr>
+                 	 <th>
+						 <a href="javascript:void(0)" onclick="unselectAll()">全选/反选</a>
+					</th>
                     <th><i class="fa fa-bullhorn"></i></th>
                     <th class="hidden-phone"></i>姓名</th>
                     <th>性别</th>
@@ -246,6 +351,7 @@
                 
                   
                   <tr  th:each="clerklist,indexlist:${clerklist}" >
+                  	<td><input type="checkbox" name="delid" th:value="${clerklist.magid }" id="delid" ></td>
                     <td th:text="${indexlist.index+1}"><i class="fa fa-bullhorn"></i>#</td>
                     <td th:text="${clerklist.realname}" class="hidden-phone"><i class="fa fa-bookmark"></i>姓名</td>
                    <td th:text="${clerklist.sex}==1?'男':'女'"><i class="fa fa-bookmark"></i> 性别</td>
@@ -255,7 +361,8 @@
                     <td th:text="${clerklist.city.region_name_c}"><i class=" fa fa-bookmark"></i>负责地区</td>
                     <td th:text="${clerklist.phone}"><i class=" fa fa-bookmark"></i>手机号码</td>
                     <td>
-                 	 	  <button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${clerklist.magid}]])"><i class="fa fa-pencil"></i></button>
+                 	 	<button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${clerklist.magid}]])">详情</button>
+                 	 	<button type="button" class="btn btn-primary btn-xs" th:onclick="jumpupdate([[${clerklist.magid}]])">修改</button>
                     </td>
                   </tr>
                 </tbody>

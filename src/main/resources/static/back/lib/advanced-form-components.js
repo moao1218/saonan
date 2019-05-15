@@ -9,7 +9,11 @@
             format: 'yyyy-mm-dd'
         });
         /*$('.dpYears').datepicker();
+
+ 
+
         $('.dpMonths').datepicker();*/
+
 
 
        /* var startDate = new Date(2012,1,20);
@@ -60,8 +64,9 @@
             }
         }).on('changeDate', function(ev) {
                 checkout.hide();
-            }).data('datepicker');
-    */});
+            }).data('datepicker');*/
+    });
+
 
 //date picker end
 
@@ -100,7 +105,7 @@ $(".form_datetime-adv").datetimepicker({
     minuteStep: 1,
     showSeconds: true,
     showMeridian: false
-});
-*/
+});*/
+
 //timepicker end
 

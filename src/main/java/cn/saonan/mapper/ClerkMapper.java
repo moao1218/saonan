@@ -15,7 +15,7 @@ public interface ClerkMapper {
 	/*
 	 * 分页查询员工表
 	 */
-	public void  findClerkSplit(Map<String,Object> map);
+	public void  findClerkSplits(Map<String,Object> map);
 	
 	/*
 	 * 员工详情的查找
@@ -45,12 +45,12 @@ public interface ClerkMapper {
 	 * 员工删除
 	 */
 	
-	public boolean clerkupddele(Clerk ck);
+	public boolean clerkupddele(Integer magid);
 	
 	/*
 	 * 员工注销
 	 */
-	 public boolean clerkdelete(Clerk ck);
+	 public boolean clerkdelete(Integer magid);
 	
 	/*
 	 * 根据角色查找员工
