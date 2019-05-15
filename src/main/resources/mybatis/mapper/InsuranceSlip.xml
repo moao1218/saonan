@@ -26,6 +26,9 @@
 			#{v_city,mode=IN,jdbcType=VARCHAR},
 			#{v_role,mode=IN,jdbcType=VARCHAR},
 			#{v_scout,mode=IN,jdbcType=VARCHAR},
+			#{v_first,mode=IN,jdbcType=VARCHAR},
+			#{v_second,mode=IN,jdbcType=VARCHAR},
+			#{v_third,mode=IN,jdbcType=VARCHAR},
 			
 			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},
 			#{v_count,mode=OUT,jdbcType=INTEGER}

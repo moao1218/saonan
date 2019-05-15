@@ -268,9 +268,11 @@ public class InsureController {
 		model.addAttribute("ps", ps);
 		
 		List<City> cityList = usersService.findAllCity();
+		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
 		model.addAttribute("insureList", insureList);
 		model.addAttribute("totalpage", totalpage);
 		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
 		
 		model.addAttribute("v_id", v_id);
 		model.addAttribute("v_name", v_name);
@@ -572,90 +574,134 @@ public class InsureController {
 	//对应审核员已完成投保单查询并列出
 	@RequestMapping(value="/completed")
 	public String completed(HttpServletResponse response, HttpServletRequest request, Model model) throws ParseException {
-		
-		Map<String,Object> map = new HashMap<String,Object>();
-		int cp = 1;
-		int ps = 5;
-		
-		String cpp = request.getParameter("cp");
-		
-		if(cpp!=null&&!"".equals(cpp)){
-			cp = Integer.parseInt(cpp);
-		}
-		
-		String pss = request.getParameter("ps");
-		if(pss!=null&&!"".equals(pss)){
-			ps = Integer.parseInt(pss);
-		}
-		
-		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-		//获得该审核员编号
-		Integer magid = clerk.getMagid();
-		
-		String v_city = clerk.getCity().getCode();
-		//我是从登陆信息从拿到的角色ID
-		Integer roleid = clerk.getRoleid();
-		String v_role = "";
-		String rList = "";
-		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-		if(roleid==1) {
-			//v_role => 只能看1状态的
-			v_role = "5,6";
-			map.put("v_role", v_role);
-			map.put("v_scout", magid + "");
-		}else if(roleid==2) {
-			v_role = "9,10";
-			map.put("v_role", v_role);
-			map.put("v_scout", magid + "");
-		}else if(roleid==3) {
-			v_role = "13,14";
-			map.put("v_role", v_role);
-			map.put("v_scout", magid + "");
-		}else {
-			try {
-				
-				response.setContentType("text/html;charset=utf-8");
-				response.getWriter().write( "<script>alert('您没有访问的权限！');"
-						+ "window.location='/jumpInsuranceList';window.close();</script>"); 
-				response.getWriter().flush();
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		
-		insuranceSlipService.findInsuranceSlipList(map);
-		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
-		
-		Date d = new Date();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-		for (InsuranceSlip insuranceSlip : insureList) {
-			Date parse = date.parse(insuranceSlip.getInsure_date());
-			if(d.getTime()<parse.getTime()+12*60*60*1000) {
-				insuranceSlip.setUrg("正常");
-			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
-				insuranceSlip.setUrg("预警");
+			Map<String,Object> map = new HashMap<String,Object>();
+			int cp = 1;
+			int ps = 5;
+			
+			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			System.out.println(clerk.getMagid());
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			String v_role = "";
+			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+			if(roleid==1) {
+				//v_role => 只能看1状态的
+				v_role = "5,6";
+				map.put("v_first", clerk.getMagid()+"");
+				map.put("v_role", v_role);
+			}else if(roleid==2) {
+				v_role = "9,10";
+				map.put("v_second", clerk.getMagid()+"");
+				map.put("v_role", v_role);
+			}else if(roleid==3) {
+				v_role = "13,14";
+				map.put("v_third", clerk.getMagid()+"");
+				map.put("v_role", v_role);
 			}else {
-				insuranceSlip.setUrg("报警");
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
-//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+			
+			System.out.println(v_role);
+			
+			String cpp = request.getParameter("cp");
+			
+			if(cpp!=null&&!"".equals(cpp)){
+				cp = Integer.parseInt(cpp);
+			}
+			
+			String pss = request.getParameter("ps");
+			if(pss!=null&&!"".equals(pss)){
+				ps = Integer.parseInt(pss);
+			}
+			
+			
+		
+			String v_id = request.getParameter("v_id");
+			String v_name = request.getParameter("v_name");
+			String v_lopremium = request.getParameter("v_lopremium");
+			String v_hipremium = request.getParameter("v_hipremium");
+			String v_area = request.getParameter("v_area");
+			String v_lojoindate = request.getParameter("v_lojoindate");
+			String v_hijoindate = request.getParameter("v_hijoindate");
+			String v_coverageid = request.getParameter("v_coverageid");
+			String v_status = request.getParameter("v_status");
+			String v_property = request.getParameter("v_property");
+			String v_order = request.getParameter("v_order");
+		 
+			
+			
+		
+		 map.put("cp", cp); 
+		 map.put("ps", ps); 
+		
+		
+		  map.put("v_id", v_id);
+		  map.put("v_name", v_name); 
+		  map.put("v_lopremium", v_lopremium);
+		  map.put("v_hipremium", v_hipremium); 
+		  map.put("v_area", v_area);
+		  map.put("v_lojoindate", v_lojoindate); 
+		  map.put("v_hijoindate", v_hijoindate);
+		  map.put("v_coverageid", v_coverageid);
+		  
+		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+		  map.put("v_status", Integer.parseInt(v_status)); }
+		  
+		  map.put("v_property", v_property); map.put("v_property", v_property);
+		  map.put("v_order", v_order);
+		 
+			
+			insuranceSlipService.findInsuranceSlipList(map);
+			List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+			
+			Date d = new Date();
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+			for (InsuranceSlip insuranceSlip : insureList) {
+				Date parse = date.parse(insuranceSlip.getInsure_date());
+				if(d.getTime()<parse.getTime()+12*60*60*1000) {
+					insuranceSlip.setUrg("正常");
+				}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+					insuranceSlip.setUrg("预警");
+				}else {
+					insuranceSlip.setUrg("报警");
+				}
+//				System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+			}
+			Integer v_count = (Integer) map.get("v_count");
+			int totalpage = (v_count-1)/ps + 1;
+			model.addAttribute("cp", cp);
+			model.addAttribute("ps", ps);
+			
+			List<City> cityList = usersService.findAllCity();
+			List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+			model.addAttribute("insureList", insureList);
+			model.addAttribute("totalpage", totalpage);
+			model.addAttribute("cityList", cityList);
+			model.addAttribute("coverageList", coverageList);
+			
+			model.addAttribute("v_id", v_id);
+			model.addAttribute("v_name", v_name);
+			model.addAttribute("v_lopremium", v_lopremium);
+	 		model.addAttribute("v_hipremium", v_hipremium);
+			model.addAttribute("v_area", v_area);
+			model.addAttribute("v_lojoindate", v_lojoindate);
+			model.addAttribute("v_hijoindate", v_hijoindate);
+			model.addAttribute("v_coverageid", v_coverageid);
+			model.addAttribute("v_status", v_status);
+			model.addAttribute("v_property", v_property);
+			model.addAttribute("v_property", v_property);
+			model.addAttribute("v_order", v_order);
+			return "server/insurance_completed_list";
 		}
-		Integer v_count = (Integer) map.get("v_count");
-		int totalpage = (v_count-1)/ps + 1;
-		model.addAttribute("cp", cp);
-		model.addAttribute("ps", ps);
-		
-		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
-		
-		List<City> cityList = usersService.findAllCity();
-		model.addAttribute("insureList", insureList);
-		model.addAttribute("totalpage", totalpage);
-		model.addAttribute("cityList", cityList);
-		model.addAttribute("coverageList", coverageList);
-
-		return "server/insurance_completed_list";
-	}
 	
 	
 }
