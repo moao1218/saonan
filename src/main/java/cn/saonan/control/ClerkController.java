@@ -44,6 +44,7 @@ public class ClerkController {
 	@Autowired
 	private RolessService rolessservice;
 
+	//分页展示
 	@RequestMapping(value="/findClerkSplits")
 	public String findClerkSplits(Model model) {
 		
@@ -73,7 +74,7 @@ public class ClerkController {
 		return "server/clerk_findAll";
 
 	}
-	
+	//分页调用
 	@RequestMapping(value="/clerksplic")
 	public String clerksplic(Model model,HttpServletRequest request,Clerk clerk) throws Exception {
 		
