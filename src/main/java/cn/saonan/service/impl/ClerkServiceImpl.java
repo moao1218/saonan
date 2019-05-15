@@ -27,7 +27,7 @@ public class ClerkServiceImpl implements ClerkService {
 	@Override
 	public void  findClerkSplits(Map<String,Object> map) {
 			
-		clerkmapper.findClerkSplit(map);
+		clerkmapper.findClerkSplits(map);
 	}
 
 	

@@ -15,7 +15,7 @@ public interface ClerkMapper {
 	/*
 	 * 分页查询员工表
 	 */
-	public void  findClerkSplit(Map<String,Object> map);
+	public void  findClerkSplits(Map<String,Object> map);
 	
 	/*
 	 * 员工详情的查找

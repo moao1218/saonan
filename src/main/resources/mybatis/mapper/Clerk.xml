@@ -79,19 +79,19 @@
 		        emergency = #{emergency},
 		        area = #{area},
 		        phone = #{phone},
-		  where magid = v_magid;
+		  where magid = v_magid
   </update>
   
   
   <!--员工删除  -->
 	  
 	 <update id="clerkupddele" parameterType="java.lang.Integer">
-	  	update clerk set del_status = 1 where magid = #{magid};
+	  	update clerk set del_status = 1 where magid = #{magid}
 	 </update>
   
 	<!--员工注销  -->
 	<delete id="clerkdelete" parameterType="java.lang.Integer">
-		delete clerk where magid = #{magid};
+		delete clerk where magid = #{magid}
 	</delete>
    
    
