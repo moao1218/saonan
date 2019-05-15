@@ -18,4 +18,6 @@ public interface InsuranceSlipMapper {
 	public List<Coverage> findAllCoverage();
 	
 	public int updateInsuranceStatus(Map<String,Object> map);
+	
+	public Coverage findCoverageid(String coverage_name);
 }

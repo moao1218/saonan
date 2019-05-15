@@ -23,8 +23,23 @@
   <link href="back/css/style.css" rel="stylesheet"/>
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
+  <script src="back/lib/sparkline-chart.js"></script>
+  <script src="back/lib/zabuto_calendar.js"></script>
+  <script src="back/lib/jquery-ui-1.9.2.custom.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-fileupload/bootstrap-fileupload.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/date.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-daterangepicker/moment.min.js"></script>
+  <script type="text/javascript" src="back/lib/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+  <script src="back/lib/advanced-form-components.js"></script>
   <script type="text/javascript">
- 		 var n = 2;
+ 		var n = 2;
+ 		function succ(pid){
+ 			location.href="/succ?pid="+pid;
+ 		}
+ 		
   		function change(object){
   			$.post("/findAllItems",{},function(data){
 					 $.each(data,function(i,n){
@@ -101,6 +116,9 @@
         <div class="row">
 			<form action="/insertPv" method="post" enctype="multipart/form-data" id="myform" name="myform">
 			<input type="hidden" value="2"  id="num" name="num">
+			<input type="hidden" th:value="${session.user.magid}"  id="scout" name="scout">
+			<input type="hidden" th:value="${pid}"  id="insureid" name="insureid">
+			<input type="hidden" th:value="${cid}"  id="coverageid" name="coverageid">
 			<table class="table table-striped">
 			  <thead>
 			    <tr>
@@ -173,7 +191,7 @@
 			      <th scope="row">房屋竣工时间</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" name="completed_date">
+				      <input type="text" class="default-date-picker" data-date-format="yyyy-mm-dd" id="completed_date" name="completed_date">
 				    </div>
 				  </td>
 			    </tr>
@@ -181,7 +199,7 @@
 			      <th scope="row">勘察时间</th>
 			      <td >
 			      	<div class="form-group col-md-3">
-				      <input type="text" class="form-control" name="verify_date">
+				      <input type="text" class="default-date-picker" data-date-format="yyyy-mm-dd" id="verify_date" name="verify_date">
 				    </div>
 				  </td>
 			    </tr>
@@ -237,7 +255,11 @@
 			  		</tr>
 			  	</tbody>
 			  </table>
-			  <input type="submit" value="提交" class="btn btn-primary" style="margin-left: 400px">
+			  <div style="margin-left: 400px">
+			  	 <input type="submit" value="单险种提交" class="btn btn-primary" >
+			 	 <input type="button" value="勘察完成" class="btn btn-danger" th:onclick="succ([[${pid}]])" th:if="${abc}=='1'">
+			  </div>
+			 
 			  </form>
 			  
 			

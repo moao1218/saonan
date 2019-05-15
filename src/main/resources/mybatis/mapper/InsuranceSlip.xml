@@ -21,10 +21,10 @@
 			#{v_hijoindate,mode=IN,jdbcType=VARCHAR},
 			#{v_coverageid,mode=IN,jdbcType=INTEGER},
 			#{v_property,mode=IN,jdbcType=VARCHAR},
-			#{v_status,mode=IN,jdbcType=VARCHAR},
+			#{v_status,mode=IN,jdbcType=INTEGER},
 			#{v_order,mode=IN,jdbcType=VARCHAR},
 			#{v_city,mode=IN,jdbcType=VARCHAR},
-			#{v_role,mode=IN,jdbcType=INTEGER},
+			#{v_role,mode=IN,jdbcType=VARCHAR},
 			#{v_scout,mode=IN,jdbcType=VARCHAR},
 			
 			#{insureList,mode=OUT,jdbcType=CURSOR,javaType=ResultSet,resultMap=insureinfo},
@@ -90,5 +90,10 @@
 			</set>  
 			 where policyid=#{policyid}
 	</update>
+	
+	<!-- 通过保险名字找到保险内容 -->
+	<select id="findCoverageid" resultType="cn.saonan.pojo.Coverage">
+		select coverageid, coverage_name, coverage_rate, upper_limit, lower_limit, del_status from coverage where coverage_name=#{coverage_name}
+	</select>
 	
 </mapper>

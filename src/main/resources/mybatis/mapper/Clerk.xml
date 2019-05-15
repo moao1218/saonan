@@ -76,16 +76,26 @@
 		        address = #{address},
 		        linkman = #{linkman},
 		        emergency = #{emergency},
+<<<<<<< HEAD
 		        area = #{city.code},
 		        phone = #{phone}
 		  where magid = #{magid}
+=======
+		        area = #{area},
+		        phone = #{phone},
+		  where magid = v_magid
+>>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git
   </update>
   
   
   <!--员工删除  -->
 	  
 	 <update id="clerkupddele" parameterType="java.lang.Integer">
+<<<<<<< HEAD
 	  	update clerk set del_status = 1 where magid=#{magid}
+=======
+	  	update clerk set del_status = 1 where magid = #{magid}
+>>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git
 	 </update>
   
 	<!--员工注销  -->

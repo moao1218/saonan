@@ -38,5 +38,6 @@ public interface InsuranceSlipService {
 	 */
 	public boolean updateInsuranceStatus(Map<String,Object> map);
 	
+	public Coverage findCoverageid(String coverage_name);
 
 }
