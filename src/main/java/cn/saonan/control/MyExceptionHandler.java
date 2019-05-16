@@ -22,7 +22,7 @@ public class MyExceptionHandler {
 	@ExceptionHandler
 	public String handleException(Exception e) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("code", "user not exist");
+		map.put("code", "网络异常");
 		map.put("message",e.getMessage());
 		return "forward:/error";
 	}
