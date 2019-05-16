@@ -23,6 +23,7 @@
   <link href="back/css/style.css" rel="stylesheet"/>
   <link href="back/css/style-responsive.css" rel="stylesheet"/>
   <script src="back/lib/chart-master/Chart.js"></script>
+  <script src="back/lib/jquery/jquery.min.js"></script>
   <script type="text/javascript">
   $(function(){
 		console.log($("#totalpage").val());
@@ -83,7 +84,96 @@
       console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
     } 
      </script>
+     
+<script type="text/javascript">
+var flag =false;
+var flag2 = false;
+function checkoldpwd()(){
+	var oldpwd = $("#userpwd").val();
+	var magid = $("#magid").val();
+	$.post("/checkoldpwd",{"oldpwd":oldpwd,"magid":magid},function(data){
+		if(data==true){
+			$("#checkoldpwd").html("<font color='green' >密码正确</font>");
+			flag = false;
+			return flag;
+		}else{
+			$("#checkoldpwd").html("<font color='red' >密码错误</font>");
+			flag =true;
+			return flag;
+		}
+		
+	},"json");
+});
+}
 
+
+function checkpwd(){
+		var pwd = $("#userpwd").val();
+		var reg = /^((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))^.{8,16}$/;
+		//只有数字和字母
+		if(reg.test(pwd)){
+			$("#pwdspan").html("<font color='green' >合法</font>");
+			return true;
+		}else{
+			$("#pwdspan").html("<font color='red' >数字、字母、字符至少包含两种 密码长度为8~16位</font>");
+			return false;
+		}
+	}
+
+	function reppwd(){
+		var repwd = $("#reppw").val();
+		var pwd = $("#userpwd").val();
+		if(repwd==pwd){
+			$("#reppwdspan").html("<font color='green' size='2' ><b>合法</b></font>");
+			return true;
+		}else{
+			$("#reppwdspan").html("<font color='red' size='2' ><b>输入密码须一致</b></font>");
+			return false;
+		}
+	}
+	
+	function isemail(){
+		var email = $("#email").val();
+		var reg = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/; 
+		if(reg.test(email)){
+			$("#checkemail").html("<font color='green' >合法</font>");
+			return true;
+		}else{
+			$("#checkemail").html("<font color='red' >输入非法</font>");
+			return false;
+		}
+	}
+	
+	function checkphone(){
+  		var phone = $("#phone").val();
+  		var reg = /^1\d{10}$/;
+  		if(reg.test(phone)){
+  			$("#phonespan").html("<font color='green' size='2' ><b>合法</b></font>");
+  			return true;
+  		}else{
+  			$("#phonespan").html("<font color='red' size='2' ><b>手机号格式不正确</b></font>");
+  			return false;
+  		}
+  	}
+
+	function isemergency(){
+  		var phone = $("#emergency").val();
+  		var reg = /^1\d{10}$/;
+  		if(reg.test(phone)){
+  			$("#checkemergency").html("<font color='green' size='2' ><b>合法</b></font>");
+  			return true;
+  		}else{
+  			$("#checkemergency").html("<font color='red' size='2' ><b>手机号格式不正确</b></font>");
+  			return false;
+  		}
+  	}
+
+  	 function succ(){
+  		return checkpwd()&&reppwd()&&checkphone()&&isemail()&&isemergency();
+  	}
+
+
+</script>
   <!-- =======================================================
     Template Name: Dashio
     Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
@@ -140,15 +230,30 @@
 			    </tr>
 			    
 			    <tr>
+			      <th scope="row">输入员工旧密码</th>
+			     	<td> <input  type="password" id="pwd" name="pwd" onchange="checkoldpwd()"/>
+			     	<span id="checkoldpwd"></span></td>
+			    </tr>
+			    
+			    
+			    
+			    <tr>
 			      <th scope="row">员工密码</th>
-			     	<td> <input th:value="${findaclerk.userpwd}" type="password" id="userpwd" name="userpwd"/></td>
-			      <td></td>
+			      
+			      <td><input type="text" name="userpwd" id="userpwd" onchange="checkpwd()"/>
+			      <span id="pwdspan"></span>
+			      </td>
+			    </tr>
+			    <tr>
+			      <th scope="row">确认密码</th>
+			      <td><input type="text"  id="reppw" name="reppw" onchange="reppwd()"/>
+			       <span id="reppwdspan"></span>
+			      </td>
 			    </tr>
 			    
 			    <tr>
 			      <th scope="row">职位</th>
 			      <td> <select id="roleid" name="roleid" >
-				      	<option value="">--请选择--</option>
 		              	<option th:value="1" th:selected="${findaclerk.roleid}==1">保单一审</option>
 		              	<option th:value="2" th:selected="${findaclerk.roleid}==2">保单二审</option>
 		              	<option th:value="3" th:selected="${findaclerk.roleid}==3">保单三审</option>
@@ -199,13 +304,15 @@
 			   
 			   <tr>
 			      <th scope="row">紧急联系人</th>
-			      <td>  <input type="text" th:value="${findaclerk.linkman}" name="linkman"  id="linkman" /></td>
+			      <td>  <input type="text" th:value="${findaclerk.linkman}" name="linkman"  id="linkman" />
+			      </td>
 			    </tr>
 			    
 			 
 			    <tr>
 			      <th scope="row">紧急联系人电话</th>
 			      <td> <input type="text" name="emergency" th:value="${findaclerk.emergency}"  id="emergency" />
+			     <span id="checkemergency"></span>
 			      </td>
 			    </tr>
 			    
@@ -229,7 +336,9 @@
 			    
 			    <tr>
 			      <th scope="row">手机号</th>
-			      <td> <input type="text" name="phone" th:value="${findaclerk.phone}"  id="phone" /></td>
+			      <td> <input type="text" name="phone" th:value="${findaclerk.phone}"  id="phone" />
+			      <span id="phonespan"></span>
+			      </td>
 			      <td></td>
 			    </tr>
 			    <tr>
