@@ -9,16 +9,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import cn.sao.mapper.PolicyMapper;
+import cn.sao.pojo.Coverage;
+import cn.sao.service.CoverageService;
 import cn.sao.service.PolicyService;
 
 @Controller
-public class PolicyController {
+public class CoverageController {
 	@Autowired
-	PolicyService PolicyServiceImpl;
+	CoverageService coverageServiceImpl;
 	@GetMapping("/shouyemes")
 	public String shouye(HttpServletRequest request) {
-		List<PolicyMapper> findPolicy = PolicyServiceImpl.findPolicy();
-		request.setAttribute("findlist", findPolicy);
+		 List<Coverage> findConverage = coverageServiceImpl.findConverage();
+		request.setAttribute("findlist", findConverage);
 		return "client/shouye";
 	}
 }

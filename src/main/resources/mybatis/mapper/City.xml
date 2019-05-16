@@ -6,4 +6,5 @@
    		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city WHERE code=#{area}
   	</select>
 	
+	
 </mapper>

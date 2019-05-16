@@ -26,7 +26,7 @@ public class UsersController {
 		Users u = userServiceImpl.isLogin(users);
 		if (u!=null) {
 			request.getSession().setAttribute("users",u);
-			return "client/shouye";
+			return "forward:/shouyemes";
 		}else {
 			return "client/login";
 		}

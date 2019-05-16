@@ -390,12 +390,12 @@ window.onload=function(){
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td><font>房屋及附属设施（家财综合）</font></td>
-            <td>0.5-500万</td>
-            <td class="setLastTd">室内附属设备包括暖气、管道煤气、厨房设备等固定装置。每次事故，房屋损失、室内装潢、室内财产总共免赔额200元。</td>
+        <tr th:each="coverage:${findlist}">
+            <td><font>[[${coverage.coverage_name}]]</font></td>
+            <td>[[${coverage.upper_limit}]]万-[[${coverage.lower_limit}]]万</td>
+            <td class="setLastTd">室、厨房设备等固定装置。每次事故，房屋损失、室内装潢、室内财产总共免赔额200元。</td>
         </tr>
-        <tr class="tableTrbj">
+      <!--   <tr class="tableTrbj">
             <td><font>室内装潢（家财综合）</font></td>
             <td>0-40万</td>
             <td class="setLastTd">承保由于火灾、爆炸、雷击、暴雨等原因导致的室内装潢损失。</td>
@@ -442,7 +442,7 @@ window.onload=function(){
         </tr>
         <tr>
             <td class="combineTd no_bgcolor" colspan="4"><font class="fontRed">注：</font>以上保障说明仅为简要介绍，详情以条款为准<a class="clause" target="_Blank" href="#">保险条款</a></td>
-        </tr>
+        </tr> -->
     </tbody>
 </table>
 </div></div>
