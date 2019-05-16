@@ -334,8 +334,40 @@ public class ClerkController {
 		if(pss!=null&&!"".equals(pss)){
 			ps = Integer.parseInt(pss);
 		}
+		
+		String v_id = request.getParameter("v_id");
+		String v_name = request.getParameter("v_name");
+		String v_lopremium = request.getParameter("v_lopremium");
+		String v_hipremium = request.getParameter("v_hipremium");
+		String v_area = request.getParameter("v_area");
+		String v_lojoindate = request.getParameter("v_lojoindate");
+		String v_hijoindate = request.getParameter("v_hijoindate");
+		String v_coverageid = request.getParameter("v_coverageid");
+		String v_status = request.getParameter("v_status");
+		String v_property = request.getParameter("v_property");
+		String v_order = request.getParameter("v_order");
+		
+		System.out.println(v_area);
+		
 		map.put("cp", cp);
 		map.put("ps", ps);
+		map.put("v_id", v_id);
+		map.put("v_name", v_name);
+		map.put("v_lopremium", v_lopremium);
+ 		map.put("v_hipremium", v_hipremium);
+		map.put("v_area", v_area);
+		map.put("v_lojoindate", v_lojoindate);
+		map.put("v_hijoindate", v_hijoindate);
+		map.put("v_coverageid", v_coverageid);
+		
+		System.out.println(v_status);
+		if(v_status != null && !"".equals(v_status)) {
+			map.put("v_status", Integer.parseInt(v_status));
+		}
+		
+		map.put("v_property", v_property);
+		map.put("v_property", v_property);
+		map.put("v_order", v_order);
 		insuranceSlipService.findInsuranceSlipList(map);
 		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
 		
@@ -364,19 +396,23 @@ public class ClerkController {
 		model.addAttribute("totalpage", totalpage);
 		model.addAttribute("cityList", cityList);
 		model.addAttribute("coverageList", coverageList);
+		
+		model.addAttribute("v_id", v_id);
+		model.addAttribute("v_name", v_name);
+		model.addAttribute("v_lopremium", v_lopremium);
+ 		model.addAttribute("v_hipremium", v_hipremium);
+		model.addAttribute("v_area", v_area);
+		model.addAttribute("v_lojoindate", v_lojoindate);
+		model.addAttribute("v_hijoindate", v_hijoindate);
+		model.addAttribute("v_coverageid", v_coverageid);
+		model.addAttribute("v_status", v_status);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_order", v_order);
 		return "server/clerk_insurance_slip_list";
 	}
 	
-	//投保单详情页面
-		@RequestMapping(value="/jumpDetailss")
-		public String details(String pid,Model model) {
-			
-			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
-			List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
-			model.addAttribute("insurance", insurance);
-			model.addAttribute("pvList", pvList);
-			return "server/insurance_Details";
-		}
+	
 		
 	
 	//身份验证
