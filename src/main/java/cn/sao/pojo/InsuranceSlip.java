@@ -37,6 +37,22 @@ public class InsuranceSlip implements Serializable {
 	private String del_status; //逻辑删除
 	private String yuliu1; //预留字段1
 	private String yuliu2; //预留字段2
+	
+	
+	@Override
+	public String toString() {
+		return "InsuranceSlip [insureid=" + insureid + ", insure_name=" + insure_name + ", insure_card=" + insure_card
+				+ ", area=" + area + ", address=" + address + ", relation=" + relation + ", holder_name=" + holder_name
+				+ ", holder_card=" + holder_card + ", holder_sex=" + holder_sex + ", holder_phone=" + holder_phone
+				+ ", holder_email=" + holder_email + ", insure_date=" + insure_date + ", first_auditor=" + first_auditor
+				+ ", first_status=" + first_status + ", first_result=" + first_result + ", second_auditor="
+				+ second_auditor + ", second_status=" + second_status + ", second_result=" + second_result
+				+ ", third_auditor=" + third_auditor + ", third_status=" + third_status + ", third_result="
+				+ third_result + ", scout=" + scout + ", scout_status=" + scout_status + ", scout_result="
+				+ scout_result + ", license=" + license + ", industry_code=" + industry_code + ", acreage=" + acreage
+				+ ", firm_name=" + firm_name + ", premium=" + premium + ", pol_property=" + pol_property
+				+ ", del_status=" + del_status + ", yuliu1=" + yuliu1 + ", yuliu2=" + yuliu2 + "]";
+	}
 	public Integer getInsureid() {
 		return insureid;
 	}
