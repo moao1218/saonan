@@ -61,7 +61,7 @@
 		}
 	  }
 	  function jumpDetails(pid){
-		  location.href = "/jumpDetails?pid="+pid;
+		  location.href = "/jumpDetails?pid="+pid+"&flag=true";
   		}
 	  
   </script>
@@ -176,7 +176,7 @@
        
 		<div class="col-md-12">
             <div class="content-panel">
-              <form action="/completed" method="post" id="sform" name="sform">
+              <form action="/processing" method="post" id="sform" name="sform">
               <input type="hidden"  name="cp"  id="cp" th:value="${cp}"/>
               <input type="hidden"  name="ps"  id="ps" th:value="${ps}"/>
 				<input type="hidden" name="totalpage"  id="totalpage" th:value="${totalpage}" />

@@ -1,5 +1,6 @@
 package cn.saonan.control;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,13 +51,36 @@ public class PolicyVerifyController {
 	
 	//跳转待处理勘察页面
 	@GetMapping(value="/jumpScout")
-	public String scoutSplit(HttpServletRequest request,Model model) throws ParseException {
+	public String scoutSplit(HttpServletRequest request,Model model, HttpServletResponse response) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
 		
 		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		//获取城市信息
+		String v_city = clerk.getCity().getCode();
 		
+		//我是从登陆信息从拿到的角色ID
+		Integer roleid = clerk.getRoleid();
+		String v_role = "";
+		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+		if(roleid==9) {
+			//v_role => 只能看1状态的
+			v_role = "2,3";
+			map.put("v_city", v_city);
+			map.put("v_role", v_role);
+		}else {
+			try {
+				
+				response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write( "<script>alert('您没有访问的权限！');"
+						+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+				response.getWriter().flush();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		String cpp = request.getParameter("cp");
 		
 		if(cpp!=null&&!"".equals(cpp)){
@@ -66,9 +91,40 @@ public class PolicyVerifyController {
 		if(pss!=null&&!"".equals(pss)){
 			ps = Integer.parseInt(pss);
 		}
+		
+		String v_id = request.getParameter("v_id");
+		String v_name = request.getParameter("v_name");
+		String v_lopremium = request.getParameter("v_lopremium");
+		String v_hipremium = request.getParameter("v_hipremium");
+		String v_area = request.getParameter("v_area");
+		String v_lojoindate = request.getParameter("v_lojoindate");
+		String v_hijoindate = request.getParameter("v_hijoindate");
+		String v_coverageid = request.getParameter("v_coverageid");
+		String v_status = request.getParameter("v_status");
+		String v_property = request.getParameter("v_property");
+		String v_order = request.getParameter("v_order");
+		
+		
 		map.put("cp", cp);
 		map.put("ps", ps);
-		map.put("v_scout", clerk.getMagid()+"");
+
+		map.put("v_id", v_id);
+	    map.put("v_name", v_name); 
+	    map.put("v_lopremium", v_lopremium);
+	    map.put("v_hipremium", v_hipremium); 
+	    map.put("v_area", v_area);
+	    map.put("v_lojoindate", v_lojoindate); 
+	    map.put("v_hijoindate", v_hijoindate);
+	    map.put("v_coverageid", v_coverageid);
+	  
+	  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+	  map.put("v_status", Integer.parseInt(v_status)); }
+	  
+	  map.put("v_property", v_property); map.put("v_property", v_property);
+	  map.put("v_order", v_order);
+		
+		
+		
 		insuranceSlipService.findInsuranceSlipList(map);
 		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
 		
@@ -98,6 +154,26 @@ public class PolicyVerifyController {
 		model.addAttribute("totalpage", totalpage);
 		model.addAttribute("cityList", cityList);
 		model.addAttribute("coverageList", coverageList);
+		
+		
+		model.addAttribute("insureList", insureList);
+		model.addAttribute("totalpage", totalpage);
+		model.addAttribute("cityList", cityList);
+		model.addAttribute("coverageList", coverageList);
+		
+		model.addAttribute("v_id", v_id);
+		model.addAttribute("v_name", v_name);
+		model.addAttribute("v_lopremium", v_lopremium);
+ 		model.addAttribute("v_hipremium", v_hipremium);
+		model.addAttribute("v_area", v_area);
+		model.addAttribute("v_lojoindate", v_lojoindate);
+		model.addAttribute("v_hijoindate", v_hijoindate);
+		model.addAttribute("v_coverageid", v_coverageid);
+		model.addAttribute("v_status", v_status);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_order", v_order);
+		
 		return "server/policy_verify_list";
 	}
 	

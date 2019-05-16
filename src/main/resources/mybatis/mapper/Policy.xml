@@ -44,4 +44,22 @@
 		from policy where policyid = #{policyId}
 	</select>
 	
+	<!-- 将审核通过的投保单信息天道保单中 -->
+	<insert id="insertPolicy" parameterType="java.util.Map">
+	
+		insert into policy
+		  (policyid, insured_name, insured_card, area, address, 
+		  relation, holder_name, holder_card, holder_sex, holder_phone, 
+		  holder_email, insured_date, license, industry_code, acreage, 
+		  firm_name, premium, pol_property, del_status, start_date, 
+		  end_date, userid)
+		values
+		  (#{insurance.policyid}, #{insurance.insure_name}, #{insurance.insure_card}, #{insurance.city.code}, #{insurance.address}, 
+		  #{insurance.relation}, #{insurance.holder_name}, #{insurance.holder_card}, #{insurance.holder_sex}, #{insurance.holder_phone}, 
+		  #{insurance.holder_email}, #{insurance.insure_date}, #{insurance.license}, #{insurance.industry_code}, #{insurance.acreage}, 
+		  #{insurance.firm_name}, #{insurance.premium}, #{insurance.pol_property}, #{insurance.del_status}, #{start_date}, 
+		  #{end_date}, #{insurance.userid})
+		  
+	</insert>
+	
 </mapper>

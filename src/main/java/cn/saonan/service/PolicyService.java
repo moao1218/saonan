@@ -9,5 +9,7 @@ public interface PolicyService {
 	public void findPolicyByMoreCondition(Map<String, Object> map);
 	
 	public Policy findPolicyById(String policyId);
+	
+	public boolean insertPolicy(Map<String, Object> map);
 
 }

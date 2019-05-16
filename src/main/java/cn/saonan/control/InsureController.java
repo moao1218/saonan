@@ -32,10 +32,12 @@ import cn.saonan.service.ClerkService;
 import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.BlackListService;
 import cn.saonan.service.InsuranceSlipService;
+import cn.saonan.service.PolicyService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.PvService;
 import cn.saonan.service.UsersService;
 import cn.saonan.service.impl.BlackListServiceImpl;
+import cn.saonan.utils.DateUtil;
 import cn.saonan.utils.IdCard;
 
 @Controller
@@ -47,14 +49,14 @@ public class InsureController {
 	private UsersService usersService ;
 	@Autowired
 	private ClerkService clerkService;
-	
 	@Autowired
 	private PolicyVerifyService pvs;
 	@Autowired
 	private BlackListService bls;
-	
 	@Autowired
 	private PvService pvService;
+	@Autowired
+	private PolicyService policyService;
 
 	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
@@ -291,12 +293,13 @@ public class InsureController {
 	
 	//投保单详情页面
 	@RequestMapping(value="/jumpDetails")
-	public String details(String pid,Model model) {
+	public String details(String pid,Model model,String flag) {
 		
 		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
 		model.addAttribute("insurance", insurance);
 		model.addAttribute("pvList", pvList);
+		model.addAttribute("flag", flag);
 		return "server/insurance_Details";
 	}
 	
@@ -314,12 +317,212 @@ public class InsureController {
 	@PostMapping(value="/firstHandle")
 	public String firstHandle(String pid,Model model,HttpServletRequest request) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("newstatus", 2);
-		map.put("policyid", pid);
-		insuranceSlipService.updateInsuranceStatus(map);
-		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
-		model.addAttribute("insurance", insurance);
-		return "server/insurance_Accept";
+		
+		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		//我是从登陆信息从拿到的角色ID
+		Integer roleid = clerk.getRoleid();
+		
+		//判断操作的用户是谁,让后进行相应的操作
+		if(roleid==1) {
+			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+			if(insurance.getStatus().getStatusid()==1) {
+				map.put("newstatus", 2);
+			}
+			map.put("policyid", pid);
+			map.put("first_auditor", clerk.getMagid()+"");
+			insuranceSlipService.updateInsuranceStatus(map);
+			model.addAttribute("insurance", insurance);
+			return "server/insurance_Accept";
+		}else if(roleid==2) {
+			map.put("newstatus", 8);
+			map.put("policyid", pid);
+			map.put("second_auditor", clerk.getMagid()+"");
+			insuranceSlipService.updateInsuranceStatus(map);
+			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+			model.addAttribute("insurance", insurance);
+			return "server/insurance_second_accept";
+		}else {
+			map.put("newstatus", 12);
+			map.put("policyid", pid);
+			map.put("third_auditor", clerk.getMagid()+"");
+			insuranceSlipService.updateInsuranceStatus(map);
+			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+			model.addAttribute("insurance", insurance);
+			return "server/insurance_second_accept";
+		}
+
+		
+	}
+	
+	@RequestMapping(value="/secondHandle")
+	public String secondHandle(String pid,Model model,HttpServletRequest request,String flag, HttpServletResponse response) {
+		
+		System.out.println("=================="+flag);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		//我是从登陆信息从拿到的角色ID
+		Integer roleid = clerk.getRoleid();
+		
+		//判断操作的用户是谁,让后进行相应的操作
+		if("1".equals(flag)) {
+			System.out.println("========================熊蕃猛===================================");
+			if(roleid==2) {
+				//二审通过
+				map.put("newstatus", 9);
+				map.put("policyid", pid);
+				boolean b = insuranceSlipService.updateInsuranceStatus(map);
+				if(b) {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作成功');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作失败');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}else {
+				//三审通过
+				map.put("newstatus", 13);
+				map.put("policyid", pid);
+				boolean b = insuranceSlipService.updateInsuranceStatus(map);
+
+				
+				if(b) {
+					//三审通过则要将投保单中的信息填入保单中
+					Map<String, Object> map2 = new HashMap<String,Object>();
+					InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+					List<String> dateList = DateUtil.gainTwoDate();
+					
+					map2.put("insurance", insurance);
+					map2.put("start_date", dateList.get(0));
+					map2.put("end_date", dateList.get(1));
+					
+					boolean b2 = policyService.insertPolicy(map2);
+					if(!b2) {
+						try {
+							//添加保单失败要把投保单状态回调
+							map.put("newstatus", 12);
+							map.put("policyid", pid);
+							insuranceSlipService.updateInsuranceStatus(map);
+							
+							response.setContentType("text/html;charset=utf-8");
+							response.getWriter().write( "<script>alert('操作失败');"
+									+ "window.location='/jumpPending';window.close();</script>"); 
+							response.getWriter().flush();
+							
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作成功');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作失败');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
+
+		}else {
+			if(roleid==2) {
+				//二审不通过
+				map.put("newstatus", 10);
+				map.put("policyid", pid);
+				boolean b = insuranceSlipService.updateInsuranceStatus(map);
+				if(b) {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作成功');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作失败');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}else {
+				//三审不通过
+				map.put("newstatus", 14);
+				map.put("policyid", pid);
+				boolean b = insuranceSlipService.updateInsuranceStatus(map);
+				if(b) {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作成功');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作失败');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				
+			}
+			
+		}
+		
+		
+		return "redirect:/jumpPending";
 	}
 	
 	//分派专业指导员
@@ -451,93 +654,6 @@ public class InsureController {
 		return "server/pending_insurance";
 	}
 	
-	//已完成的投保单
-	public String hadDone(Model model,HttpServletRequest request,HttpServletResponse response) throws ParseException {
-		Map<String,Object> map = new HashMap<String,Object>();
-		int cp = 1;
-		int ps = 5;
-		
-		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-		String v_city = clerk.getCity().getCode();
-		//我是从登陆信息从拿到的角色ID
-		Integer roleid = clerk.getRoleid();
-		String v_role = "";
-		String rList = "";
-		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-		if(roleid==1) {
-			//v_role => 只能看1状态的
-			v_role = "5,6,7,8,9,10,11,12,13,14";
-			map.put("v_city", v_city);
-			map.put("v_role", v_role);
-		}else if(roleid==2) {
-			v_role = "9,10,11,12,13,14";
-			List<City> cityRegion = insuranceSlipService.findCityRegion(v_city);
-			for (City city : cityRegion) {
-				rList = rList  + city.getCode()  + ",";
-			}
-			String substring = rList.substring(0,rList.length()-1);
-			map.put("v_city", substring);
-			map.put("v_role", v_role);
-		}else if(roleid==3) {
-			v_role = "13,14";
-			List<City> cityRegion = insuranceSlipService.findCityRegion(v_city);
-			for (City city : cityRegion) {
-				rList = rList + city.getCode() + ",";
-			}
-			String substring = rList.substring(0,rList.length()-1);
-			map.put("v_city", substring);
-			map.put("v_role", v_role);
-		}else {
-			try {
-				response.setContentType("text/html;charset=utf-8");
-				response.getWriter().write( "<script>alert('您没有访问的权限！');"
-						+ "window.location='/jumpInsuranceList';window.close();</script>"); 
-				response.getWriter().flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		String cpp = request.getParameter("cp");
-		
-		if(cpp!=null&&!"".equals(cpp)){
-			cp = Integer.parseInt(cpp);
-		}
-		
-		String pss = request.getParameter("ps");
-		if(pss!=null&&!"".equals(pss)){
-			ps = Integer.parseInt(pss);
-		}
-		
-		map.put("cp", cp);
-		map.put("ps", ps);
-		insuranceSlipService.findInsuranceSlipList(map);
-		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
-		
-		Date d = new Date();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-		for (InsuranceSlip insuranceSlip : insureList) {
-			Date parse = date.parse(insuranceSlip.getInsure_date());
-			if(d.getTime()<parse.getTime()+12*60*60*1000) {
-				insuranceSlip.setUrg("正常");
-			}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
-				insuranceSlip.setUrg("预警");
-			}else {
-				insuranceSlip.setUrg("报警");
-			}
-//			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
-		}
-		Integer v_count = (Integer) map.get("v_count");
-		int totalpage = (v_count-1)/ps + 1;
-		model.addAttribute("cp", cp);
-		model.addAttribute("ps", ps);
-		
-		List<City> cityList = usersService.findAllCity();
-		model.addAttribute("insureList", insureList);
-		model.addAttribute("totalpage", totalpage);
-		model.addAttribute("cityList", cityList);
-		return "server/pending_insurance";
-	}
 	
 	@ResponseBody
 	@RequestMapping(value="/checkIdCard")
@@ -551,16 +667,13 @@ public class InsureController {
 	
 	@RequestMapping(value="/CheckBlack")
 	@ResponseBody
-	public String CheckBlack(HttpServletRequest request) {
-		
+	public String CheckBlack(HttpServletRequest request,Map<String,Object> map) {
+
 		String userId = request.getParameter("userId");
-		BlackList blackList = bls.findBlackListById(userId);
+		System.out.println(userId);
+		boolean flag = bls.findBlackListById(userId);
 		
-		if(blackList==null) {
-			return "\""+"ture"+"\"";
-		}else {
-			return "\""+"false"+"\"";
-		}
+		return flag+"";
 
 	}
 	
@@ -701,6 +814,138 @@ public class InsureController {
 			model.addAttribute("v_property", v_property);
 			model.addAttribute("v_order", v_order);
 			return "server/insurance_completed_list";
+		}
+	
+	
+	@RequestMapping(value="/processing")
+	public String processing(HttpServletResponse response, HttpServletRequest request, Model model) throws ParseException {
+			Map<String,Object> map = new HashMap<String,Object>();
+			int cp = 1;
+			int ps = 5;
+			
+			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			System.out.println(clerk.getMagid());
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			String v_role = "";
+			//roleid 角色  
+			if(roleid==1) {
+				//v_role => 只能看1状态的
+				v_role = "2,3,4";
+				map.put("v_first", clerk.getMagid()+"");
+				map.put("v_role", v_role);
+			}else if(roleid==2) {
+				v_role = "8";
+				map.put("v_second", clerk.getMagid()+"");
+				map.put("v_role", v_role);
+			}else if(roleid==3) {
+				v_role = "12";
+				map.put("v_third", clerk.getMagid()+"");
+				map.put("v_role", v_role);
+			}else {
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			System.out.println(v_role);
+			
+			String cpp = request.getParameter("cp");
+			
+			if(cpp!=null&&!"".equals(cpp)){
+				cp = Integer.parseInt(cpp);
+			}
+			
+			String pss = request.getParameter("ps");
+			if(pss!=null&&!"".equals(pss)){
+				ps = Integer.parseInt(pss);
+			}
+			
+			
+		
+			String v_id = request.getParameter("v_id");
+			String v_name = request.getParameter("v_name");
+			String v_lopremium = request.getParameter("v_lopremium");
+			String v_hipremium = request.getParameter("v_hipremium");
+			String v_area = request.getParameter("v_area");
+			String v_lojoindate = request.getParameter("v_lojoindate");
+			String v_hijoindate = request.getParameter("v_hijoindate");
+			String v_coverageid = request.getParameter("v_coverageid");
+			String v_status = request.getParameter("v_status");
+			String v_property = request.getParameter("v_property");
+			String v_order = request.getParameter("v_order");
+		 
+			
+			
+		
+		 map.put("cp", cp); 
+		 map.put("ps", ps); 
+		
+		
+		  map.put("v_id", v_id);
+		  map.put("v_name", v_name); 
+		  map.put("v_lopremium", v_lopremium);
+		  map.put("v_hipremium", v_hipremium); 
+		  map.put("v_area", v_area);
+		  map.put("v_lojoindate", v_lojoindate); 
+		  map.put("v_hijoindate", v_hijoindate);
+		  map.put("v_coverageid", v_coverageid);
+		  
+		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+		  map.put("v_status", Integer.parseInt(v_status)); }
+		  
+		  map.put("v_property", v_property); map.put("v_property", v_property);
+		  map.put("v_order", v_order);
+		 
+			
+			insuranceSlipService.findInsuranceSlipList(map);
+			List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+			
+			Date d = new Date();
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+			for (InsuranceSlip insuranceSlip : insureList) {
+				Date parse = date.parse(insuranceSlip.getInsure_date());
+				if(d.getTime()<parse.getTime()+12*60*60*1000) {
+					insuranceSlip.setUrg("正常");
+				}else if(d.getTime()<parse.getTime()+24*60*60*1000) {
+					insuranceSlip.setUrg("预警");
+				}else {
+					insuranceSlip.setUrg("报警");
+				}
+//				System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
+			}
+			Integer v_count = (Integer) map.get("v_count");
+			int totalpage = (v_count-1)/ps + 1;
+			model.addAttribute("cp", cp);
+			model.addAttribute("ps", ps);
+			
+			List<City> cityList = usersService.findAllCity();
+			List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
+			model.addAttribute("insureList", insureList);
+			model.addAttribute("totalpage", totalpage);
+			model.addAttribute("cityList", cityList);
+			model.addAttribute("coverageList", coverageList);
+			
+			model.addAttribute("v_id", v_id);
+			model.addAttribute("v_name", v_name);
+			model.addAttribute("v_lopremium", v_lopremium);
+	 		model.addAttribute("v_hipremium", v_hipremium);
+			model.addAttribute("v_area", v_area);
+			model.addAttribute("v_lojoindate", v_lojoindate);
+			model.addAttribute("v_hijoindate", v_hijoindate);
+			model.addAttribute("v_coverageid", v_coverageid);
+			model.addAttribute("v_status", v_status);
+			model.addAttribute("v_property", v_property);
+			model.addAttribute("v_property", v_property);
+			model.addAttribute("v_order", v_order);
+			return "server/insurance_processing";
 		}
 	
 	

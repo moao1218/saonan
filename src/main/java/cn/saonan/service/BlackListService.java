@@ -8,6 +8,6 @@ public interface BlackListService {
 	 * @param userId
 	 * @return
 	 */
-	public BlackList findBlackListById(String userId);
+	public boolean findBlackListById(String userId);
 
 }

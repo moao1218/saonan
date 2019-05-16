@@ -84,12 +84,15 @@
 		select coverageid, coverage_name, coverage_rate, upper_limit, lower_limit, del_status from coverage 
 	</select>
 	
-	<!-- 更改投保单状态 -->
+	<!-- 点击受理时更改投保单状态 -->
 	<update id="updateInsuranceStatus" parameterType="java.util.Map">
 		update insurance_slip 
 			<set>
 				<if test="newstatus!=null"> insure_status=#{newstatus}, </if>
 				<if test="scout!=null"> scout=#{scout}, </if>
+				<if test="first_auditor!=null">first_auditor=#{first_auditor}, </if>
+				<if test="second_auditor!=null">second_auditor=#{second_auditor}, </if>
+				<if test="third_auditor!=null">third_auditor=#{third_auditor}, </if>
 			</set>  
 			 where policyid=#{policyid}
 	</update>
