@@ -10,6 +10,7 @@ public class City implements Serializable {
 	private String region_name_c;
 	private String rlevel;
 	private String ipper_region;
+
 	public String getCode() {
 		return code;
 	}

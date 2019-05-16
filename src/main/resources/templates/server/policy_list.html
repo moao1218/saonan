@@ -119,18 +119,6 @@
 				    </div>
 				  </div>
 				  <div class="form-row">
-				    <div class='col-sm-2'>
-				        <div class="form-group">
-				            <label>选择日期：</label>
-				            <!--指定 date标记-->
-				            <div class='input-group date' id='datetimepicker1'>
-				                <input type='text' class="form-control" />
-				                <span class="input-group-addon">
-				                    <span class="glyphicon glyphicon-calendar"></span>
-				                </span>
-				            </div>
-				        </div>
-					</div>
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(低)</label>
 				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="">
@@ -138,13 +126,12 @@
 				    <div class="form-group col-md-2">
 				      <label for="inputState">申请时间(高)</label>
 				      <input type="text" value="2012-12-12" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="inputZip">
-				      <input type="text" class="form-control form-control-inline input-medium default-date-picker" data-date-format="yyyy-mm-dd" id="">
 				    </div>
 				   <div class="form-group col-md-2">
 				      <label for="inputState">险种</label>
 				      <select id="inputState" class="form-control">
 				      	<option value="">--请选择--</option>
-				        <option th:each="city:${cityList}" th:value="${city.code}" th:text="${city.region_name_c}">Choose...</option>
+				        <option th:each="coverage:${coverageList}" th:selected="${coverage.coverageid}==${v_coverageid}" th:value="${coverage.coverageid}" th:text="${coverage.coverage_name}">Choose...</option>
 				      </select>
 				    </div>
 				    <div class="form-group col-md-2">
@@ -156,17 +143,18 @@
 				  	<div class="form-group col-md-2">
 				      <label for="inputState">保单性质</label>
 				      <select id="inputState" class="form-control">
-				        <option selected>个人</option>
-				        <option selected>企业</option>
-				        <option>...</option>
+				        <option value="">--请选择保单性质--</option>
+				        <option value="0" th:selected="${v_property}=='0'">个人</option>
+				        <option value="1" th:selected="${v_property}=='1'">企业</option>
 				      </select>
 				    </div>
 				    
 				    <div class="form-group col-md-2">
 				      <label for="inputState">排序</label>
 				      <select id="inputState" class="form-control">
-				        <option selected>正序</option>
-				        <option>...</option>
+				        <option value="">--选择排序方式--</option>
+				        <option value="desc" th:selected="${v_order}=='desc'">时间正序</option>
+				        <option value="asc" th:selected="${v_order}=='asc'">时间倒序</option>
 				      </select>
 				    </div>
 				  </div>

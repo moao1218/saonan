@@ -9,7 +9,7 @@
 	</sql>
 	
    <select id="isLogin"  resultMap="clerkinfo" >
-   		select <include refid="showUsers"></include> from clerk where username=#{username} and userpwd=#{userpwd}
+   		select <include refid="showUsers"></include> from clerk where username=#{username} 
    </select>
    
    <resultMap type="cn.saonan.pojo.Clerk" id="clerkinfo">

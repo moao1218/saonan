@@ -49,4 +49,12 @@ public class InsuranceSlipServiceImpl implements InsuranceSlipService {
 		return false;
 	}
 
+	@Override
+	public Coverage findCoverageid(String coverage_name) {
+		if(coverage_name==null&&"".equals(coverage_name)) {
+			return null;
+		}
+		return insuranceMapper.findCoverageid(coverage_name);
+	}
+
 }

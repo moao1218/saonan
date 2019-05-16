@@ -11,10 +11,10 @@ public class ItemsList implements Serializable {
 	
 	private Integer itemid; 
 	private String item_name;
-	private String deductible; 
-	private String excess;
-	private String dep_rate; 
-	private String industry;
+	private String deductible; //
+	private String excess;//
+	private String dep_rate;// 
+	private String industry;//
 	private String del_status; 
 	private String yuliu;
 	public Integer getItemid() {

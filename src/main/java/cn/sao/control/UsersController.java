@@ -65,7 +65,7 @@ public class UsersController {
 	
 	@GetMapping(value = "/myorder")
 	public String myorder() {
-		return "client/toRegisterUser";
+		return "client/myorder";
 	}
 }
 
