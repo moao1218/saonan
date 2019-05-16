@@ -5,6 +5,9 @@
 <link href="asserts/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/4.0.0/css/bootstrap.min.css}" rel="stylesheet">
 <meta name="description" content="网站描述">
 <meta name="keywords" content="关键字1,关键字2...">
+<title>ePICC中国人保财险电子商务平台－为您提供车险、交强险、意外险、家财险等全面的网上保险服务</title>
+<script type="text/javascript" id="interactionProposalScript" src="client_resources/js/interactionProposal_picc.js"></script>
+<script type="text/javascript" id="interactionProposalScript" src="client_resources/js/interactionProposal_picc.js(1)"></script>
 <script type="text/javascript" async="" src="client_resources/js/ubcfg.js"></script><script type="text/javascript" async="" src="client_resources/js/gs.js"></script><script async="" src="client_resources/js/ag_track-2.20.js"></script><script type="text/javascript" src="client_resources/js/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="client_resources/js/common.js"></script>
 <script type="text/javascript" src="client_resources/js/newpublic.js"></script>
@@ -20,15 +23,40 @@
 <link href="client_resources/css/process.css" type="text/css" rel="stylesheet">
 <link href="client_resources/css/property_insurance.css" rel="stylesheet">
 <link rel="stylesheet" href="client_resources/css/tipswindown.css" type="text/css" media="all">
-<title>ePICC中国人保财险电子商务平台－为您提供车险、交强险、意外险、家财险等全面的网上保险服务</title><script type="text/javascript" id="interactionProposalScript" src="client_resources/js/interactionProposal_picc.js"></script><script type="text/javascript" id="interactionProposalScript" src="client_resources/js/interactionProposal_picc.js(1)"></script>
+<link href="client_resources/css/loginshownewmsg.css" type="text/css" rel="stylesheet">
+<script>
+      // 点击弹出层"关闭"按钮
+  (function(){
+		
+		$(".closedialog").click(function(){
+				closedialog(".dialog");						 
+			});
+		
+  });
+</script>
+<script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
 
-</head>
-<body onload="showstartDateTips();">
-<form action="http://www.epicc.com.cn/eproperty/japroposal/calcProposal.do" name="form" id="form" method="post">
+<script>
+	$(function(){
+		$("#changecity").change(function(){
+			var code=$(this).val();
+			$.post("/u",{"code":code},function(data){
+				console.log(data);
+			},"json")
+			
+		})
+		
+	})
+	/* function changecity(){
+		alert("ssss");
+		$("#changecity").change(function(){
+			console.log("进入了");
+			var upper=$(this).val();
+			
+		})
+	} */
 	
-
- 
-
+</script>
 <style type="text/css">
 .interwrong{background:#fff; margin:0 auto; padding:15px 0;}
 
@@ -44,6 +72,14 @@
 	 color:#2196CC;
 }
 </style>
+</head>
+<body onload="showstartDateTips();">
+<form action="http://www.epicc.com.cn/eproperty/japroposal/calcProposal.do" name="form" id="form" method="post">
+	
+
+ 
+
+
 <!--新版流程弹出框-->
 <div class="pop_prompt" id="popDivNew" style="display:none;">
 	<div class="title"><a class="close" href="javascript:closeTipCheckMSG();">关闭</a></div>
@@ -95,26 +131,6 @@
         </div>
         
 </div>
-
-
-
-
-<script>
-      // 点击弹出层"关闭"按钮
-  (function(){
-		
-		$(".closedialog").click(function(){
-				closedialog(".dialog");						 
-			});
-  })();
-</script>
- <script type="text/javascript" src="webjars/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-</script>
-<link href="client_resources/css/loginshownewmsg.css" type="text/css" rel="stylesheet">
-
-
 <div class="pop_promptlogin" id="loginDivnew">
         <div class="title"><a class="close" href="javascript:closeTipCheckMSG();">关闭</a></div>
     <div class="con">
@@ -322,16 +338,13 @@
     		
 			
 					<span >
-						<select name="pro" th:each="province:${findProvince}">
-								<option >---省---</option>
-								<option th:text="${province.city.father}">[[${province.province}]]</option>
+						<select name="pro" id="changecity" onchange="function(">
+								<option >---市---</option>
+								<option th:each="city:${findallcity}" th:value="${city.code}">[[${city.region_name_c}]]</option>
 						</select>
 						<select name="city">
-								<option>---市---</option>
+								<option id="street">---街道---</option>
 								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
 						</select>
 				
 					</span>
