@@ -48,9 +48,6 @@ public class PolicyVerifyController {
 	@Autowired
 	private PvService pvService;
 	
-	@Autowired
-	private RedisUtil redisUtil;
-	
 	//跳转待处理勘察页面
 	@GetMapping(value="/jumpScout")
 	public String scoutSplit(HttpServletRequest request,Model model) throws ParseException {
