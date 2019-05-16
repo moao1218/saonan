@@ -32,6 +32,7 @@ import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.PvService;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.RedisUtil;
 import cn.saonan.utils.Upload;
 
 @Controller
@@ -187,8 +188,6 @@ public class PolicyVerifyController {
 	@PostMapping(value="/insertPv")
 	public String insertPv(Pv pv,HttpServletRequest request) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		Coverage c = new Coverage();
-		c.setCoverageid(null);
 		
 		Items items = new Items();
 		Coverage coverage = new Coverage();
@@ -208,11 +207,11 @@ public class PolicyVerifyController {
 		MultipartRequest req = (MultipartRequest) request;	
 		MultipartFile h_pic = req.getFile("h_pic");
 		MultipartFile bu_pic = req.getFile("bud_pic");
-		if(h_pic!=null) {
+		if(h_pic!=null&&!"".equals(h_pic)) {
 			String house_pic = Upload.upload(request, h_pic);
 			pv.setHouse_pic(house_pic);
 		}
-		if(bu_pic!=null) {
+		if(bu_pic!=null&&!"".equals(bu_pic)) {
 			String building_pic = Upload.upload(request, bu_pic);
 			pv.setBuilding_pic(building_pic);
 		}
@@ -224,16 +223,16 @@ public class PolicyVerifyController {
 			int r = new Random().nextInt(8999)+1000;
 			pv.setPol_ver_id(""+currentTimeMillis+r);
 			
-			if(req.getFile("a_pic"+i)!=null) {
+			if(req.getFile("a_pic"+i)!=null&&!"".equals(req.getFile("a_pic"+i))) {
 				String site_photo = Upload.upload(request, req.getFile("a_pic"+i));
 				items.setSite_photo(site_photo);
 			}
 			
-			if(req.getFile("b_pic"+i)!=null) {
+			if(req.getFile("b_pic"+i)!=null&&!"".equals(req.getFile("b_pic"+i))) {
 				String third_pic = Upload.upload(request, req.getFile("b_pic"+i));
 				items.setThird_pic(third_pic);
 			}
-			if(req.getFile("c_pic"+i)!=null) {
+			if(req.getFile("c_pic"+i)!=null&&!"".equals(req.getFile("c_pic"+i))) {
 				String invoice_pic = Upload.upload(request, req.getFile("c_pic"+i));
 				items.setInvoice_pic(invoice_pic);
 			}
@@ -319,7 +318,6 @@ public class PolicyVerifyController {
 	public String goAdd(String pid,String cid,Model model) {
 		Coverage vo = insuranceSlipService.findCoverageid(cid);
 		Integer coverageid = vo.getCoverageid();
-		System.out.println("coverageid:"+coverageid);
 		model.addAttribute("pid", pid);
 		model.addAttribute("cid", coverageid);
 		return "server/add_verify";

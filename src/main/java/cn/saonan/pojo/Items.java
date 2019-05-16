@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 public class Items implements Serializable {
 
-	private Integer itemid; 
-	private String item_name;
+	private Integer itemid; //
+	private String item_name;//
 	private String deductible; 
 	private String excess;
 	private String dep_rate; 
 	private String industry;
-	private String site_photo; 
-	private String third_pic; 
-	private String item_age; 
-	private String invoice_pic; 
-	private String invoice; 
-	private String mark; 
+	private String site_photo; //
+	private String third_pic; //
+	private String item_age; //
+	private String invoice_pic; //
+	private String invoice; //
+	private String mark; //
 	private String pmodel; 
 	private String del_status;
 	public Integer getItemid() {

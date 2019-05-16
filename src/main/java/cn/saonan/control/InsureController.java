@@ -1,16 +1,17 @@
 package cn.saonan.control;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,10 +28,9 @@ import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
-import cn.saonan.pojo.Items;
-import cn.saonan.service.ClerkService;
 import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.BlackListService;
+import cn.saonan.service.ClerkService;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyService;
 import cn.saonan.service.PolicyVerifyService;
@@ -39,6 +39,8 @@ import cn.saonan.service.UsersService;
 import cn.saonan.service.impl.BlackListServiceImpl;
 import cn.saonan.utils.DateUtil;
 import cn.saonan.utils.IdCard;
+import cn.saonan.utils.JsonUtil;
+import cn.saonan.utils.RedisUtil;
 
 @Controller
 public class InsureController {
@@ -57,11 +59,18 @@ public class InsureController {
 	private PvService pvService;
 	@Autowired
 	private PolicyService policyService;
+	
+	@Autowired
+	private RedisUtil redisUtil;
+	
+	private String change = "";
 
 	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
 	public String goList(Model model,HttpServletRequest request) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
+		List<InsuranceSlip> insureList = new ArrayList<>();
+		Integer v_count = null;
 		int cp = 1;
 		int ps = 5;
 		
@@ -88,8 +97,6 @@ public class InsureController {
 		String v_property = request.getParameter("v_property");
 		String v_order = request.getParameter("v_order");
 		
-		System.out.println(v_area);
-		
 		map.put("cp", cp);
 		map.put("ps", ps);
 		map.put("v_id", v_id);
@@ -101,7 +108,6 @@ public class InsureController {
 		map.put("v_hijoindate", v_hijoindate);
 		map.put("v_coverageid", v_coverageid);
 		
-		System.out.println(v_status);
 		if(v_status != null && !"".equals(v_status)) {
 			map.put("v_status", Integer.parseInt(v_status));
 		}
@@ -109,8 +115,60 @@ public class InsureController {
 		map.put("v_property", v_property);
 		map.put("v_property", v_property);
 		map.put("v_order", v_order);
-		insuranceSlipService.findInsuranceSlipList(map);
-		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
+		
+		//redis
+		
+//		Map<Object, Object> hmget = redisUtil.hmget("all");
+//		Set<Entry<Object, Object>> entrySet = hmget.entrySet();
+//		Iterator<Entry<Object, Object>> iterator = entrySet.iterator();
+//		while(iterator.hasNext()) {
+//			Entry<Object, Object> next = iterator.next();
+//			InsuranceSlip value = (InsuranceSlip) next.getValue();
+//			insureList.add(value);lGetListSize
+//		}
+		
+		if(redisUtil.lGetListSize("plist")!=0) {
+			List<Object> lGet = redisUtil.lGet("1",0,-1);
+			for (Object object : lGet) {
+				insureList.add(JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class));
+				v_count=(int)redisUtil.lGetListSize("plist");
+				System.out.println("redis:"+insureList.get(0).getPolicyid());
+			}
+		}
+		System.out.println(insureList.size());
+		if(insureList.size()<1) {
+			insuranceSlipService.findInsuranceSlipList(map);
+			insureList = (List<InsuranceSlip>) map.get("insureList");
+			
+			for (int i = 0; i < insureList.size(); i++) {
+				InsuranceSlip insuranceSlip = insureList.get(i);
+				String policyid = insuranceSlip.getPolicyid();
+				redisUtil.lSet("plist",JsonUtil.objectToJson(insuranceSlip));
+			}
+			
+			v_count = (Integer) map.get("v_count");
+//			for (InsuranceSlip insuranceSlip : insureList) {
+//				String policyid = insuranceSlip.getPolicyid();
+//				Map<String,Object> polmap = new HashMap<String,Object>();
+//				
+//				polmap.put(policyid, JsonUtil.objectToJson(insuranceSlip));
+//				redisUtil.hmset("all", polmap);
+//			}
+		}else if(!"".equals(change)) {
+			InsuranceSlip findOneInsurance = insuranceSlipService.findOneInsurance(change);
+			redisUtil.lSet("plist", JsonUtil.objectToJson(findOneInsurance));
+//			hmget.put(change, findOneInsurance);
+//			redisUtil.hmset("all", hmget);
+//			insureList.add(findOneInsurance);
+		}
+		
+		
+		
+//		redisUtil.set("insure", JsonUtil.objectToJson(insureList));
+//		List<InsuranceSlip> jsonToList = JsonUtil.jsonToList((String)redisUtil.get("insure"), new TypeReference<List<InsuranceSlip>>() {});
+//		for (InsuranceSlip insuranceSlip : jsonToList) {
+//			System.out.println(insuranceSlip.getInsure_name());
+//		}
 		
 		Date d = new Date();
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
@@ -125,7 +183,8 @@ public class InsureController {
 			}
 //			System.out.println(date.format(new Date(parse.getTime()+12*60*60*1000)));
 		}
-		Integer v_count = (Integer) map.get("v_count");
+		
+		System.out.println("v_count:"+v_count);
 		int totalpage = (v_count-1)/ps + 1;
 		
 		List<Coverage> coverageList = insuranceSlipService.findAllCoverage();
@@ -245,7 +304,6 @@ public class InsureController {
 		}
 		
 		map.put("v_property", v_property);
-		map.put("v_property", v_property);
 		map.put("v_order", v_order);
 		
 		insuranceSlipService.findInsuranceSlipList(map);
@@ -285,7 +343,6 @@ public class InsureController {
 		model.addAttribute("v_hijoindate", v_hijoindate);
 		model.addAttribute("v_coverageid", v_coverageid);
 		model.addAttribute("v_status", v_status);
-		model.addAttribute("v_property", v_property);
 		model.addAttribute("v_property", v_property);
 		model.addAttribute("v_order", v_order);
 		return "server/pending_insurance";
@@ -330,27 +387,47 @@ public class InsureController {
 			}
 			map.put("policyid", pid);
 			map.put("first_auditor", clerk.getMagid()+"");
-			insuranceSlipService.updateInsuranceStatus(map);
+			boolean f1 = insuranceSlipService.updateInsuranceStatus(map);
+			//redis
+			if(f1) {
+//				redisUtil.del(pid);
+//				redisUtil.set(pid,null);lRemove
+				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
+				change = pid;
+			}
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_Accept";
 		}else if(roleid==2) {
 			map.put("newstatus", 8);
 			map.put("policyid", pid);
 			map.put("second_auditor", clerk.getMagid()+"");
-			insuranceSlipService.updateInsuranceStatus(map);
+			boolean f2 = insuranceSlipService.updateInsuranceStatus(map);
 			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+			//redis
+			if(f2) {
+//				redisUtil.del(pid);
+//				redisUtil.set(pid,null);lRemove
+				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
+				change = pid;
+			}
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_second_accept";
 		}else {
 			map.put("newstatus", 12);
 			map.put("policyid", pid);
 			map.put("third_auditor", clerk.getMagid()+"");
-			insuranceSlipService.updateInsuranceStatus(map);
+			boolean f3 = insuranceSlipService.updateInsuranceStatus(map);
 			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+			//redis
+			if(f3) {
+//				redisUtil.del(pid);
+//				redisUtil.set(pid,null);lRemove
+				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
+				change = pid;
+			}
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_second_accept";
 		}
-
 		
 	}
 	
@@ -521,8 +598,9 @@ public class InsureController {
 			
 		}
 		
-		
 		return "redirect:/jumpPending";
+		
+		
 	}
 	
 	//分派专业指导员

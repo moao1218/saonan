@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.Clerk;
 import cn.saonan.service.UsersService;
+import cn.saonan.utils.RSAInterface;
 
 
 @Controller
@@ -26,7 +28,10 @@ public class UsersController {
 	
 	@Autowired
 	private UsersService usersService;
+	@Autowired
+	private RSAInterface rSAInterface;
 	
+	static Map<Integer,String> map;
 	@GetMapping(value="/")
 	public String login() {
 		return "server/login";
@@ -38,13 +43,18 @@ public class UsersController {
 //	}
 
 	@PostMapping(value="/login")
-	public String isLogin(Clerk user,HttpSession session) {
-		Clerk vo = usersService.isLogin(user);
-		if(vo!=null) {
+	public String isLogin(Clerk user,HttpSession session) throws Exception {
+//		System.out.println("公钥"+map.get(0));
+//		System.out.println("私钥"+map.get(1));
+		System.out.println(user.getUserpwd());
+		boolean check = usersService.isLogin(user,map.get(1));
+		if(check==true) {
+			Clerk vo=usersService.getClerk(user);
 			session.setAttribute("user", vo);
 			return "server/index";
+		}else {
+			return "server/login";
 		}
-		return "server/login";
 		
 	}
 	
@@ -84,5 +94,12 @@ public class UsersController {
 			e.printStackTrace();
 		}
 		return b.toString();
+	}
+	@ResponseBody
+	@PostMapping("/getKeys")
+	public String getKeys() {
+		map=rSAInterface.getCommAndPrivaKey();
+		String publicKeys=map.get(0);
+		return "\""+publicKeys+"\"";
 	}
 }

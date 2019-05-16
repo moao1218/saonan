@@ -144,7 +144,7 @@ ul.map_column.column_3 {width: 160px;}
 ul.map_column.column_4 {width: 150px;}
 .contact{width: 390px;}
 .f_top,.f_header{width:1000px;float:none;margin:0 auto;}
-.cate_sub_column .price{position:inherit;}
+	/* .cate_sub_column .price{position:inherit;} */
 dl.contact_list {
     margin:-100px 0 0 -25px;
     width: 328px;
@@ -215,10 +215,44 @@ function quick(){
 
 
 </script>
+<!-- myorder样式及js开始 -->
+<style type="text/css"> 
+		.btn-group{
+		}
+	</style>
+    <!--默认的通用样式-->
+    <link rel="stylesheet" type="text/css" href="client_resources/css/indexImg.css">
+    <link rel="stylesheet" type="text/css" href="client_resources/css/member_center.css">
+     <link rel="stylesheet" type="text/css" id="loadcss1" href="client_resources/css/member_pulic.css">
+     <link rel="stylesheet" href="client_resources/css/TravelwelcomeIndex.css">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+ 
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+ 
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+	$(function(){
+		$("#displayi").click(function(){
+			
+			$("#displayul").css('display','block');
+		});
+		$("#dispalyli").click(function(){
 
+			$("#displayul").css('display','none');
+		})
+	} )
+	
+ function dingdan(){
+		alert("进入订单方法");
+		location.href="/InsueanceSlip";
+	} 
+	
+</script>
 
-
-
+<!-- myorder样式及js结束 -->
 </head>
 <body class="">
 <div style="display: none;">
@@ -325,7 +359,7 @@ window.onload=function(){
     <li class="aaa"><a data-toggle="tab" href="#menu2">投保须知</a></li>
     <li class="aaa"><a data-toggle="tab" href="#menu3">理赔服务</a></li>
      <li class="aaa"><a data-toggle="tab" href="#menu4">常见问题</a></li>
-      <li class="aaa"><a data-toggle="tab" href="#menu5">我的订单</a></li>
+      <li class="aaa"><a data-toggle="tab" href="javascript(0)" onclick="dingdan();">我的订单</a></li>
   </ul>
 
   <div class="tab-content">
@@ -343,10 +377,10 @@ window.onload=function(){
             <p><font>适用人群：</font>  个人及家庭</p>
             <p><font>可选保障：</font>  家庭财产、地震责任（部分地区）</p>
             <p><font>保障期限：</font>  一年</p>
-           <div class=""> <div class="setHeight member_price"><p><font>会&nbsp;员&nbsp;价&nbsp;：</font><font class="hong"> 
-           	<font class="font28 font_297">￥1.60</font></font> 起&nbsp; &nbsp;&nbsp;&nbsp;<del>原价: 1.78元  </del><!--<a href="#"> 登陆会员</a>-->
+           <div class=""><!--  <div class="setHeight member_price"><p><font>会&nbsp;员&nbsp;价&nbsp;：</font><font class="hong"> 
+           	<font class="font28 font_297">￥1.60</font></font> 起&nbsp; &nbsp;&nbsp;&nbsp;<del>原价: 1.78元  </del><a href="#"> 登陆会员</a>
             &nbsp;&nbsp;&nbsp;&nbsp;立省 <span>0.18</span> 元</p>
-           </div>
+           </div> -->
            <div style="margin-top: 10px;">
             	<p>近30天售出：<span id="productNums">1678</span>单</p>
                 <p>评分：<em class="png"></em><span id="productScore"></span>分 </p>
@@ -390,12 +424,12 @@ window.onload=function(){
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td><font>房屋及附属设施（家财综合）</font></td>
-            <td>0.5-500万</td>
-            <td class="setLastTd">室内附属设备包括暖气、管道煤气、厨房设备等固定装置。每次事故，房屋损失、室内装潢、室内财产总共免赔额200元。</td>
+        <tr th:each="coverage:${findlist}">
+            <td><font>[[${coverage.coverage_name}]]</font></td>
+            <td>[[${coverage.upper_limit}]]万-[[${coverage.lower_limit}]]万</td>
+            <td class="setLastTd">室、厨房设备等固定装置。每次事故，房屋损失、室内装潢、室内财产总共免赔额200元。</td>
         </tr>
-        <tr class="tableTrbj">
+      <!--   <tr class="tableTrbj">
             <td><font>室内装潢（家财综合）</font></td>
             <td>0-40万</td>
             <td class="setLastTd">承保由于火灾、爆炸、雷击、暴雨等原因导致的室内装潢损失。</td>
@@ -442,7 +476,7 @@ window.onload=function(){
         </tr>
         <tr>
             <td class="combineTd no_bgcolor" colspan="4"><font class="fontRed">注：</font>以上保障说明仅为简要介绍，详情以条款为准<a class="clause" target="_Blank" href="#">保险条款</a></td>
-        </tr>
+        </tr> -->
     </tbody>
 </table>
 </div></div>
@@ -552,8 +586,162 @@ window.onload=function(){
       <p>这是菜单 4 显示的内容。这是菜单 4 显示的内容。这是菜单 4显示的内容。</p>
     </div>
      <div id="menu5" class="tab-pane fade">
-      <h3>菜单 5</h3>
-      <p>这是菜单 5 显示的内容。这是菜单 5 显示的内容。这是菜单 5显示的内容。</p>
+      <!-- 菜单5开始 -->
+      	<div style="margin-top:46px;margin-left:-120px">
+      		<div style="display: none;" id="universalTemplate" ><!--//我的订单大模板-->
+<script type="text/template" id="bigorderTemplate">
+</script>
+<!--普通订单中心工具栏-->
+<script type="text/template" id="otherOrderToolTemplate">
+</script>
+
+<!--首页左侧导航栏内层li模板-->
+<script type="text/template" id="leftMenuInLiTemplate">
+    <li><a href="<%=liHref%>" url="<%=liUrl%>" id="<%=liId%>" class="<%=liClass%>"><%=mText%></a></li>
+</script></div>
+    <!-------右侧主窗口------->
+    <div class="m_right_main" id="rightmain">
+    <div class="content-box" >
+        <div class="content-top-box">
+                <span class="content-top-right">
+                    <a href="#order/recycle" class="content-top-password" id="clickRecycle"><span></span><p>回收站</p></a>
+                    <a href="javascript:;" class="content-top-play"><span></span><p>添加保单</p></a>
+                </span>
+            <ul>
+                <li class="active act-first"><a href="#order" id="clickAll">全部订单</a></li>
+                <li id="getProposal" class="hasNum"><a href="#order/proposal" id="clickProposal">投保中<span></span></a></li>
+                <li id="getTopay" class="hasNum"><a href="#order/topay" id="clickTopay">待支付<span></span></a></li>
+                <li id="getPayed" class="hasNum"><a href="#order/payed" id="clickPayed">已支付<span></span></a></li>
+            </ul>
+        </div>
+        <input type="hidden" id="orderAction" name="orderAction" value=""/>
+			<div class="content-list-box">
+				<ul class="content-list-top" id="mytool">
+					<li style="width: 137px;"
+						class="content-list-top-items content-list-top-items2 time">
+						<span class="items-title show-time-title" id="displayspan">全部订单
+							<i id="displayi" style="z-index: 99">+</i>
+					</span>
+						<ul class="three-indent-list display-time" id="displayul"
+							style="display: none">
+							<li class="three-index-list-first" id="dispalyli"><span
+								class="items-title show-status-span">全部订单</span></li>
+
+							<li class="three-index-list-span three-index-list-old"><a
+								class="time-a" href="#">全部订单</a></li>
+							<li class="three-index-list-span"><a class="time-a" href="#">近三个月订单</a>
+							</li>
+							<li class="three-index-list-span"><a class="time-a" href="#">今年内订单</a>
+							</li>
+							<li class="three-index-list-span"><a class="time-a" href="#">2018年订单</a>
+							</li>
+							<li class="three-index-list-span"><a class="time-a" href="#">2017年订单</a>
+							</li>
+							<li class="three-index-list-span"><a class="time-a" href="#">2017年以前订单</a>
+							</li>
+						</ul> <input type="hidden" id="timeIndex" name="timeIndex" value="0" />
+					</li>
+
+					<li style="width: 281px; margin-left: 90px"
+						class="content-list-top-items"><span class="items-title">订单信息</span>
+					</li>
+					<li style="width: 153px; margin-left: 50px;"
+						class="content-list-top-items"><span class="items-title">金额</span>
+					</li>
+					<li style="width: 127px;"
+						class="content-list-top-items content-list-top-items2 status">
+						<span class="items-title show-status-title">全部状态 <i
+							id="displayi">+</i>
+					</span>
+						<ul class="three-indent-list display-status" id="displayul"
+							style="display: none">
+							<li class="three-indent-list-first" id="displayli"><span
+								class="items-title show-status-span">全部状态<i></i></span></li>
+							<li
+								class="three-indent-list-span three-indent-list-span2 three-indent-list-old three-indent-list-old2">
+								<a class="status-a" href="#order/statusIndex/a">全部状态</a>
+							</li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status0"
+								href="#order/statusIndex/proposal0">投保中</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status1" href="#order/statusIndex/topay1">待支付</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status4" href="#order/statusIndex/payed4">保单生成中</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status5" href="#order/statusIndex/payed5">未起保</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status6" href="#order/statusIndex/payed6">承保中</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status7" href="#order/statusIndex/payed7">已过期</a></li>
+							<li class="three-indent-list-span three-indent-list-span2"><a
+								class="status-a" id="status8" href="#order/statusIndex/payed8">已退保</a></li>
+						</ul> <input type="hidden" id="timeIndex" name="timeIndex" value="0" />
+					</li>
+					<li style="width: 100px;" class="content-list-top-items"><span
+						class="items-title">操作</span></li>
+				</ul>
+				<div id="midorder">
+					<div>
+						<div class="indent-list-box">
+							<div class="indent-list-top">
+								<div class="delete-btn">
+									<i></i>删除
+								</div>
+								<div class="remark-showDetails">
+									<p></p>
+								</div>
+								<span class="time-table">订单时间：</span> <span class="time-text">2019-4-28
+									14:44:16</span> <span class="indent-table">订单号码：</span> <span
+									class="indent-num">12353674</span>
+							</div>
+							<div class="indent-content-box-delete-box">
+								<ul class="indent-content-box indent-content-box-delete">
+									<div>
+										<li class="indent-list-li">
+											<div class="indent-state indent-state2">
+												<span>待支付</span>
+											</div>
+											<div class="indent-money indent-money2">
+												<span>￥175.54</span>
+											</div>
+											<div class="indent-img-box indent-img-box2">
+												<a href="#"> <img src="client_resources/img/JAB_A.jpg">
+												</a>
+											</div>
+											<div class="indent-font-list indent-font-list2">
+												<p>
+													<a href="#">家庭财产综合保险</a>
+												</p>
+												<p class="proposalno">
+													投保单号： <span style="color: rgb(51, 51, 51); cursor: auto;">431g13g14t14t1g1g</span>
+												</p>
+												<p style="word-break: break-all";>被保险人：[ [${insuranceList.insure_name}]]
+												</p>
+												<p>保险期间：2019-01-12至2020-02-11</p>
+											</div>
+										</li>
+									</div>
+								</ul>
+								<div class="revert-all2">
+									<i class="centrer-line"></i> <span class="pay-status">待支付</span>
+								</div>
+								<div class="revert-all1">
+									<i class="centrer-line"></i> <span class="price1">￥175.60</span>
+								</div>
+								<div class="revert-all">
+									<i class="centrer-line"></i>
+									<p class="fast-insure fast-insure1 mt0">立即支付</p>
+								</div>
+							</div>
+							<div class="indent-paging-box"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+      	</div>
+      
+      <!-- 菜单5结束 -->
     </div>
   </div>
 </div>
@@ -916,7 +1104,7 @@ try { trkIstDimention("eVar18", _value ); } catch (e) { }
 	var pNav = scroH+40;
 	//alert(navH);
 	//滚动条的滑动距离大于等于定位元素距离浏览器顶部的距离，就固定，反之就不固定 
-	if(scroH>=navH-40){ 
+	/* if(scroH>=navH-40){ 
 	//$(".productNav ").addClass('address'); 
 	$('.titleNav').show().addClass('price');
 	}else if(scroH<navH){ 
@@ -924,7 +1112,7 @@ try { trkIstDimention("eVar18", _value ); } catch (e) { }
 	$('.titleNav').hide().removeClass('price');
 	} 
 	}) 
-});
+}); */
 
 $(".productNav").click(function(){
 	if($(this).hasClass('address')){

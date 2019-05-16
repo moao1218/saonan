@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sao.mapper.CityMapper">
+        <select id="findallcity" parameterType="java.lang.String" resultType="cn.sao.pojo.City">
+        		SELECT code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city WHERE rlevel=2
+        </select>
+        
+  		<select id="findstreet" parameterType="java.lang.String" resultType="cn.sao.pojo.City">
+  				select code, country_code, region_name_e, region_name_c, rlevel, upper_region FROM city where upper_region=#{code};
+  		</select> 
+        
+</mapper>
