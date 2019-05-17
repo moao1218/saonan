@@ -21,14 +21,13 @@ public class MyMvcConfig implements WebMvcConfigurer{
 			  @Override public void addViewControllers(ViewControllerRegistry registry) {
 			  
 			  registry.addViewController("/").setViewName("server/login");
-			  registry.addViewController("/index.html").setViewName("server/login");
 			  
 			  }
 			 
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {
 				registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
-				.excludePathPatterns("/","/login.html","/login","/webjars/**","/asserts/**","/back/**","/images/**","/upload/**","/logout","/js/**","/getKeys");
+				.excludePathPatterns("/","/login.html","/login","/webjars/**","/asserts/**","/back/**","/images/**","/upload/**","/logout","/js/**","/getKeys","/weather","/image/**","/client_resources/**");
 			}
 			
 		};
