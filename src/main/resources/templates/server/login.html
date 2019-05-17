@@ -21,8 +21,10 @@
 				$.post("/getKeys",{},function(data){
 					publicKey=data;
 					encrypt.setPublicKey(publicKey);
+					alert("前台拿到的公钥"+data);
 					var encryptPwd=encrypt.encryptLong(pwd);
 					sform.userpwd.value=encryptPwd;
+					alert("密文"+sform.userpwd.value);
 					sform.submit();
 				},"json");
 			}

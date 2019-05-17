@@ -130,6 +130,7 @@ public class RSAImpl implements RSAInterface{
         byte[] decryptedData = out.toByteArray();
         out.close();
         // 解密后的内容 
+        System.out.println("new String(decryptedData, \"UTF-8\"):"+new String(decryptedData, "UTF-8"));
         return new String(decryptedData, "UTF-8");
     }
 	/**获取钥对
