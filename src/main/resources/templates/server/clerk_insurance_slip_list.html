@@ -69,24 +69,9 @@
 			$("#tianqi_temphigh").html(data.result.result.temphigh);
 			$("#tianqi_detail").html(data.result.result.index[0].detail);
 		},"json");
-		
-		
-		
-		 /* $("#splitPage li").click(function(){
-				var total = $("#totalpage").val();
-				console.log(num);
-				if(parseInt(num)<1){
-					alert("已经是第一页了!");
-				}else if(parseInt(num)>total){
-					alert("已经是最后一页了!")
-				}else{
-					sform.cp.value=num;
-					sform.submit();}		
-			}
-		)  */
 	});
   
-   
+  
   </script>
   <script type="application/javascript">
       $(document).ready(function() {
@@ -280,6 +265,7 @@
                     <td th:text="${alist.premium}"><i class=" fa fa-bookmark"></i>保费</td>
                     <td th:text="${alist.insure_name}"><i class=" fa fa-bookmark"></i>操作人</td>
                     <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
+                  </tr>
                   </tr>
                 </tbody>
               </table>

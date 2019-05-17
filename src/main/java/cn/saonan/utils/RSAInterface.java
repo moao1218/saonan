@@ -2,68 +2,67 @@ package cn.saonan.utils;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.List;
 import java.util.Map;
 
 public interface RSAInterface {
-	/**����
+	/**加密
 	 * 
-	 * @param ԭ����
-	 * @return ���ܺ�����
+	 * @param 原密码
+	 * @return 加密后密码
 	 * @throws Exception 
 	 * @throws Exception 
 	 */
 	public String getCode(String original,String commKey) throws Exception, Exception;
 	
-	/**��ԭ����
+	/**还原密码
 	 * 
-	 * @param ����
-	 * @return ԭ����
+	 * @param 密文
+	 * @return 原密码
 	 * @throws Exception 
 	 */
 	public String getOriginal(String code,String privaKey) throws Exception;
 	
-	/**�õ���˽Կ��
+	/**拿到公私钥对
 	 * 
-	 * @return ��Կ
+	 * @return 公钥
 	 */
 	public Map<Integer,String> getCommAndPrivaKey();
 	
-	/**��ȡժҪ��
+	/**获取摘要用
 	 * 
-	 * @param ԭ����
+	 * @param 原密码
 	 * @return
 	 */
 	public String getMD5Hash(String original);
 	
 	/**
-     * ǩ��
+     * 签名
      * 
-     * @param data ��ǩ������
-     * @param privateKey ˽Կ
-     * @return ǩ��
+     * @param data 待签名数据
+     * @param privateKey 私钥
+     * @return 签名
 	 * @throws Exception 
      */
 	public String sign(String data, PrivateKey privateKey) throws Exception;
 	
 	/**
-     * ��ȡ˽Կ
+     * 获取私钥
      * 
-     * @param privateKey ˽Կ�ַ���
+     * @param privateKey 私钥字符串
      * @return
 	 * @throws Exception 
      */
     public PrivateKey getPrivateKey(String privateKey) throws Exception;
     
     /**
-     * ��ȡ��Կ
+     * 获取公钥
      * 
-     * @param publicKey ��Կ�ַ���
+     * @param publicKey 公钥字符串
      * @return
      * @throws Exception 
      */
     public PublicKey getPublicKey(String publicKey) throws Exception;
-    /**��ǩ
+    /**验签
      * 
      * @param srcData
      * @param publicKey

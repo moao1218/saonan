@@ -33,7 +33,7 @@ public class ClientSocketImpl implements ClientSocketInterface {
 			InputStream is = socket.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			backMessige = br.readLine();
-			System.out.println("�ͻ��˵õ���������"+backMessige);
+			System.out.println("客户端得到的数据是"+backMessige);
 			
 			
 			socket.close(); 
