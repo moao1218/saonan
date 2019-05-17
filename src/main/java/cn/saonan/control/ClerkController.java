@@ -70,7 +70,7 @@ public class ClerkController {
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-			if(roleid==11) {
+			if(roleid==12) {
 				//v_role => 只能看1状态的
 				map.put("v_city", v_city);
 			}else {
@@ -174,7 +174,20 @@ public class ClerkController {
 	//详情
 	@RequestMapping(value="/clerkdetail")
 	public String detallsclerk(Model model,HttpServletRequest request,HttpServletResponse response) {
-		  Map<String,Object> map = new HashMap<String,Object>(); 
+		 
+		
+		
+		String pid = request.getParameter("pid");
+		Integer magid = Integer.parseInt(pid);
+		Clerk findaclerk = clerkservice.findaclerk(magid);
+		model.addAttribute("findaclerk", findaclerk);
+		return "server/clerk_Details";
+	}
+	
+	//注册页面跳转
+	@RequestMapping(value="/addclerk")
+	public String addclerk(Model model,HttpServletRequest request,HttpServletResponse response) {
+		 Map<String,Object> map = new HashMap<String,Object>(); 
 
 		 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
 			//获取城市信息
@@ -198,19 +211,6 @@ public class ClerkController {
 					e.printStackTrace();
 				}
 			}
-		
-		
-		String pid = request.getParameter("pid");
-		Integer magid = Integer.parseInt(pid);
-		Clerk findaclerk = clerkservice.findaclerk(magid);
-		model.addAttribute("findaclerk", findaclerk);
-		return "server/clerk_Details";
-	}
-	
-	//注册页面跳转
-	@RequestMapping(value="/addclerk")
-	public String addclerk(Model model) {
-		
 		
 		List<City> cityList = usersService.findAllCity();
 		model.addAttribute("cityList", cityList);
