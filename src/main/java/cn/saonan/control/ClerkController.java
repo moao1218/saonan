@@ -22,11 +22,15 @@ import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
+import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.ClerkService;
 import cn.saonan.service.InsuranceSlipService;
+import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.RolessService;
 import cn.saonan.service.UsersService;
 import cn.saonan.utils.IdCard;
+import cn.saonan.utils.impl.BCryptImpl;
+import cn.saonan.utils.impl.RSAImpl;
 
 
 
@@ -37,6 +41,9 @@ public class ClerkController {
 
 	@Autowired
 	private ClerkService clerkservice;
+	
+	@Autowired
+	private PolicyVerifyService pvs;
 	
 	@Autowired
 	private UsersService usersService ;
@@ -83,7 +90,7 @@ public class ClerkController {
 		  int ps =5;
 		  
 		  String cpp = request.getParameter("cp");
-			
+		
 			if(cpp!=null&&!"".equals(cpp)){
 				cp = Integer.parseInt(cpp);
 			}
@@ -150,7 +157,15 @@ public class ClerkController {
 	
 	//注册
 	@RequestMapping(value="/addclerkses")
-	public String addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public void addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		String pwd = request.getParameter("userpwd");
+		System.out.println("注册获取密码："+pwd);
+		RSAImpl rsa=new RSAImpl();
+		BCryptImpl bc=new BCryptImpl();
+		String userpwd=bc.getCode(pwd, 12);
+		clerk.setUserpwd(userpwd);
+		System.out.println("密文："+userpwd);
+		
 		String rolei = request.getParameter("roleid");
 		int roleid = Integer.parseInt(rolei);
 		String job = rolessservice.findjob(roleid);
@@ -160,11 +175,16 @@ public class ClerkController {
 		city.setCode(area);
 		clerk.setCity(city);
 		boolean docreate = clerkservice.docreate(clerk);
+		System.out.println("注册："+docreate);
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
 		if(docreate==true) {
-			return "forward:/findClerkSplits";
+			out.write("<script>alert('注册成功');location='/findClerkSplits';</script>");
 		}else {
-			return "server/clerk_addClerk";
+			out.write("<script>alert('注册失败');location='server/clerk_addClerk';</script>");
 		}
+		out.flush();
+		out.close();
 	}
 	
 	
@@ -243,9 +263,30 @@ public class ClerkController {
 		return "server/clerk_update.html";
 	}
 	
+	//新旧密码验证
+	@ResponseBody
+	@RequestMapping(value="/checkoldpwd")
+	public boolean checkoldpwd(HttpServletRequest request) {
+		String magidd = request.getParameter("magid");
+		Integer magid = Integer.parseInt(magidd);
+		Clerk clerk = clerkservice.findaclerk(magid);
+		String userpwd = clerk.getUserpwd();
+		System.out.println("得到旧密码："+userpwd);
+		
+		
+		String oldpwd = request.getParameter("oldpwd");
+		System.out.println("拿到页面的pwd："+oldpwd);
+		RSAImpl rsa=new RSAImpl();
+		BCryptImpl bc=new BCryptImpl();
+		boolean checkMatch = bc.checkMatch(oldpwd, userpwd);
+		return checkMatch;
+	}
+	
 	//修改
 	@RequestMapping(value="/xiugai")
 	public void xiugai( Clerk clerk,Model model,HttpServletRequest request,HttpServletResponse response) throws IOException {
+		
+		
 		String magidd = request.getParameter("magid");
 		Integer magid = Integer.parseInt(magidd);
 		clerk.setMagid(magid);
@@ -257,11 +298,19 @@ public class ClerkController {
 		City city = new City() ;
 		city.setCode(area);
 		clerk.setCity(city);
+		
+		String pwd = request.getParameter("userpwd");
+		RSAImpl rsa=new RSAImpl();
+		BCryptImpl bc=new BCryptImpl();
+		String userpwd=bc.getCode(pwd, 12);
+		clerk.setUserpwd(userpwd);
+		
+		
 		boolean clerkupdate = clerkservice.clerkupdate(clerk);
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		if(clerkupdate==true) {
-			out.write("<script>alert('修改成功'); location.href = \"/update?pid=\"+pid;</script>");
+			out.write("<script>alert('修改成功'); location.href ='/findClerkSplits';</script>");
 		}else {
 			out.write("<script>alert('修改失败');location='/xiugai';</script>");
 		}
@@ -286,8 +335,40 @@ public class ClerkController {
 		if(pss!=null&&!"".equals(pss)){
 			ps = Integer.parseInt(pss);
 		}
+		
+		String v_id = request.getParameter("v_id");
+		String v_name = request.getParameter("v_name");
+		String v_lopremium = request.getParameter("v_lopremium");
+		String v_hipremium = request.getParameter("v_hipremium");
+		String v_area = request.getParameter("v_area");
+		String v_lojoindate = request.getParameter("v_lojoindate");
+		String v_hijoindate = request.getParameter("v_hijoindate");
+		String v_coverageid = request.getParameter("v_coverageid");
+		String v_status = request.getParameter("v_status");
+		String v_property = request.getParameter("v_property");
+		String v_order = request.getParameter("v_order");
+		
+		System.out.println(v_area);
+		
 		map.put("cp", cp);
 		map.put("ps", ps);
+		map.put("v_id", v_id);
+		map.put("v_name", v_name);
+		map.put("v_lopremium", v_lopremium);
+ 		map.put("v_hipremium", v_hipremium);
+		map.put("v_area", v_area);
+		map.put("v_lojoindate", v_lojoindate);
+		map.put("v_hijoindate", v_hijoindate);
+		map.put("v_coverageid", v_coverageid);
+		
+		System.out.println(v_status);
+		if(v_status != null && !"".equals(v_status)) {
+			map.put("v_status", Integer.parseInt(v_status));
+		}
+		
+		map.put("v_property", v_property);
+		map.put("v_property", v_property);
+		map.put("v_order", v_order);
 		insuranceSlipService.findInsuranceSlipList(map);
 		List<InsuranceSlip> insureList = (List<InsuranceSlip>) map.get("insureList");
 		
@@ -316,8 +397,24 @@ public class ClerkController {
 		model.addAttribute("totalpage", totalpage);
 		model.addAttribute("cityList", cityList);
 		model.addAttribute("coverageList", coverageList);
+		
+		model.addAttribute("v_id", v_id);
+		model.addAttribute("v_name", v_name);
+		model.addAttribute("v_lopremium", v_lopremium);
+ 		model.addAttribute("v_hipremium", v_hipremium);
+		model.addAttribute("v_area", v_area);
+		model.addAttribute("v_lojoindate", v_lojoindate);
+		model.addAttribute("v_hijoindate", v_hijoindate);
+		model.addAttribute("v_coverageid", v_coverageid);
+		model.addAttribute("v_status", v_status);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_order", v_order);
 		return "server/clerk_insurance_slip_list";
 	}
+	
+	
+		
 	
 	//身份验证
 	/*
