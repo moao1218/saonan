@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.saonan.pojo.Clerk;
@@ -32,7 +33,7 @@ public class UsersController {
 	private RSAInterface rSAInterface;
 	
 	static Map<Integer,String> map;
-	@GetMapping(value="/")
+	@RequestMapping(value="/")
 	public String login() {
 		return "server/login";
 	}
@@ -42,7 +43,7 @@ public class UsersController {
 //		return "server/index";
 //	}
 
-	@PostMapping(value="/login")
+	@RequestMapping(value="/login")
 	public String isLogin(Clerk user,HttpSession session) throws Exception {
 //		System.out.println("公钥"+map.get(0));
 //		System.out.println("私钥"+map.get(1));
@@ -58,14 +59,14 @@ public class UsersController {
 		
 	}
 	
-	@GetMapping(value="/logout")
+	@RequestMapping(value="/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");
 		return "server/login";
 	}
 	
 	@ResponseBody
-	@PostMapping(value="/weather")
+	@RequestMapping(value="/weather")
 	public String weather(HttpServletRequest request) throws Exception {
 		
 		/*
@@ -96,7 +97,7 @@ public class UsersController {
 		return b.toString();
 	}
 	@ResponseBody
-	@PostMapping("/getKeys")
+	@RequestMapping("/getKeys")
 	public String getKeys() {
 		map=rSAInterface.getCommAndPrivaKey();
 		String publicKeys=map.get(0);
