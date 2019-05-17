@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.sao.pojo.Users;
 import cn.sao.service.impl.UsersServiceImpl;
@@ -16,12 +17,12 @@ public class UsersController {
 	@Autowired
 	private UsersServiceImpl userServiceImpl;
 	
-	@GetMapping(value = "/")
+	@RequestMapping(value = "/")
 	public String login() {
 		return "client/login";
 	}
 	
-	@GetMapping("/islogin")
+	@RequestMapping("/islogin")
 	public String isLogin(Users users,HttpServletRequest request) {
 		Users u = userServiceImpl.isLogin(users);
 		if (u!=null) {
@@ -32,7 +33,7 @@ public class UsersController {
 		}
 	}
 	
-	@PostMapping(value = "/login")
+	@RequestMapping(value = "/login")
 	public String login(Users users,HttpServletRequest request) {
 		Users u = userServiceImpl.Login(users);
 		if (u!=null) {
@@ -43,12 +44,12 @@ public class UsersController {
 	}
 	
 	//预注册
-	@GetMapping(value="/prereg")
+	@RequestMapping(value="/prereg")
 	public String prereg() {
 		return "client/reg";
 	}
 	
-	@PostMapping("/reg")
+	@RequestMapping("/reg")
 	public String reg(Users users,HttpServletRequest request) {
 		System.out.println("users:"+users);
 		boolean flag = userServiceImpl.addUser(users);
@@ -58,12 +59,12 @@ public class UsersController {
 		return "client/reg";
 	}
 	
-	@GetMapping(value="/claim")
+	@RequestMapping(value="/claim")
 	public String claim() {
 		return "client/claim";
 	}
 	
-	@GetMapping(value = "/myorder")
+	@RequestMapping(value = "/myorder")
 	public String myorder() {
 		return "client/myorder";
 	}

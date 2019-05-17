@@ -18,12 +18,6 @@ public class MyMvcConfig implements WebMvcConfigurer{
 	public WebMvcConfigurer webMvcConfigurer() {
 		WebMvcConfigurer adapter = new WebMvcConfigurer() {
 			
-			  @Override public void addViewControllers(ViewControllerRegistry registry) {
-			  
-			  registry.addViewController("/").setViewName("server/login");
-			  
-			  }
-			 
 			@Override
 			public void addInterceptors(InterceptorRegistry registry) {
 				registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")

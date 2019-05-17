@@ -22,13 +22,11 @@ import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
-import cn.saonan.pojo.PolicyVerify;
 import cn.saonan.service.ClerkService;
 import cn.saonan.service.InsuranceSlipService;
 import cn.saonan.service.PolicyVerifyService;
 import cn.saonan.service.RolessService;
 import cn.saonan.service.UsersService;
-import cn.saonan.utils.IdCard;
 import cn.saonan.utils.impl.BCryptImpl;
 import cn.saonan.utils.impl.RSAImpl;
 
@@ -53,9 +51,37 @@ public class ClerkController {
 
 	//分页展示
 	@RequestMapping(value="/findClerkSplits")
-	public String findClerkSplits(Model model) {
+	public String findClerkSplits(Model model,HttpServletRequest request,HttpServletResponse response) {
 		
 		  Map<String,Object> map = new HashMap<String,Object>(); 
+		  
+		  Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			//获取城市信息
+			String v_city = clerk.getCity().getCode();
+			
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+			if(roleid==12) {
+				//v_role => 只能看1状态的
+				map.put("v_city", v_city);
+			}else {
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		  
+		  
+		  
+		  
+		  
 		  int cp = 1; 
 		  int ps =5;
 		  
@@ -140,6 +166,9 @@ public class ClerkController {
 	//详情
 	@RequestMapping(value="/clerkdetail")
 	public String detallsclerk(Model model,HttpServletRequest request) {
+		
+		
+		
 		String pid = request.getParameter("pid");
 		Integer magid = Integer.parseInt(pid);
 		Clerk findaclerk = clerkservice.findaclerk(magid);
@@ -149,7 +178,31 @@ public class ClerkController {
 	
 	//注册页面跳转
 	@RequestMapping(value="/addclerk")
-	public String addclerk(Model model) {
+	public String addclerk(Model model,HttpServletRequest request,HttpServletResponse response) {
+		  Map<String,Object> map = new HashMap<String,Object>(); 
+			 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+				//获取城市信息
+				String v_city = clerk.getCity().getCode();
+				
+				//我是从登陆信息从拿到的角色ID
+				Integer roleid = clerk.getRoleid();
+				//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+				if(roleid==12) {
+					//v_role => 只能看1状态的
+					map.put("v_city", v_city);
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('您没有访问的权限！');"
+								+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+		
 		List<City> cityList = usersService.findAllCity();
 		model.addAttribute("cityList", cityList);
 			return "server/clerk_addClerk";
@@ -158,6 +211,11 @@ public class ClerkController {
 	//注册
 	@RequestMapping(value="/addclerkses")
 	public void addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		
+		
+		
+		
+		
 		String pwd = request.getParameter("userpwd");
 		System.out.println("注册获取密码："+pwd);
 		RSAImpl rsa=new RSAImpl();
@@ -320,8 +378,32 @@ public class ClerkController {
 	
 	//投保单查询
 	@RequestMapping(value="/jumpIscList")
-	public String goList(Model model,HttpServletRequest request) throws ParseException {
-		Map<String,Object> map = new HashMap<String,Object>();
+	public String goList(Model model,HttpServletRequest request,HttpServletResponse response) throws ParseException {
+		 Map<String,Object> map = new HashMap<String,Object>(); 
+		 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			//获取城市信息
+			String v_city = clerk.getCity().getCode();
+			
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+			if(roleid==12) {
+				//v_role => 只能看1状态的
+				map.put("v_city", v_city);
+			}else {
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		
+		
 		int cp = 1;
 		int ps = 5;
 		
