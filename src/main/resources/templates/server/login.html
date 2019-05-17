@@ -20,10 +20,8 @@
 				//获取公钥
 				$.post("/getKeys",{},function(data){
 					publicKey=data;
-					alert(publicKey);
 					encrypt.setPublicKey(publicKey);
 					var encryptPwd=encrypt.encryptLong(pwd);
-					alert(encryptPwd);
 					sform.userpwd.value=encryptPwd;
 					sform.submit();
 				},"json");
