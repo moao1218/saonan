@@ -264,6 +264,7 @@ public class ClerkController {
 	}
 	
 	//新旧密码验证
+	@ResponseBody
 	@RequestMapping(value="/checkoldpwd")
 	public boolean checkoldpwd(HttpServletRequest request) {
 		String magidd = request.getParameter("magid");

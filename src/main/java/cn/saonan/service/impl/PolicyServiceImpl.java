@@ -27,4 +27,10 @@ public class PolicyServiceImpl implements PolicyService {
 		return policyMapper.findPolicyById(policyId);
 	}
 
+	@Override
+	public boolean insertPolicy(Map<String, Object> map) {
+		
+		return policyMapper.insertPolicy(map);
+	}
+
 }

@@ -44,8 +44,8 @@ public class UsersController {
 
 	@PostMapping(value="/login")
 	public String isLogin(Clerk user,HttpSession session) throws Exception {
-		System.out.println("公钥"+map.get(0));
-		System.out.println("私钥"+map.get(1));
+//		System.out.println("公钥"+map.get(0));
+//		System.out.println("私钥"+map.get(1));
 		System.out.println(user.getUserpwd());
 		boolean check = usersService.isLogin(user,map.get(1));
 		if(check==true) {

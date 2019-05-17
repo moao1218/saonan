@@ -88,23 +88,6 @@
 <script type="text/javascript">
 /* var flag =false;
 var flag2 = false; */
-/* function checkoldpwd()(){
-	var oldpwd = $("#userpwd").val();
-	var magid = $("#magid").val();
-	$.post("/checkoldpwd",{"oldpwd":oldpwd,"magid":magid},function(data){
-		if(data==true){
-			$("#checkoldpwd").html("<font color='green' >密码正确</font>");
-			flag = false;
-			return flag;
-		}else{
-			$("#checkoldpwd").html("<font color='red' >密码错误</font>");
-			flag =true;
-			return flag;
-		}
-		
-	},"json");
-});
-} */
 
 
 function checkpwd(){
@@ -167,6 +150,27 @@ function checkpwd(){
   			return false;
   		}
   	}
+	
+	
+	function checkoldpwd()(){
+	var oldpwd = $("#userpwd").val();
+	var magid = $("#magid").val();
+	$.post("/checkoldpwd",{"oldpwd":oldpwd,"magid":magid},function(data){
+		if(data==true){
+			$("#checkoldpwd").html("<font color='green' >密码正确</font>");
+			flag = false;
+			return flag;
+		}else{
+			$("#checkoldpwd").html("<font color='red' >密码错误</font>");
+			flag =true;
+			return flag;
+		}
+		
+	},"json");
+});
+} 
+
+	
 
   	 function succ(){
   		return checkpwd()&&reppwd()&&checkphone()&&isemail()&&isemergency();
@@ -229,16 +233,16 @@ function checkpwd(){
 			      <td></td>
 			    </tr>
 			    
-			    <!-- <tr>
+			   <!--   <tr>
 			      <th scope="row">输入员工旧密码</th>
 			     	<td> <input  type="password" id="pwd" name="pwd" onchange="checkoldpwd()"/>
 			     	<span id="checkoldpwd"></span></td>
-			    </tr>
-			     -->
+			    </tr> -->
+			     
 			    
 			    
 			    <tr>
-			      <th scope="row">员工密码</th>
+			      <th scope="row">新的员工密码</th>
 			      
 			      <td><input type="text" name="userpwd" id="userpwd" onchange="checkpwd()"/>
 			      <span id="pwdspan"></span>

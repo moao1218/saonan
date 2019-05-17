@@ -11,10 +11,17 @@ public class BlackList implements Serializable {
 	
 	private String userid;
 	private String blname; 
-	private String l_card; 
+	private String bl_card; 
 	private String operator_user; 
 	private String black_description; 
 	private String del_status;
+	
+	public String getBl_card() {
+		return bl_card;
+	}
+	public void setBl_card(String bl_card) {
+		this.bl_card = bl_card;
+	}
 	public String getUserid() {
 		return userid;
 	}
@@ -26,12 +33,6 @@ public class BlackList implements Serializable {
 	}
 	public void setBlname(String blname) {
 		this.blname = blname;
-	}
-	public String getL_card() {
-		return l_card;
-	}
-	public void setL_card(String l_card) {
-		this.l_card = l_card;
 	}
 	public String getOperator_user() {
 		return operator_user;
