@@ -40,6 +40,33 @@ public class PolicyController {
 			cp = Integer.parseInt(ccp);
 		}
 		
+		String v_id = request.getParameter("v_id");
+		String v_name = request.getParameter("v_name");
+		String v_lopremium = request.getParameter("v_lopremium");
+		String v_hipremium = request.getParameter("v_hipremium");
+		String v_area = request.getParameter("v_area");
+		String v_lojoindate = request.getParameter("v_lojoindate");
+		String v_hijoindate = request.getParameter("v_hijoindate");
+		String v_coverageid = request.getParameter("v_coverageid");
+		String v_date = request.getParameter("v_date");
+		String v_property = request.getParameter("v_property");
+		String v_order = request.getParameter("v_order");
+		
+		map.put("cp", cp);
+		map.put("ps", ps);
+		map.put("v_id", v_id);
+		map.put("v_name", v_name);
+		map.put("v_lopremium", v_lopremium);
+ 		map.put("v_hipremium", v_hipremium);
+		map.put("v_area", v_area);
+		map.put("v_lojoindate", v_lojoindate);
+		map.put("v_hijoindate", v_hijoindate);
+		map.put("v_coverageid", v_coverageid);
+		map.put("v_date", v_date);
+		map.put("v_property", v_property);
+		map.put("v_property", v_property);
+		map.put("v_order", v_order);
+		
 		map.put("cp", cp);
 		map.put("ps", ps);
 		
@@ -61,6 +88,19 @@ public class PolicyController {
 		model.addAttribute("cityList", cityList);
 		model.addAttribute("coverageList", coverageList);
 		model.addAttribute("cp", cp);
+		
+		model.addAttribute("v_id", v_id);
+		model.addAttribute("v_name", v_name);
+		model.addAttribute("v_lopremium", v_lopremium);
+ 		model.addAttribute("v_hipremium", v_hipremium);
+		model.addAttribute("v_area", v_area);
+		model.addAttribute("v_lojoindate", v_lojoindate);
+		model.addAttribute("v_hijoindate", v_hijoindate);
+		model.addAttribute("v_coverageid", v_coverageid);
+		model.addAttribute("v_date", v_date);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_property", v_property);
+		model.addAttribute("v_order", v_order);
 		
 		return "server/policy_list";
 	}
