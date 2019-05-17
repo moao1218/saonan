@@ -395,6 +395,8 @@ public class InsureController {
 				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
 				change = pid;
 			}
+			List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
+			model.addAttribute("pvList", pvList);
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_Accept";
 		}else if(roleid==2) {
@@ -410,6 +412,8 @@ public class InsureController {
 				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
 				change = pid;
 			}
+			List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
+			model.addAttribute("pvList", pvList);
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_second_accept";
 		}else {
@@ -425,6 +429,8 @@ public class InsureController {
 				redisUtil.lRemove("plist", 1, JsonUtil.objectToJson(insurance));
 				change = pid;
 			}
+			List<PolicyVerify> pvList = pvs.findPolicyVerifyByPolicyId(pid);
+			model.addAttribute("pvList", pvList);
 			model.addAttribute("insurance", insurance);
 			return "server/insurance_second_accept";
 		}
@@ -445,7 +451,36 @@ public class InsureController {
 		//判断操作的用户是谁,让后进行相应的操作
 		if("1".equals(flag)) {
 			System.out.println("========================熊蕃猛===================================");
-			if(roleid==2) {
+			if(roleid==1) {
+				//一审通过
+				map.put("newstatus", 5);
+				map.put("policyid", pid);
+				boolean b = insuranceSlipService.updateInsuranceStatus(map);
+				if(b) {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作成功');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('操作失败');"
+								+ "window.location='/jumpPending';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}else if(roleid==2) {
 				//二审通过
 				map.put("newstatus", 9);
 				map.put("policyid", pid);
@@ -479,7 +514,7 @@ public class InsureController {
 				map.put("newstatus", 13);
 				map.put("policyid", pid);
 				boolean b = insuranceSlipService.updateInsuranceStatus(map);
-
+				
 				
 				if(b) {
 					//三审通过则要将投保单中的信息填入保单中
@@ -535,7 +570,36 @@ public class InsureController {
 			}
 
 		}else {
-			if(roleid==2) {
+			if(roleid==1) {
+					//一审不通过
+					map.put("newstatus", 6);
+					map.put("policyid", pid);
+					boolean b = insuranceSlipService.updateInsuranceStatus(map);
+					if(b) {
+						try {
+							
+							response.setContentType("text/html;charset=utf-8");
+							response.getWriter().write( "<script>alert('操作成功');"
+									+ "window.location='/jumpPending';window.close();</script>"); 
+							response.getWriter().flush();
+							
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}else {
+						try {
+							
+							response.setContentType("text/html;charset=utf-8");
+							response.getWriter().write( "<script>alert('操作失败');"
+									+ "window.location='/jumpPending';window.close();</script>"); 
+							response.getWriter().flush();
+							
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				
+			}else if(roleid==2) {
 				//二审不通过
 				map.put("newstatus", 10);
 				map.put("policyid", pid);
