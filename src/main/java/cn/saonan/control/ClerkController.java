@@ -327,6 +327,7 @@ public class ClerkController {
 		
 		
 		String userpwd = clerk.getUserpwd();
+		
 		System.out.println("得到旧密码："+userpwd);
 		
 		
