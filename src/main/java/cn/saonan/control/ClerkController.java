@@ -52,15 +52,6 @@ public class ClerkController {
 	//分页展示
 	@RequestMapping(value="/findClerkSplits")
 	public String findClerkSplits(Model model,HttpServletRequest request,HttpServletResponse response) {
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		  Map<String,Object> map = new HashMap<String,Object>(); 
 		  
 		  Clerk clerk = (Clerk) request.getSession().getAttribute("user");
@@ -330,8 +321,11 @@ public class ClerkController {
 	@RequestMapping(value="/checkoldpwd")
 	public boolean checkoldpwd(HttpServletRequest request) {
 		String magidd = request.getParameter("magid");
+		
 		Integer magid = Integer.parseInt(magidd);
 		Clerk clerk = clerkservice.findaclerk(magid);
+		
+		
 		String userpwd = clerk.getUserpwd();
 		System.out.println("得到旧密码："+userpwd);
 		
