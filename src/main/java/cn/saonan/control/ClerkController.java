@@ -53,6 +53,14 @@ public class ClerkController {
 	@RequestMapping(value="/findClerkSplits")
 	public String findClerkSplits(Model model,HttpServletRequest request,HttpServletResponse response) {
 		
+		
+		
+		
+		
+		
+		
+		
+		
 		  Map<String,Object> map = new HashMap<String,Object>(); 
 		  
 		  Clerk clerk = (Clerk) request.getSession().getAttribute("user");
@@ -62,7 +70,7 @@ public class ClerkController {
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-			if(roleid==12) {
+			if(roleid==11) {
 				//v_role => 只能看1状态的
 				map.put("v_city", v_city);
 			}else {
@@ -165,8 +173,31 @@ public class ClerkController {
 	
 	//详情
 	@RequestMapping(value="/clerkdetail")
-	public String detallsclerk(Model model,HttpServletRequest request) {
-		
+	public String detallsclerk(Model model,HttpServletRequest request,HttpServletResponse response) {
+		  Map<String,Object> map = new HashMap<String,Object>(); 
+
+		 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			//获取城市信息
+			String v_city = clerk.getCity().getCode();
+			
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+			if(roleid==11) {
+				//v_role => 只能看1状态的
+				map.put("v_city", v_city);
+			}else {
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		
 		
 		String pid = request.getParameter("pid");
@@ -178,30 +209,8 @@ public class ClerkController {
 	
 	//注册页面跳转
 	@RequestMapping(value="/addclerk")
-	public String addclerk(Model model,HttpServletRequest request,HttpServletResponse response) {
-		  Map<String,Object> map = new HashMap<String,Object>(); 
-			 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-				//获取城市信息
-				String v_city = clerk.getCity().getCode();
-				
-				//我是从登陆信息从拿到的角色ID
-				Integer roleid = clerk.getRoleid();
-				//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-				if(roleid==12) {
-					//v_role => 只能看1状态的
-					map.put("v_city", v_city);
-				}else {
-					try {
-						
-						response.setContentType("text/html;charset=utf-8");
-						response.getWriter().write( "<script>alert('您没有访问的权限！');"
-								+ "window.location='/jumpInsuranceList';window.close();</script>"); 
-						response.getWriter().flush();
-						
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+	public String addclerk(Model model) {
+		
 		
 		List<City> cityList = usersService.findAllCity();
 		model.addAttribute("cityList", cityList);
@@ -211,11 +220,6 @@ public class ClerkController {
 	//注册
 	@RequestMapping(value="/addclerkses")
 	public void addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		
-		
-		
-		
-		
 		String pwd = request.getParameter("userpwd");
 		System.out.println("注册获取密码："+pwd);
 		RSAImpl rsa=new RSAImpl();
@@ -378,32 +382,10 @@ public class ClerkController {
 	
 	//投保单查询
 	@RequestMapping(value="/jumpIscList")
-	public String goList(Model model,HttpServletRequest request,HttpServletResponse response) throws ParseException {
-		 Map<String,Object> map = new HashMap<String,Object>(); 
-		 Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-			//获取城市信息
-			String v_city = clerk.getCity().getCode();
-			
-			//我是从登陆信息从拿到的角色ID
-			Integer roleid = clerk.getRoleid();
-			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-			if(roleid==12) {
-				//v_role => 只能看1状态的
-				map.put("v_city", v_city);
-			}else {
-				try {
-					
-					response.setContentType("text/html;charset=utf-8");
-					response.getWriter().write( "<script>alert('您没有访问的权限！');"
-							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
-					response.getWriter().flush();
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	public String goList(Model model,HttpServletRequest request) throws ParseException {
 		
 		
+		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
 		
