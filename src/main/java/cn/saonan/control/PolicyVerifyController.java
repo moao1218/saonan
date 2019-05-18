@@ -220,7 +220,7 @@ public class PolicyVerifyController {
 		String num = request.getParameter("num");
 		for (int i = 1; i < Integer.parseInt(num); i++) {
 			long currentTimeMillis = System.currentTimeMillis();
-			int r = new Random().nextInt(8999)+1000;
+			int r = new Random().nextInt(3999)+1000;
 			pv.setPol_ver_id(""+currentTimeMillis+r);
 			
 			if(req.getFile("a_pic"+i)!=null&&!"".equals(req.getFile("a_pic"+i))) {

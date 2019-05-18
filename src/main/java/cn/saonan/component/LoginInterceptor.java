@@ -10,11 +10,20 @@ public class LoginInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		
 		Object user = request.getSession().getAttribute("user");
+		String uri = request.getRequestURI();
+		String contextpath = request.getContextPath();
+		String requestname = uri.substring(contextpath.length()+1);//获取当前请求的名字
+		System.out.println(requestname);
 		if(user == null) {
-			request.setAttribute("msg", "没有权限请登录！");
-			request.getRequestDispatcher("/").forward(request, response);
-			return false;
+			if("/".equals(requestname)) {
+				return true;
+			}else {
+				request.setAttribute("msg", "没有权限请登录！");
+				request.getRequestDispatcher("/").forward(request, response);
+				return false;
+			}
 		}else {
 			return true;
 		}

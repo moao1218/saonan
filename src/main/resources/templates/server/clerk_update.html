@@ -89,11 +89,12 @@
 /* var flag =false;
 var flag2 = false; */
 
-
 function checkpwd(){
 		var pwd = $("#userpwd").val();
 		var reg = /^((?=.*\d)(?=.*\D)|(?=.*[a-zA-Z])(?=.*[^a-zA-Z]))^.{8,16}$/;
 		//只有数字和字母
+		if(pwd!=null){
+			
 		if(reg.test(pwd)){
 			$("#pwdspan").html("<font color='green' >合法</font>");
 			return true;
@@ -102,10 +103,13 @@ function checkpwd(){
 			return false;
 		}
 	}
+}
+
 
 	function reppwd(){
 		var repwd = $("#reppw").val();
 		var pwd = $("#userpwd").val();
+		
 		if(repwd==pwd){
 			$("#reppwdspan").html("<font color='green' size='2' ><b>合法</b></font>");
 			return true;
@@ -152,7 +156,7 @@ function checkpwd(){
   	}
 	
 	
-	function checkoldpwd()(){
+	function checkoldpwd(){
 	var oldpwd = $("#userpwd").val();
 	var magid = $("#magid").val();
 	$.post("/checkoldpwd",{"oldpwd":oldpwd,"magid":magid},function(data){
@@ -167,13 +171,12 @@ function checkpwd(){
 		}
 		
 	},"json");
-});
-} 
+	}  
 
 	
 
   	 function succ(){
-  		return checkpwd()&&reppwd()&&checkphone()&&isemail()&&isemergency();
+  		return checkpwd()&&reppwd()&&checkphone()&&isemail()&&isemergency()&&checkoldpwd();
   	}
 
 
@@ -210,7 +213,7 @@ function checkpwd(){
     <!--main content start-->
     <section id="main-content">
      <section class="wrapper">
-     <form action="/xiugai" method="post" name="myform" id="myform"  >	
+     <form action="/xiugai" method="post" name="myform" id="myform" onsubmit="return succ()" >	
      <input type="hidden" th:value="${findaclerk.magid}" name="magid" id="magid"/>
         <div class="row">
 			<table class="table table-striped">
@@ -233,24 +236,24 @@ function checkpwd(){
 			      <td></td>
 			    </tr>
 			    
-			   <!--   <tr>
+			    <tr>
 			      <th scope="row">输入员工旧密码</th>
-			     	<td> <input  type="password" id="pwd" name="pwd" onchange="checkoldpwd()"/>
+			     	<td> <input  type="password" id="oldpwd" name="oldpwd" onchange="checkoldpwd()"/>
 			     	<span id="checkoldpwd"></span></td>
-			    </tr> -->
+			    </tr> 
 			     
 			    
 			    
 			    <tr>
 			      <th scope="row">新的员工密码</th>
 			      
-			      <td><input type="text" name="userpwd" id="userpwd" onchange="checkpwd()"/>
+			      <td><input type="password" name="userpwd" id="userpwd" onchange="checkpwd()"/>
 			      <span id="pwdspan"></span>
 			      </td>
 			    </tr>
 			    <tr>
 			      <th scope="row">确认密码</th>
-			      <td><input type="text"  id="reppw" name="reppw" onchange="reppwd()"/>
+			      <td><input type="password"  id="reppw" name="reppw" onchange="reppwd()"/>
 			       <span id="reppwdspan"></span>
 			      </td>
 			    </tr>
