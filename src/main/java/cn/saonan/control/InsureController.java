@@ -723,7 +723,7 @@ public class InsureController {
 		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
 		if(roleid==1) {
 			//v_role => 只能看1状态的
-			v_role = "2,3,4";
+			v_role = "2,4";
 			map.put("v_city", v_city);
 			map.put("v_role", v_role);
 		}else if(roleid==2) {

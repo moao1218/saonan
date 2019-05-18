@@ -255,21 +255,21 @@ i<!DOCTYPE html>
 			    </tbody>
 			</table>
 			
-			<div style="margin-left: 200px" id="assign1" th:if="${insurance.status.statusid==1}">
+			<div style="margin-left: 200px" id="assign1" th:if="${insurance.status.statusid==1||insurance.status.statusid==2}">
 			   <button type="button" class="btn btn-danger" th:onclick="assignGuide([[${insurance.policyid}]])">分派专业指导人员</button>
 			   <select name="guide" id="guide" style="display:none">
 				</select>
 			   
 			</div>
-			<div style="margin-left: 200px" id="assign2" th:if="${insurance.status.statusid==1}">
+			<div style="margin-left: 200px" id="assign2" th:if="${insurance.status.statusid==1||insurance.status.statusid==2}">
 			   <button type="button" class="btn btn-success" th:onclick="assignScout([[${insurance.policyid}]])">分派现场勘察人员</button>
 			   <select name="scout" id="scout" style="display:none">
 				</select>
 			</div>
 			
 			<div style="margin-left: 400px" id="assign2" th:if="${insurance.status.statusid==4}">
-			   <button type="button" class="btn btn-success" th:onclick="putin3(1)">通过</button>
-			   <button type="button" class="btn btn-success" th:onclick="putin3(2)">不通过</button>
+			   <button type="button" class="btn btn-success" th:onclick="putin3('1')">通过</button>
+			   <button type="button" class="btn btn-success" th:onclick="putin3('2')">不通过</button>
 			</div>
 			
 			
