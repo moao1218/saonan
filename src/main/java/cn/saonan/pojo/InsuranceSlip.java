@@ -15,9 +15,9 @@ public class InsuranceSlip implements Serializable {
 	private String holder_phone;
 	private String holder_email;
 	private String insure_date;
-	private String first_auditor;
-	private String second_auditor;
-	private String third_auditor;
+	private Clerk first_auditor;
+	private Clerk second_auditor;
+	private Clerk third_auditor;
 	private String scout;
 	private String scout_status;
 	private String license;
@@ -34,6 +34,25 @@ public class InsuranceSlip implements Serializable {
 	private Status status;
 	private String urg;
 	
+	
+	public Clerk getFirst_auditor() {
+		return first_auditor;
+	}
+	public void setFirst_auditor(Clerk first_auditor) {
+		this.first_auditor = first_auditor;
+	}
+	public Clerk getSecond_auditor() {
+		return second_auditor;
+	}
+	public void setSecond_auditor(Clerk second_auditor) {
+		this.second_auditor = second_auditor;
+	}
+	public Clerk getThird_auditor() {
+		return third_auditor;
+	}
+	public void setThird_auditor(Clerk third_auditor) {
+		this.third_auditor = third_auditor;
+	}
 	public String getPolicyid() {
 		return policyid;
 	}
@@ -99,24 +118,6 @@ public class InsuranceSlip implements Serializable {
 	}
 	public void setInsure_date(String insure_date) {
 		this.insure_date = insure_date;
-	}
-	public String getFirst_auditor() {
-		return first_auditor;
-	}
-	public void setFirst_auditor(String first_auditor) {
-		this.first_auditor = first_auditor;
-	}
-	public String getSecond_auditor() {
-		return second_auditor;
-	}
-	public void setSecond_auditor(String second_auditor) {
-		this.second_auditor = second_auditor;
-	}
-	public String getThird_auditor() {
-		return third_auditor;
-	}
-	public void setThird_auditor(String third_auditor) {
-		this.third_auditor = third_auditor;
 	}
 	public String getScout() {
 		return scout;

@@ -47,9 +47,6 @@
 		<result property="holder_phone" column="holder_phone" />
 		<result property="holder_email" column="holder_email" />
 		<result property="insure_date" column="insure_date" />
-		<result property="first_auditor" column="first_auditor" />
-		<result property="second_auditor" column="second_auditor" />
-		<result property="third_auditor" column="third_auditor" />
 		<result property="scout" column="scout" />
 		<result property="scout_status" column="scout_status" />
 		<result property="license" column="license" />
@@ -63,6 +60,9 @@
 		<result property="coverage.coverage_name" column="coverage_name" />
 		<association property="city" column="area" select="cn.saonan.mapper.UsersMapper.findCityById"></association>
 		<association property="status" column="insure_status" select="cn.saonan.mapper.InsuranceSlipMapper.findStatusById"></association>
+		<association property="first_auditor" column="first_auditor" select="cn.saonan.mapper.ClerkMapper.findaclerk"></association>
+		<association property="second_auditor" column="second_auditor" select="cn.saonan.mapper.ClerkMapper.findaclerk"></association>
+		<association property="third_auditor" column="third_auditor" select="cn.saonan.mapper.ClerkMapper.findaclerk"></association>
 	</resultMap>
 	
 	<select id="findStatusById" resultType="cn.saonan.pojo.Status">

@@ -124,15 +124,15 @@
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单一审人</th>
-			      <td th:text="${insurance.first_auditor}">Larry</td>
+			      <td th:if="${insurance.first_auditor!=null}" th:text="${insurance.first_auditor.realname}">Larry</td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单二审人</th>
-			      <td th:text="${insurance.second_auditor}">Larry</td>
+			      <td th:if="${insurance.second_auditor!=null}" th:text="${insurance.second_auditor.realname}">Larry</td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单三审人</th>
-			      <td th:text="${insurance.third_auditor}">Larry</td>
+			      <td th:if="${insurance.third_auditor!=null}" th:text="${insurance.third_auditor.realname}">Larry</td>
 			    </tr>
 			    <tr>
 			      <th scope="row">投保单审核状态</th>
