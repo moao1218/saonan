@@ -274,12 +274,31 @@ public class PolicyVerifyController {
 	
 	//跳转正在处理页面
 	@GetMapping(value="/jumpDoing")
-	public String jumpDoing(HttpServletRequest request,Model model) throws ParseException {
+	public String jumpDoing(HttpServletRequest request,Model model, HttpServletResponse response) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
 		
 		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		
+		//获取城市信息
+		String v_city = clerk.getCity().getCode();
+		
+		//我是从登陆信息从拿到的角色ID
+		Integer roleid = clerk.getRoleid();
+		
+		if(roleid!=9) {
+			try {
+				
+				response.setContentType("text/html;charset=utf-8");
+				response.getWriter().write( "<script>alert('您没有访问的权限！');"
+						+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+				response.getWriter().flush();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		String cpp = request.getParameter("cp");
 		
@@ -358,12 +377,31 @@ public class PolicyVerifyController {
 	}
 	
 	@GetMapping(value="/done")
-	public String done(HttpServletRequest request,Model model) throws ParseException {
+	public String done(HttpServletRequest request,Model model, HttpServletResponse response) throws ParseException {
 		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
 		
 		Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+		
+		//获取城市信息
+				String v_city = clerk.getCity().getCode();
+				
+				//我是从登陆信息从拿到的角色ID
+				Integer roleid = clerk.getRoleid();
+				
+				if(roleid!=9) {
+					try {
+						
+						response.setContentType("text/html;charset=utf-8");
+						response.getWriter().write( "<script>alert('您没有访问的权限！');"
+								+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+						response.getWriter().flush();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 		
 		String cpp = request.getParameter("cp");
 		
