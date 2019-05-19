@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import cn.saonan.mapper.UsersMapper;
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
+import cn.saonan.pojo.Users;
 import cn.saonan.service.UsersService;
 import cn.saonan.utils.BCryptInterface;
 import cn.saonan.utils.RSAInterface;
@@ -45,6 +46,12 @@ public class UsersServiceImpl implements UsersService {
 	public Clerk getClerk(Clerk clerk) {
 		Clerk login = usersMapper.isLogin(clerk);
 		return login;
+	}
+
+	@Override
+	public Users findUserByUserId(String userid) {
+		// TODO Auto-generated method stub
+		return usersMapper.findUserByUserId(userid);
 	}
 
 }

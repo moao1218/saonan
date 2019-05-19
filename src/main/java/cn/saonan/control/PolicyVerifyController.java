@@ -207,15 +207,18 @@ public class PolicyVerifyController {
 		MultipartRequest req = (MultipartRequest) request;	
 		MultipartFile h_pic = req.getFile("h_pic");
 		MultipartFile bu_pic = req.getFile("bud_pic");
-		if(h_pic!=null&&!"".equals(h_pic)) {
+		if(h_pic.getOriginalFilename()!=null&&!"".equals(h_pic.getOriginalFilename())) {
 			String house_pic = Upload.upload(request, h_pic);
 			pv.setHouse_pic(house_pic);
+		}else {
+			pv.setHouse_pic("");
 		}
-		if(bu_pic!=null&&!"".equals(bu_pic)) {
+		if(bu_pic.getOriginalFilename()!=null&&!"".equals(bu_pic.getOriginalFilename())) {
 			String building_pic = Upload.upload(request, bu_pic);
 			pv.setBuilding_pic(building_pic);
+		}else {
+			pv.setBuilding_pic("");
 		}
-		
 		
 		String num = request.getParameter("num");
 		for (int i = 1; i < Integer.parseInt(num); i++) {
@@ -223,19 +226,27 @@ public class PolicyVerifyController {
 			int r = new Random().nextInt(3999)+1000;
 			pv.setPol_ver_id(""+currentTimeMillis+r);
 			
-			if(req.getFile("a_pic"+i)!=null&&!"".equals(req.getFile("a_pic"+i))) {
+			if(req.getFile("a_pic"+i).getOriginalFilename()!=null&&!"".equals(req.getFile("a_pic"+i).getOriginalFilename())) {
 				String site_photo = Upload.upload(request, req.getFile("a_pic"+i));
 				items.setSite_photo(site_photo);
+			}else {
+				items.setSite_photo("");
 			}
 			
-			if(req.getFile("b_pic"+i)!=null&&!"".equals(req.getFile("b_pic"+i))) {
+			if(req.getFile("b_pic"+i).getOriginalFilename()!=null&&!"".equals(req.getFile("b_pic"+i).getOriginalFilename())) {
 				String third_pic = Upload.upload(request, req.getFile("b_pic"+i));
 				items.setThird_pic(third_pic);
+			}else {
+				items.setThird_pic("");
 			}
-			if(req.getFile("c_pic"+i)!=null&&!"".equals(req.getFile("c_pic"+i))) {
+			
+			if(req.getFile("c_pic"+i).getOriginalFilename()!=null&&!"".equals(req.getFile("c_pic"+i).getOriginalFilename())) {
 				String invoice_pic = Upload.upload(request, req.getFile("c_pic"+i));
 				items.setInvoice_pic(invoice_pic);
+			}else {
+				items.setInvoice_pic("");
 			}
+			
 			String itemid = request.getParameter("a"+i);
 			String item_age = request.getParameter("b"+i);
 			String invoice = request.getParameter("c"+i);

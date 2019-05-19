@@ -64,7 +64,6 @@ public class PolicyController {
 		map.put("v_coverageid", v_coverageid);
 		map.put("v_date", v_date);
 		map.put("v_property", v_property);
-		map.put("v_property", v_property);
 		map.put("v_order", v_order);
 		
 		map.put("cp", cp);
@@ -98,7 +97,6 @@ public class PolicyController {
 		model.addAttribute("v_hijoindate", v_hijoindate);
 		model.addAttribute("v_coverageid", v_coverageid);
 		model.addAttribute("v_date", v_date);
-		model.addAttribute("v_property", v_property);
 		model.addAttribute("v_property", v_property);
 		model.addAttribute("v_order", v_order);
 		
