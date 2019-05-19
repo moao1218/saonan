@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,6 +66,11 @@ public class InsureController {
 	private RedisUtil redisUtil;
 	
 	private String change = "";
+	
+	@RequestMapping(value="/jumpIndex")
+	public String jumpIndex() {
+		return "server/index";
+	}
 
 	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
@@ -148,7 +154,6 @@ public class InsureController {
 			
 			for (int i = 0; i < insureList.size(); i++) {
 				InsuranceSlip insuranceSlip = insureList.get(i);
-				String policyid = insuranceSlip.getPolicyid();
 				redisUtil.lSet("plist",JsonUtil.objectToJson(insuranceSlip));
 			}
 			
@@ -170,7 +175,7 @@ public class InsureController {
 		
 		
 		
-//		redisUtil.set("insure", JsonUtil.objectToJson(insureList));
+//		redisUtil.set("insure", JsonUtil.objectToJson(insureList)); 
 //		List<InsuranceSlip> jsonToList = JsonUtil.jsonToList((String)redisUtil.get("insure"), new TypeReference<List<InsuranceSlip>>() {});
 //		for (InsuranceSlip insuranceSlip : jsonToList) {
 //			System.out.println(insuranceSlip.getInsure_name());
