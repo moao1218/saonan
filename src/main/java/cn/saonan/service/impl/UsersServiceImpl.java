@@ -27,10 +27,10 @@ public class UsersServiceImpl implements UsersService {
 	public boolean isLogin(Clerk user,String privateKeys) throws Exception {
 		if(user!=null&&!"".equals(user)) {
 			String pwd=usersMapper.isLogin(user).getUserpwd();
-			System.out.println("后台拿的私钥"+privateKeys);
-			System.out.println("后台拿的密文"+user.getUserpwd());
+//			System.out.println("后台拿的私钥"+privateKeys);
+//			System.out.println("后台拿的密文"+user.getUserpwd());
 			String original = rSAInterface.getOriginal(user.getUserpwd(), privateKeys);
-			System.out.println("解完密后的密文:"+original);
+//			System.out.println("解完密后的密文:"+original);
 			boolean checkMatch = bCryptInterface.checkMatch(original, pwd);
 			return checkMatch;
 		}

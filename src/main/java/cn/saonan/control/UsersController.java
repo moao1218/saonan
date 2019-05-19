@@ -52,9 +52,9 @@ public class UsersController {
 //		System.out.println("私钥"+map);
 //		System.out.println(user.getUserpwd());
 		String privatekey = (String) redisUtil.get("privatekey");
-		System.out.println("redis拿到的私钥:"+privatekey);
+//		System.out.println("redis拿到的私钥:"+privatekey);
 		boolean check = usersService.isLogin(user,privatekey);
-		System.out.println("check:"+check);
+//		System.out.println("check:"+check);
 		if(check==true) {
 			Clerk vo=usersService.getClerk(user);
 			session.setAttribute("user", vo);
@@ -106,8 +106,8 @@ public class UsersController {
 	@RequestMapping("/getKeys")
 	public String getKeys() {
 		Map<Integer, String> commAndPrivaKey = rSAInterface.getCommAndPrivaKey();
-		System.out.println("最开始创建的公钥"+commAndPrivaKey.get(0));
-		System.out.println("最开始创建的私钥"+commAndPrivaKey.get(1));
+//		System.out.println("最开始创建的公钥"+commAndPrivaKey.get(0));
+//		System.out.println("最开始创建的私钥"+commAndPrivaKey.get(1));
 		redisUtil.set("publickey",commAndPrivaKey.get(0));
 		redisUtil.set("privatekey",commAndPrivaKey.get(1));
 		String publicKeys=commAndPrivaKey.get(0);

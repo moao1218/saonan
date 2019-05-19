@@ -98,7 +98,7 @@ public class InsureController {
 		String v_property = request.getParameter("v_property");
 		String v_order = request.getParameter("v_order");
 		
-		System.out.println("v_coverageid:" + v_coverageid);
+//		System.out.println("v_coverageid:" + v_coverageid);
 		
 		map.put("cp", cp);
 		map.put("ps", ps);
@@ -133,15 +133,15 @@ public class InsureController {
 			redisUtil.del("plist");
 			List<Object> lGet = redisUtil.lGet("plist",0,-1);
 			for (Object object : lGet) {
-				System.out.println("test1"+JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class).getCoverage().getCoverage_name());
+//				System.out.println("test1"+JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class).getCoverage().getCoverage_name());
 				insureList.add(JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class));
 				v_count=(int)redisUtil.lGetListSize("plist");
-				System.out.println("redis:"+insureList.get(0).getPolicyid());
+//				System.out.println("redis:"+insureList.get(0).getPolicyid());
 			}
 		}
 		
 		
-		System.out.println(insureList.size());
+//		System.out.println(insureList.size());
 		if(insureList.size()<1||cpp!=null||pss!=null||v_id!=null||v_name!=null||(v_lopremium!=null&&v_hipremium!=null)||v_area!=null||(v_lojoindate!=null&&v_hijoindate!=null)||v_coverageid!=null||v_status!=null||v_property!=null||v_order!=null) {
 			insuranceSlipService.findInsuranceSlipList(map);
 			insureList = (List<InsuranceSlip>) map.get("insureList");
@@ -718,8 +718,8 @@ public class InsureController {
 		insuranceMap.put("policyid", pid);
 		insuranceMap.put("scout", scout);
 		boolean updateInsuranceStatus = insuranceSlipService.updateInsuranceStatus(insuranceMap);
-		System.out.println(pid);
-		System.out.println(updateInsuranceStatus);
+//		System.out.println(pid);
+//		System.out.println(updateInsuranceStatus);
 		return "forward:/jumpPending";
 	}
 	
@@ -828,7 +828,7 @@ public class InsureController {
 	public String CheckBlack(HttpServletRequest request,Map<String,Object> map) {
 
 		String userId = request.getParameter("userId");
-		System.out.println(userId);
+//		System.out.println(userId);
 		boolean flag = bls.findBlackListById(userId);
 		
 		return flag+"";
@@ -850,7 +850,7 @@ public class InsureController {
 			int ps = 5;
 			
 			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-			System.out.println(clerk.getMagid());
+//			System.out.println(clerk.getMagid());
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			String v_role = "";
@@ -881,7 +881,7 @@ public class InsureController {
 				}
 			}
 			
-			System.out.println(v_role);
+//			System.out.println(v_role);
 			
 			String cpp = request.getParameter("cp");
 			
@@ -924,7 +924,8 @@ public class InsureController {
 		  map.put("v_hijoindate", v_hijoindate);
 		  map.put("v_coverageid", v_coverageid);
 		  
-		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+//		  System.out.println(v_status); 
+		  if(v_status != null && !"".equals(v_status)) {
 		  map.put("v_status", Integer.parseInt(v_status)); }
 		  
 		  map.put("v_property", v_property); map.put("v_property", v_property);
@@ -982,7 +983,7 @@ public class InsureController {
 			int ps = 5;
 			
 			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-			System.out.println(clerk.getMagid());
+//			System.out.println(clerk.getMagid());
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			String v_role = "";
@@ -1013,7 +1014,7 @@ public class InsureController {
 				}
 			}
 			
-			System.out.println(v_role);
+//			System.out.println(v_role);
 			
 			String cpp = request.getParameter("cp");
 			
@@ -1056,7 +1057,8 @@ public class InsureController {
 		  map.put("v_hijoindate", v_hijoindate);
 		  map.put("v_coverageid", v_coverageid);
 		  
-		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+//		  System.out.println(v_status); 
+		  if(v_status != null && !"".equals(v_status)) {
 		  map.put("v_status", Integer.parseInt(v_status)); }
 		  
 		  map.put("v_property", v_property); map.put("v_property", v_property);

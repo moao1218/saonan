@@ -118,7 +118,8 @@ public class PolicyVerifyController {
 	    map.put("v_hijoindate", v_hijoindate);
 	    map.put("v_coverageid", v_coverageid);
 	  
-	  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+//	  System.out.println(v_status); 
+	  if(v_status != null && !"".equals(v_status)) {
 	  map.put("v_status", Integer.parseInt(v_status)); }
 	  
 	  map.put("v_property", v_property); map.put("v_property", v_property);
@@ -193,7 +194,7 @@ public class PolicyVerifyController {
 		Coverage coverage = new Coverage();
 		
 		String cid = request.getParameter("coverageid");
-		System.out.println(cid);
+//		System.out.println(cid);
 		if(cid!=null&&!"".equals(cid)) {
 			coverage.setCoverageid(Integer.parseInt(cid));
 			pv.setCoverage(coverage);
