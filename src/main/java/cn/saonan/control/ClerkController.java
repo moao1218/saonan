@@ -61,7 +61,7 @@ public class ClerkController {
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-			if(roleid==12) {
+			if(roleid==12||roleid==11) {
 				//v_role => 只能看1状态的
 				map.put("v_city", v_city);
 			}else {
@@ -187,7 +187,7 @@ public class ClerkController {
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
-			if(roleid==11) {
+			if(roleid==11||roleid==11) {
 				//v_role => 只能看1状态的
 				map.put("v_city", v_city);
 			}else {
@@ -376,10 +376,37 @@ public class ClerkController {
 	
 	//投保单查询
 	@RequestMapping(value="/jumpIscList")
-	public String goList(Model model,HttpServletRequest request) throws ParseException {
+	public String goList(Model model,HttpServletRequest request,HttpServletResponse response) throws ParseException {
+		 Map<String,Object> map = new HashMap<String,Object>(); 
+		
+		  
+		  Clerk clerk = (Clerk) request.getSession().getAttribute("user");
+			//获取城市信息
+			String v_city = clerk.getCity().getCode();
+			
+			//我是从登陆信息从拿到的角色ID
+			Integer roleid = clerk.getRoleid();
+			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
+			if(roleid==12||roleid==11) {
+				//v_role => 只能看1状态的
+				map.put("v_city", v_city);
+			}else {
+				try {
+					
+					response.setContentType("text/html;charset=utf-8");
+					response.getWriter().write( "<script>alert('您没有访问的权限！');"
+							+ "window.location='/jumpInsuranceList';window.close();</script>"); 
+					response.getWriter().flush();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		  
+		  
+		  
 		
 		
-		Map<String,Object> map = new HashMap<String,Object>();
 		int cp = 1;
 		int ps = 5;
 		
