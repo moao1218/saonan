@@ -17,7 +17,7 @@
     <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
   </div>
   <!--logo start-->
-  <a href="index.html" class="logo"><b>喵喵<span>财保</span></b></a>
+  <a href="/jumpIndex" class="logo"><b>喵喵<span>财保</span></b></a>
   <!--logo end-->
   
   
@@ -48,12 +48,12 @@
       <div id="sidebar" class="nav-collapse ">
         <!-- sidebar menu start-->
         <ul class="sidebar-menu" id="nav-accordion">
-          <p class="centered"><a href="profile.html"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
+          <p class="centered"><a href="/jumpIndex"><img src="back/img/labixiaoxin.jpg" class="img-circle" width="80"/></a></p>
           <h5 class="centered" th:text="${session.user.realname}" >熊蕃猛是个傻子</h5>
           <p style="color:white;margin-left:60px" >所属区域:<span th:text="${session.user.city.region_name_c}" style="color:#4ECDC4" ></span></p>
           <p style="color:white;margin-left:60px" >职位:<span th:text="${session.user.job}" style="color:#4ECDC4" ></span></p>
           <li class="mt">
-            <a class="active" href="a.html" 
+            <a class="active" href="/jumpIndex" 
             th:class="${activeUri=='index.html'?'active':''}">
               <i class="fa fa-dashboard"></i>
               <span>公司简介</span>

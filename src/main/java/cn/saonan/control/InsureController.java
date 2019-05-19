@@ -65,6 +65,11 @@ public class InsureController {
 	private RedisUtil redisUtil;
 	
 	private String change = "";
+	
+	@RequestMapping(value="/jumpIndex")
+	public String jumpIndex() {
+		return "server/index";
+	}
 
 	//所有保单列表
 	@RequestMapping(value="/jumpInsuranceList")
