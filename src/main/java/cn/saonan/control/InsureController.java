@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -128,7 +129,7 @@ public class InsureController {
 //		}
 		
 		if(redisUtil.lGetListSize("plist")!=0) {
-			List<Object> lGet = redisUtil.lGet("1",0,-1);
+			List<Object> lGet = redisUtil.lGet("plist",0,-1);
 			for (Object object : lGet) {
 				insureList.add(JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class));
 				v_count=(int)redisUtil.lGetListSize("plist");
@@ -142,7 +143,6 @@ public class InsureController {
 			
 			for (int i = 0; i < insureList.size(); i++) {
 				InsuranceSlip insuranceSlip = insureList.get(i);
-				String policyid = insuranceSlip.getPolicyid();
 				redisUtil.lSet("plist",JsonUtil.objectToJson(insuranceSlip));
 			}
 			
@@ -164,7 +164,7 @@ public class InsureController {
 		
 		
 		
-//		redisUtil.set("insure", JsonUtil.objectToJson(insureList));
+//		redisUtil.set("insure", JsonUtil.objectToJson(insureList)); 
 //		List<InsuranceSlip> jsonToList = JsonUtil.jsonToList((String)redisUtil.get("insure"), new TypeReference<List<InsuranceSlip>>() {});
 //		for (InsuranceSlip insuranceSlip : jsonToList) {
 //			System.out.println(insuranceSlip.getInsure_name());
