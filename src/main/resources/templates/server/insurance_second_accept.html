@@ -53,10 +53,10 @@
   		$.post("/CheckBlack",{"userId":userId},function(data){
   			console.log(data);
   			
-  			if(data.flag=='false'){
-  				$("#blackSpan").html("buzai");
+  			if(!data){
+  				$("#blackSpan").html("不在黑名单");
   			}else{
-  				$("#blackSpan").html("zai");
+  				$("#blackSpan").html("在黑名单");
   			}
   			
   		},"json");
@@ -378,4 +378,7 @@
 </body>
 
 </html>
+<<<<<<< HEAD
+=======
 <SCRIPT Language=VBScript></SCRIPT>
+>>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git

@@ -19,7 +19,8 @@ public class Upload {
 		String ul ="";
 		try {
 //			String realpath = request.getSession().getServletContext().getRealPath("/upload");
-			String realpath = "D:\\eclipse2019space\\saonan-project\\src\\main\\resources\\static\\upload";
+//			System.out.println("realpath:="+realpath);
+			String realpath = "C:\\Users\\ThinkPad\\git\\saonan\\src\\main\\resources\\static\\upload";
 			String oldname = pic.getOriginalFilename();
 			System.out.println("oldname:"+oldname);
 			String endname = oldname.substring(oldname.lastIndexOf("."));

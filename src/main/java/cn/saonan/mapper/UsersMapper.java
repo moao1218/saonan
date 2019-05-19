@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
+import cn.saonan.pojo.Users;
 
 public interface UsersMapper {
 
@@ -19,4 +20,10 @@ public interface UsersMapper {
 	 * @return
 	 */
 	public List<City> findAllCity();
+	
+	/**通过id查找用户
+	 * @param userid
+	 * @return
+	 */
+	public Users findUserByUserId(String userid);
 }

@@ -212,12 +212,12 @@ public class ClerkController {
 	@RequestMapping(value="/addclerkses")
 	public void addclerkses(Model model,Clerk clerk ,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		String pwd = request.getParameter("userpwd");
-		System.out.println("注册获取密码："+pwd);
+//		System.out.println("注册获取密码："+pwd);
 		RSAImpl rsa=new RSAImpl();
 		BCryptImpl bc=new BCryptImpl();
 		String userpwd=bc.getCode(pwd, 12);
 		clerk.setUserpwd(userpwd);
-		System.out.println("密文："+userpwd);
+//		System.out.println("密文："+userpwd);
 		
 		String rolei = request.getParameter("roleid");
 		int roleid = Integer.parseInt(rolei);
@@ -228,7 +228,7 @@ public class ClerkController {
 		city.setCode(area);
 		clerk.setCity(city);
 		boolean docreate = clerkservice.docreate(clerk);
-		System.out.println("注册："+docreate);
+//		System.out.println("注册："+docreate);
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		if(docreate==true) {
@@ -328,11 +328,11 @@ public class ClerkController {
 		
 		String userpwd = clerk.getUserpwd();
 		
-		System.out.println("得到旧密码："+userpwd);
+//		System.out.println("得到旧密码："+userpwd);
 		
 		
 		String oldpwd = request.getParameter("oldpwd");
-		System.out.println("拿到页面的pwd："+oldpwd);
+//		System.out.println("拿到页面的pwd："+oldpwd);
 		RSAImpl rsa=new RSAImpl();
 		BCryptImpl bc=new BCryptImpl();
 		boolean checkMatch = bc.checkMatch(oldpwd, userpwd);
@@ -407,7 +407,7 @@ public class ClerkController {
 		String v_property = request.getParameter("v_property");
 		String v_order = request.getParameter("v_order");
 		
-		System.out.println(v_area);
+//		System.out.println(v_area);
 		
 		map.put("cp", cp);
 		map.put("ps", ps);
@@ -420,7 +420,7 @@ public class ClerkController {
 		map.put("v_hijoindate", v_hijoindate);
 		map.put("v_coverageid", v_coverageid);
 		
-		System.out.println(v_status);
+//		System.out.println(v_status);
 		if(v_status != null && !"".equals(v_status)) {
 			map.put("v_status", Integer.parseInt(v_status));
 		}

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cn.saonan.pojo.City;
 import cn.saonan.pojo.Clerk;
+import cn.saonan.pojo.Users;
 
 
 public interface UsersService {
@@ -25,5 +26,11 @@ public interface UsersService {
 	 * @return
 	 */
 	public Clerk getClerk(Clerk clerk);
+	
+	/**通过id查找用户
+	 * @param userid
+	 * @return
+	 */
+	public Users findUserByUserId(String userid);
 	
 }
