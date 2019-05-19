@@ -393,9 +393,9 @@ public class InsureController {
 		//判断操作的用户是谁,让后进行相应的操作
 		if(roleid==1) {
 			InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
-			if(insurance.getStatus().getStatusid()==1) {
-				map.put("newstatus", 2);
-			}
+//			if(insurance.getStatus().getStatusid()==1) {
+//				map.put("newstatus", 2);
+//			}
 			map.put("policyid", pid);
 			map.put("first_auditor", clerk.getMagid()+"");
 			boolean f1 = insuranceSlipService.updateInsuranceStatus(map);
@@ -719,7 +719,7 @@ public class InsureController {
 	@GetMapping(value="/toScout")
 	public String toScout(String scout,String pid) {
 		Map<String,Object> insuranceMap = new HashMap<String,Object>();
-		insuranceMap.put("newstatus", 3);
+		insuranceMap.put("newstatus", 2);
 		insuranceMap.put("policyid", pid);
 		insuranceMap.put("scout", scout);
 		boolean updateInsuranceStatus = insuranceSlipService.updateInsuranceStatus(insuranceMap);

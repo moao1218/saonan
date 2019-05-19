@@ -18,7 +18,7 @@ public class InsuranceSlip implements Serializable {
 	private String first_auditor;
 	private String second_auditor;
 	private String third_auditor;
-	private String scout;
+	private Clerk scout;
 	private String scout_status;
 	private String license;
 	private Integer industry_code;
@@ -118,12 +118,6 @@ public class InsuranceSlip implements Serializable {
 	public void setThird_auditor(String third_auditor) {
 		this.third_auditor = third_auditor;
 	}
-	public String getScout() {
-		return scout;
-	}
-	public void setScout(String scout) {
-		this.scout = scout;
-	}
 	public String getScout_status() {
 		return scout_status;
 	}
@@ -207,6 +201,12 @@ public class InsuranceSlip implements Serializable {
 	}
 	public void setUrg(String urg) {
 		this.urg = urg;
+	}
+	public Clerk getScout() {
+		return scout;
+	}
+	public void setScout(Clerk scout) {
+		this.scout = scout;
 	}
 	
 	
