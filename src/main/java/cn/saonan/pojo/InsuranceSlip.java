@@ -18,7 +18,7 @@ public class InsuranceSlip implements Serializable {
 	private Clerk first_auditor;
 	private Clerk second_auditor;
 	private Clerk third_auditor;
-	private String scout;
+	private Clerk scout;
 	private String scout_status;
 	private String license;
 	private Integer industry_code;
@@ -33,26 +33,6 @@ public class InsuranceSlip implements Serializable {
 	private City city;
 	private Status status;
 	private String urg;
-	
-	
-	public Clerk getFirst_auditor() {
-		return first_auditor;
-	}
-	public void setFirst_auditor(Clerk first_auditor) {
-		this.first_auditor = first_auditor;
-	}
-	public Clerk getSecond_auditor() {
-		return second_auditor;
-	}
-	public void setSecond_auditor(Clerk second_auditor) {
-		this.second_auditor = second_auditor;
-	}
-	public Clerk getThird_auditor() {
-		return third_auditor;
-	}
-	public void setThird_auditor(Clerk third_auditor) {
-		this.third_auditor = third_auditor;
-	}
 	public String getPolicyid() {
 		return policyid;
 	}
@@ -119,10 +99,28 @@ public class InsuranceSlip implements Serializable {
 	public void setInsure_date(String insure_date) {
 		this.insure_date = insure_date;
 	}
-	public String getScout() {
+	public Clerk getFirst_auditor() {
+		return first_auditor;
+	}
+	public void setFirst_auditor(Clerk first_auditor) {
+		this.first_auditor = first_auditor;
+	}
+	public Clerk getSecond_auditor() {
+		return second_auditor;
+	}
+	public void setSecond_auditor(Clerk second_auditor) {
+		this.second_auditor = second_auditor;
+	}
+	public Clerk getThird_auditor() {
+		return third_auditor;
+	}
+	public void setThird_auditor(Clerk third_auditor) {
+		this.third_auditor = third_auditor;
+	}
+	public Clerk getScout() {
 		return scout;
 	}
-	public void setScout(String scout) {
+	public void setScout(Clerk scout) {
 		this.scout = scout;
 	}
 	public String getScout_status() {
@@ -136,6 +134,12 @@ public class InsuranceSlip implements Serializable {
 	}
 	public void setLicense(String license) {
 		this.license = license;
+	}
+	public Integer getIndustry_code() {
+		return industry_code;
+	}
+	public void setIndustry_code(Integer industry_code) {
+		this.industry_code = industry_code;
 	}
 	public String getAcreage() {
 		return acreage;
@@ -185,11 +189,11 @@ public class InsuranceSlip implements Serializable {
 	public void setCoverage(Coverage coverage) {
 		this.coverage = coverage;
 	}
-	public Integer getIndustry_code() {
-		return industry_code;
+	public City getCity() {
+		return city;
 	}
-	public void setIndustry_code(Integer industry_code) {
-		this.industry_code = industry_code;
+	public void setCity(City city) {
+		this.city = city;
 	}
 	public Status getStatus() {
 		return status;
@@ -197,18 +201,13 @@ public class InsuranceSlip implements Serializable {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	public City getCity() {
-		return city;
-	}
-	public void setCity(City city) {
-		this.city = city;
-	}
 	public String getUrg() {
 		return urg;
 	}
 	public void setUrg(String urg) {
 		this.urg = urg;
 	}
+	
 	
 	
 }

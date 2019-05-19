@@ -67,7 +67,7 @@ public class PolicyVerifyController {
 		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
 		if(roleid==9) {
 			//v_role => 只能看1状态的
-			v_role = "2,3";
+			v_role = "2";
 			map.put("v_city", v_city);
 			map.put("v_role", v_role);
 		}else {
@@ -186,6 +186,7 @@ public class PolicyVerifyController {
 		return items;
 	}
 	
+	//提交勘察报告
 	@PostMapping(value="/insertPv")
 	public String insertPv(Pv pv,HttpServletRequest request) {
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -260,6 +261,7 @@ public class PolicyVerifyController {
 			items.setMark(mark);
 			items.setPmodel(pmodel);
 			
+			map.put("v_status",3);
 			map.put("pv", pv);
 			map.put("items", items);
 			
