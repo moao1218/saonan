@@ -48,6 +48,11 @@
   <script src="back/lib/advanced-form-components.js"></script>
   
   <script type="text/javascript">
+	  function jumpDetails(pid){
+		  console.log("熊蕃猛");
+		  location.href = "/jumpDetails?pid="+pid+"&flag=false";
+		}
+  
 	  function goToPage(num){
 			var total = $("#totalpage").val();
 			
@@ -60,9 +65,7 @@
 				sform.submit();
 		}
 	  }
-	  function jumpDetails(pid){
-		  location.href = "/jumpDetails?pid="+pid"&flag=false";
-  		}
+	  
 	  
   </script>
   <script type="text/javascript">
@@ -99,6 +102,7 @@
 		)  */
 	});
   
+ 
    
   </script>
   <script type="application/javascript">
@@ -308,8 +312,8 @@
                     <!--  <td th:text="${alist.scout.realname}"><i class=" fa fa-bookmark"></i>操作人</td> -->
                     <td ><span th:text="${alist.urg}" class="label label-warning label-mini" th:class="${alist.urg}=='正常'?'label label-success label-mini':(${alist.urg}=='预警'?'label label-warning label-mini':'label label-danger label-mini')">紧急状态</span></td>
                     <td>
-                         <button type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${alist.policyid}]])"><i class="fa fa-pencil"></i></button>
-                    </td>
+                         <button th:type="button" class="btn btn-primary btn-xs" th:onclick="jumpDetails([[${alist.policyid}]])" ><i class="fa fa-pencil"></i></button>
+                    </td>													  
                   </tr>
                 </tbody>
               </table>
