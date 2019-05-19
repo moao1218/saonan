@@ -47,13 +47,6 @@
 		<result property="holder_phone" column="holder_phone" />
 		<result property="holder_email" column="holder_email" />
 		<result property="insure_date" column="insure_date" />
-<<<<<<< HEAD
-		<result property="scout" column="scout" />
-=======
-		<result property="first_auditor" column="first_auditor" />
-		<result property="second_auditor" column="second_auditor" />
-		<result property="third_auditor" column="third_auditor" />
->>>>>>> branch 'dev' of https://github.com/moao1218/saonan.git
 		<result property="scout_status" column="scout_status" />
 		<result property="license" column="license" />
 		<result property="industry_code" column="industry_code" />
