@@ -29,6 +29,7 @@ import cn.saonan.pojo.Clerk;
 import cn.saonan.pojo.Coverage;
 import cn.saonan.pojo.InsuranceSlip;
 import cn.saonan.pojo.PolicyVerify;
+import cn.saonan.pojo.Users;
 import cn.saonan.service.BlackListService;
 import cn.saonan.service.ClerkService;
 import cn.saonan.service.InsuranceSlipService;
@@ -41,6 +42,7 @@ import cn.saonan.utils.DateUtil;
 import cn.saonan.utils.IdCard;
 import cn.saonan.utils.JsonUtil;
 import cn.saonan.utils.RedisUtil;
+import cn.saonan.utils.ShortMassage;
 
 @Controller
 public class InsureController {
@@ -59,7 +61,6 @@ public class InsureController {
 	private PvService pvService;
 	@Autowired
 	private PolicyService policyService;
-	
 	@Autowired
 	private RedisUtil redisUtil;
 	
@@ -97,6 +98,8 @@ public class InsureController {
 		String v_property = request.getParameter("v_property");
 		String v_order = request.getParameter("v_order");
 		
+//		System.out.println("v_coverageid:" + v_coverageid);
+		
 		map.put("cp", cp);
 		map.put("ps", ps);
 		map.put("v_id", v_id);
@@ -126,17 +129,20 @@ public class InsureController {
 //			InsuranceSlip value = (InsuranceSlip) next.getValue();
 //			insureList.add(value);lGetListSize
 //		}
-		
 		if(redisUtil.lGetListSize("plist")!=0) {
-			List<Object> lGet = redisUtil.lGet("1",0,-1);
+			redisUtil.del("plist");
+			List<Object> lGet = redisUtil.lGet("plist",0,-1);
 			for (Object object : lGet) {
+//				System.out.println("test1"+JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class).getCoverage().getCoverage_name());
 				insureList.add(JsonUtil.jsonToPoJo(object.toString(), InsuranceSlip.class));
 				v_count=(int)redisUtil.lGetListSize("plist");
-				System.out.println("redis:"+insureList.get(0).getPolicyid());
+//				System.out.println("redis:"+insureList.get(0).getPolicyid());
 			}
 		}
-		System.out.println(insureList.size());
-		if(insureList.size()<1) {
+		
+		
+//		System.out.println(insureList.size());
+		if(insureList.size()<1||cpp!=null||pss!=null||v_id!=null||v_name!=null||(v_lopremium!=null&&v_hipremium!=null)||v_area!=null||(v_lojoindate!=null&&v_hijoindate!=null)||v_coverageid!=null||v_status!=null||v_property!=null||v_order!=null) {
 			insuranceSlipService.findInsuranceSlipList(map);
 			insureList = (List<InsuranceSlip>) map.get("insureList");
 			
@@ -448,12 +454,13 @@ public class InsureController {
 		//我是从登陆信息从拿到的角色ID
 		Integer roleid = clerk.getRoleid();
 		
+		InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
 		//判断操作的用户是谁,让后进行相应的操作
 		if("1".equals(flag)) {
 			System.out.println("========================熊蕃猛===================================");
 			if(roleid==1) {
 				//一审通过
-				map.put("newstatus", 5);
+				map.put("newstatus", 7);
 				map.put("policyid", pid);
 				boolean b = insuranceSlipService.updateInsuranceStatus(map);
 				if(b) {
@@ -482,7 +489,7 @@ public class InsureController {
 				
 			}else if(roleid==2) {
 				//二审通过
-				map.put("newstatus", 9);
+				map.put("newstatus", 11);
 				map.put("policyid", pid);
 				boolean b = insuranceSlipService.updateInsuranceStatus(map);
 				if(b) {
@@ -519,7 +526,8 @@ public class InsureController {
 				if(b) {
 					//三审通过则要将投保单中的信息填入保单中
 					Map<String, Object> map2 = new HashMap<String,Object>();
-					InsuranceSlip insurance = insuranceSlipService.findOneInsurance(pid);
+					
+					
 					List<String> dateList = DateUtil.gainTwoDate();
 					
 					map2.put("insurance", insurance);
@@ -542,6 +550,9 @@ public class InsureController {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
+					}else {
+						Users user = usersService.findUserByUserId(insurance.getUserid());
+						ShortMassage.mobileQuery(user.getPhone(), ShortMassage.TEMPLATE_1, "POST");
 					}
 					
 					try {
@@ -605,6 +616,8 @@ public class InsureController {
 				map.put("policyid", pid);
 				boolean b = insuranceSlipService.updateInsuranceStatus(map);
 				if(b) {
+					Users user = usersService.findUserByUserId(insurance.getUserid());
+					ShortMassage.mobileQuery(user.getPhone(), ShortMassage.TEMPLATE_2, "POST");
 					try {
 						
 						response.setContentType("text/html;charset=utf-8");
@@ -635,6 +648,9 @@ public class InsureController {
 				boolean b = insuranceSlipService.updateInsuranceStatus(map);
 				if(b) {
 					try {
+						
+						Users user = usersService.findUserByUserId(insurance.getUserid());
+						ShortMassage.mobileQuery(user.getPhone(), ShortMassage.TEMPLATE_2, "POST");
 						
 						response.setContentType("text/html;charset=utf-8");
 						response.getWriter().write( "<script>alert('操作成功');"
@@ -702,8 +718,8 @@ public class InsureController {
 		insuranceMap.put("policyid", pid);
 		insuranceMap.put("scout", scout);
 		boolean updateInsuranceStatus = insuranceSlipService.updateInsuranceStatus(insuranceMap);
-		System.out.println(pid);
-		System.out.println(updateInsuranceStatus);
+//		System.out.println(pid);
+//		System.out.println(updateInsuranceStatus);
 		return "forward:/jumpPending";
 	}
 	
@@ -723,7 +739,7 @@ public class InsureController {
 		//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
 		if(roleid==1) {
 			//v_role => 只能看1状态的
-			v_role = "2,3,4";
+			v_role = "2,4";
 			map.put("v_city", v_city);
 			map.put("v_role", v_role);
 		}else if(roleid==2) {
@@ -812,7 +828,7 @@ public class InsureController {
 	public String CheckBlack(HttpServletRequest request,Map<String,Object> map) {
 
 		String userId = request.getParameter("userId");
-		System.out.println(userId);
+//		System.out.println(userId);
 		boolean flag = bls.findBlackListById(userId);
 		
 		return flag+"";
@@ -834,18 +850,18 @@ public class InsureController {
 			int ps = 5;
 			
 			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-			System.out.println(clerk.getMagid());
+//			System.out.println(clerk.getMagid());
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			String v_role = "";
 			//roleid 角色  比如:一审人员=>1  二审=>7 三审=>11
 			if(roleid==1) {
 				//v_role => 只能看1状态的
-				v_role = "5,6";
+				v_role = "5,6,7,8,9,10,11,12,13,14";
 				map.put("v_first", clerk.getMagid()+"");
 				map.put("v_role", v_role);
 			}else if(roleid==2) {
-				v_role = "9,10";
+				v_role = "9,10,11,12,13";
 				map.put("v_second", clerk.getMagid()+"");
 				map.put("v_role", v_role);
 			}else if(roleid==3) {
@@ -865,7 +881,7 @@ public class InsureController {
 				}
 			}
 			
-			System.out.println(v_role);
+//			System.out.println(v_role);
 			
 			String cpp = request.getParameter("cp");
 			
@@ -908,7 +924,8 @@ public class InsureController {
 		  map.put("v_hijoindate", v_hijoindate);
 		  map.put("v_coverageid", v_coverageid);
 		  
-		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+//		  System.out.println(v_status); 
+		  if(v_status != null && !"".equals(v_status)) {
 		  map.put("v_status", Integer.parseInt(v_status)); }
 		  
 		  map.put("v_property", v_property); map.put("v_property", v_property);
@@ -966,7 +983,7 @@ public class InsureController {
 			int ps = 5;
 			
 			Clerk clerk = (Clerk) request.getSession().getAttribute("user");
-			System.out.println(clerk.getMagid());
+//			System.out.println(clerk.getMagid());
 			//我是从登陆信息从拿到的角色ID
 			Integer roleid = clerk.getRoleid();
 			String v_role = "";
@@ -997,7 +1014,7 @@ public class InsureController {
 				}
 			}
 			
-			System.out.println(v_role);
+//			System.out.println(v_role);
 			
 			String cpp = request.getParameter("cp");
 			
@@ -1040,7 +1057,8 @@ public class InsureController {
 		  map.put("v_hijoindate", v_hijoindate);
 		  map.put("v_coverageid", v_coverageid);
 		  
-		  System.out.println(v_status); if(v_status != null && !"".equals(v_status)) {
+//		  System.out.println(v_status); 
+		  if(v_status != null && !"".equals(v_status)) {
 		  map.put("v_status", Integer.parseInt(v_status)); }
 		  
 		  map.put("v_property", v_property); map.put("v_property", v_property);
